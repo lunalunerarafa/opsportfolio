@@ -1,0 +1,94 @@
+name: reboot pages
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/reboot-pages.yml
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  deployments: write
+jobs:
+  reboot:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Clear stuck Pages deployments
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          set +e
+          http() {
+            label="$1"
+            shift
+            out=$(gh api -i "$@" 2>&1)
+            code=$(printf '%s\n' "$out" | awk '/^HTTP/{print $2; exit}')
+            echo "HTTP ${label} ${code:-NO_HTTP}"
+          }
+          http "GET pages" "repos/${REPO}/pages"
+          http "PUT source null" -X PUT "repos/${REPO}/pages" --input - <<'JSON'
+          {"source":null}
+          JSON
+          http "PUT restore main" -X PUT "repos/${REPO}/pages" --input - <<'JSON'
+          {"build_type":"legacy","source":{"branch":"main","path":"/"}}
+          JSON
+          shas="e1bd76bb2cd8c801fe8b1466812d2b183f7eef61 101203e9cfbcd731df768d5dba44367f660398f4 aea6856aab573d8a52caefc98825d9733624b2bb ${SHA}"
+          ids="7098488248 7098889400 7098982274"
+          extra=$(gh api "repos/${REPO}/deployments?per_page=20" --jq '.[] | select(.environment=="github-pages") | "\(.sha) \(.id)"')
+          while read -r sha id; do
+            [ -n "$sha" ] && shas="$shas $sha"
+            [ -n "$id" ] && ids="$ids $id"
+          done <<EOF
+          ${extra}
+          EOF
+          for sha in $shas; do
+            http "CANCEL sha ${sha}" -X POST "repos/${REPO}/pages/deployments/${sha}/cancel"
+            http "CANCEL alt ${sha}" -X POST "repos/${REPO}/pages/deployment/cancel/${sha}"
+          done
+          for id in $ids; do
+            http "CANCEL id ${id}" -X POST "repos/${REPO}/pages/deployments/${id}/cancel"
+            http "DELETE id ${id}" -X DELETE "repos/${REPO}/deployments/${id}"
+          done
+          http "POST pages builds" -X POST "repos/${REPO}/pages/builds"
+          echo "BUILD $(gh api "repos/${REPO}/pages/builds/latest" --jq '.status + " " + .commit')"
+      - name: Wait until Pages is not building
+        id: wait
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set +e
+          for i in $(seq 1 18); do
+            st=$(gh api "repos/${REPO}/pages/builds/latest" --jq '.status')
+            echo "HTTP poll ${i} build=${st}"
+            if [ "$st" != "building" ]; then
+              echo "ready=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "ready=false" >> "$GITHUB_OUTPUT"
+          exit 0
+      - uses: actions/checkout@v4
+        if: steps.wait.outputs.ready == 'true'
+      - uses: actions/configure-pages@v5
+        if: steps.wait.outputs.ready == 'true'
+      - name: Stage site files
+        if: steps.wait.outputs.ready == 'true'
+        run: |
+          mkdir -p _site
+          cp index.html README.md .nojekyll _site/
+      - uses: actions/upload-pages-artifact@v3
+        if: steps.wait.outputs.ready == 'true'
+        with:
+          path: _site
+      - id: deployment
+        if: steps.wait.outputs.ready == 'true'
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 180000
