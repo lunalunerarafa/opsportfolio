@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>30-Day Client Sprint Control Tower · Naffy Quehen</title>
-<meta name="description" content="Interactive 30-day sprint ops control tower and /sprint-pulse drift detector. Field-service dispatch and a fintech KYB cutover.">
+<title>30-Day Client Sprint Control Tower · built for Regen8</title>
+<meta name="description" content="A working prototype of the ops layer for Regen8's 30-day client sprints. Field-service dispatch and a fintech KYB cutover.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Crect x='6' y='6' width='8' height='20' fill='%231440ff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,8 +27,10 @@ h1 span{color:#1440ff}
 h2{font-family:Archivo,Impact,sans-serif;font-stretch:62%;font-weight:900;font-size:clamp(28px,4vw,42px);line-height:.95;margin:18px 0 8px}
 h3{font:600 16px/1.35 "IBM Plex Mono",ui-monospace,monospace;margin:0}
 h4{font:600 14px/1.35 "IBM Plex Mono",ui-monospace,monospace;margin:2px 0 6px}
-.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#1440ff;font-weight:600;margin:0}
-.sub{margin:14px 0 0;font-size:15px;line-height:1.5;max-width:70ch}
+.for{font-size:13px;font-weight:600;color:#1440ff;margin:0}
+.sub{margin:14px 0 0;font-size:15px;line-height:1.5;max-width:68ch}
+.by{margin:10px 0 0;font-size:13px;color:#333}
+.by a{color:#1440ff}
 .sub a{color:#1440ff}
 .scenarios{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:stretch}
 .scenarios button{font:600 13px/1.35 "IBM Plex Mono",ui-monospace,monospace;text-align:left;background:#fff;color:#1440ff;border:2px solid #1440ff;padding:8px 12px;max-width:460px}
@@ -1003,8 +1005,9 @@ function head() {
     const on = state.scenarioId === id;
     return '<button type="button" data-act="scenario" data-id="' + id + '" aria-pressed="' + on + '">' + esc(SCENARIOS[id].button) + "</button>";
   }).join("");
-  return '<header><p class="kicker">Interactive prototype</p><h1>30-Day Client Sprint<br><span>Control Tower</span></h1>' +
-    '<p class="sub">Operational execution between Day-1 Discovery and Day-30 Go-Live · Built by Naffy Quehen (<a href="https://x.com/n_andrea_q">@n_andrea_q</a>)</p>' +
+  return '<header><p class="for">built for regen8 · 30-day client sprint ops prototype</p><h1>30-Day Client Sprint<br><span>Control Tower</span></h1>' +
+    '<p class="sub">how i\'d run the operational layer between day-1 discovery and day-30 go-live across your 30-day sprints — built as a working prototype instead of a static doc.</p>' +
+    '<p class="by">Naffy Quehen · <a href="https://x.com/n_andrea_q">@n_andrea_q</a></p>' +
     '<div class="scenarios" role="group" aria-label="Sprint scenario">' + scenarioButtons +
     '<button type="button" class="texty" data-act="reset">Reset sample</button></div>' +
     "<p class=\"blurb\"><b>" + esc(sc.kicker) + ".</b> " + esc(sc.blurb) + "</p>" +
