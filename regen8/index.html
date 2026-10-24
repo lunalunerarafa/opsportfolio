@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Regen8 · 30-Day Sprint Board</title>
-<meta name="description" content="A 30-day sprint board for Regen8. What is slipping sits in its own column.">
+<title>Regen8 · AI Sprint Control Tower</title>
+<meta name="description" content="A 30-day sprint control tower. The board is diffed against call transcripts, client Slack, and the signed SOW.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121212'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23FF3B18'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,8 +41,9 @@ button{cursor:pointer}
 
 .wrap{max-width:1440px;margin:0 auto;padding:32px 32px 64px}
 
-.top{display:flex;align-items:center;justify-content:space-between;gap:28px;margin-bottom:28px}
-.brand{display:flex;flex-direction:column;align-items:flex-start;gap:8px;min-width:0}
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:28px;margin-bottom:16px}
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0}
+.brand .pick summary{max-width:520px;text-align:left;line-height:1.35}
 .logo{font-family:var(--font-display);font-weight:500;font-size:26px;letter-spacing:-.03em;line-height:1}
 .by{font-size:13px;color:var(--muted);background:var(--white);border-radius:999px;padding:5px 12px;box-shadow:0 1px 2px rgba(18,18,18,.04)}
 .controls{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
@@ -82,8 +83,9 @@ button{cursor:pointer}
 .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;align-items:stretch}
 .col{background:var(--bone);border-radius:18px;padding:16px 12px 20px;min-height:520px}
 .col.over{background:#E7E0D0}
-.col-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:2px 8px 14px}
-.col h2{margin:0;font-family:var(--font-display);font-weight:500;font-size:16px;letter-spacing:-.02em;line-height:1.25}
+.col-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:2px 8px 6px}
+.col h2{margin:0;font-family:var(--font-display);font-weight:500;font-size:15px;letter-spacing:-.02em;line-height:1.25}
+.col-sub{margin:0 8px 14px;font-size:12.5px;line-height:1.35;color:var(--muted)}
 .col.slip{box-shadow:inset 0 3px 0 var(--ember)}
 .col.slip h2{color:var(--ember)}
 .cnt{font-family:var(--font-mono);font-size:12px;color:var(--faint)}
@@ -100,8 +102,8 @@ button{cursor:pointer}
 .card.flagged{background:#FFF8F6}
 .micro{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
 .phase{font-family:var(--font-label);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
-.age{font-family:var(--font-label);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
-.age.bad{color:var(--ember);background:rgba(255,59,24,.1);border-radius:999px;padding:3px 8px}
+.age{font-family:var(--font-label);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint)}
+.age.bad{color:var(--ember);background:rgba(255,59,24,.1);border-radius:999px;padding:3px 8px;white-space:normal;line-height:1.35}
 .card h3{margin:0;font-size:15.5px;font-weight:500;letter-spacing:-.01em;line-height:1.35}
 .callout{margin:12px 0 0;background:#FFF1EC;border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.4}
 .card-f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
@@ -164,6 +166,24 @@ button{cursor:pointer}
 .step p{margin:0 0 6px;color:var(--muted);font-size:14px}
 .step b{color:var(--ink);font-weight:500}
 
+
+.why{margin:0 0 22px;max-width:860px;font-size:13.5px;line-height:1.45;color:var(--muted)}
+.why b{color:var(--ink);font-weight:500}
+.diff{margin:12px 0 0;background:var(--paper);border-radius:10px;padding:8px 10px;font-family:var(--font-mono);font-size:11px;line-height:1.45}
+.diff .real{color:var(--ember);margin-top:3px}
+.eval{margin:12px 0 0}
+.eval .lab{font-size:12.5px;line-height:1.4;color:var(--muted)}
+.card .meter{display:block;width:100%;margin:8px 0 0}
+.impact{margin:12px 0 0;font-family:var(--font-mono);font-size:11.5px;line-height:1.4}
+.card-actions{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:10px}
+.card-actions button{border:0;background:none;padding:0;font-size:12.5px;line-height:1.35;color:var(--ink);text-align:left;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(18,18,18,.28)}
+.card-actions button:hover{text-decoration-color:var(--ink)}
+.reset{border:0;background:var(--white);border-radius:999px;padding:9px 14px;font-size:13.5px;box-shadow:0 1px 2px rgba(18,18,18,.05)}
+.col.slip.scanning{box-shadow:inset 0 3px 0 var(--ember),0 0 0 2px rgba(255,59,24,.28)}
+.toast{position:fixed;z-index:40;left:50%;bottom:24px;transform:translateX(-50%);width:min(520px,calc(100vw - 32px));background:var(--ink);color:var(--paper);border-radius:14px;padding:14px 16px 16px;box-shadow:0 16px 40px rgba(18,18,18,.22)}
+.toast p{margin:0 0 8px;font-size:13.5px;line-height:1.4}
+.toast .card-actions{margin-top:4px}
+.toast .card-actions button{color:var(--paper);text-decoration-color:rgba(250,246,236,.4)}
 @media(max-width:1100px){
   .board{grid-template-columns:1fr 1fr}
   .top{align-items:flex-start;flex-direction:column}
@@ -208,282 +228,319 @@ const PULSE_NOTE = "At Sophon Labs (~15-person remote team), I built a Claude Co
 const GATE_NOTE = "Why this gate exists: At Sophon Labs, I inherited a BaaS vendor signed before my time that couldn't actually support our target markets. Verifying vendor coverage and sandbox credentials in the first 72 hours prevents week-3 rewrites.";
 
 const SCENARIOS = {
-  field: {
-    id: "field",
-    button: "A · Field-Service WhatsApp Dispatch & Quoting Sprint (35-person A/C & Appliance Repair Co.)",
-    kicker: "Sprint #04 — Informal A/C & Appliance Field-Service Dispatch & Quoting Automation",
-    blurb: "A 35-person repair company. Customer requests arrive as messy WhatsApp messages, 40-second Spanish/English voice notes, and blurry unit model-plate photos with no address. Pricing lives in the lead technician's head while he's on a roof. Technicians leave job sites without logging parts used.",
+  kyb: {
+    id: "kyb",
     day: 9,
     when: "Wednesday",
-    phase: "Phase 02: Workflow Decomposition & Build",
-    noun: "request",
+    noun: "KYB pack",
     formPhase: PHASES[1],
     slotLine: "Thursday's 15-min slot works if a reply is harder.",
-    roi: { volume: 126, before: 18, after: 3, error: 15, reworkMin: 20, rate: 32, cost: 18000 },
+    roi: { volume: 8, before: 38, after: 11, error: 15, reworkMin: 25, rate: 55, cost: 18000 },
     drift: {
-      rowId: "r5",
-      call: "if it's a normal diagnostic, don't wait on me. just send it.",
-      written: "No customer-facing quote goes out until the approval cap is a written line the sponsor has agreed to. Auto-send is out of scope until then.",
-      wont: "We will not wire auto-send. The agent can draft. A human still clicks.",
-      closed: "The Thursday call asked for auto-send on a normal diagnostic. The cap is marked shipped, so this drift is closed. Auto-send only inside the written cap.",
-      noteLine: "On Thursday's call the sponsor said a normal diagnostic can just be sent. Written scope still says no auto-send until the cap is signed, so we will draft and not send."
+      rowId: "k7",
+      call: "can we add automated sanctions re-screening for the legacy accounts too.",
+      written: "Day-30 scope is the vendor cutover: intake, AML/UBO checks, exception routing, and sandbox-to-production. Legacy re-screening is not in the SOW.",
+      wont: "We will not build sanctions re-screening this sprint. It is about six engineering days and belongs in phase 2.",
+      closed: "The Thursday call asked for legacy sanctions re-screening. That card is no longer an open drift, so this item is closed.",
+      noteLine: "Thursday's sync asked for automated sanctions re-screening on legacy accounts. That is outside the Day-30 SOW, so it goes to phase 2."
     },
-    call: `Client Sponsor: if it's a normal diagnostic, don't wait on me. just send it.
-Ops Lead: we still don't have a written cap. "normal" is whatever the lead tech remembers.
-Client Dispatcher: this week half the requests were voice notes. i don't get an address until i call them back. and yesterday the tech swapped a dual capacitor and didn't tell anyone.
-Field Tech Lead: i can't type prices on a roof. i'll do it this weekend.
-Ops Lead: weekend misses the Friday pulse. i need the ranges tomorrow or the quote step stays a draft.`,
-    slack: `Client Dispatcher [Mon 8:12]: still no WhatsApp Business admin. the number is a personal phone. IT said next week.
-Client Dispatcher [Tue 18:41]: job closed. tech left. no part logged. pretty sure it was a dual capacitor.
-Ops Lead [Tue 18:44]: don't guess it onto the invoice. i'm holding that job out of the ground-truth set until someone confirms the part.
-Lead Engineer [Wed 9:02]: staging can transcribe the 18 notes we have. i am not wiring auto-send until the cap is written down.`,
-    board: `GATE-03  Ground-truth 30          Blocked      18/30   sitting 3d   Ops Lead
-QUOTE    Written approval cap      Blocked      —       sitting 2d   Client Sponsor
-STEP-02  Price ranges              In progress  —       sitting 1d   Field Tech Lead
-ENG-14   Staging transcription     In progress  18 notes            Lead Engineer`,
-    slackPull: "Slack: a job closed with no part logged. Held out of the ground-truth set on purpose. Do not invoice a guessed capacitor.",
+    call: "Client Ops Lead: while we are in there, can we add automated sanctions re-screening for the legacy accounts too.\nOps Lead: that is not in the day-30 SOW. It is about six engineering days. I will log it to phase 2.\nClient Sponsor: sending the 30 historical KYB files this afternoon.\nClient Compliance: I have not signed the auto-approval confidence threshold. Nothing under the $25k volume cap goes out until I do.\nOps Lead: then the board can say on track and still be wrong. We need a yes or no today.",
+    slack: "Client Sponsor [Tue 10:14]: sending the 30 historical KYB files this afternoon.\nOps Lead [Thu 16:02]: folder has 18 packs. The 12 missing are the non-US multi-UBO cases.\nClient Compliance [Wed 11:40]: holding sign-off on the auto-approval confidence threshold. The volume cap under $25k is not agreed.\nLead Engineer [Thu 9:05]: exception router is 26 of 30 clean in shadow. Four multi-UBO edge cases still fail. Not a cutover.",
+    board: "KYB-30  Historical packs            In Progress\nSANC    Legacy re-screening         Not on the board\nTHRESH  Auto-approval threshold     On Track\nROUTE   Exception router            In Progress  26/30",
+    slackPull: "Slack: 18 of 30 KYB packs are in the folder. The 12 missing are non-US multi-UBO cases. Do not train the shadow run on the easy 18.",
+    catchToast: "Caught on today's call transcript: Client asked for custom webhook retry UI. Not in the signed SOW.",
+    catch: {
+      id: "k-catch", code: "K-12", phase: PHASES[1], order: 0, injected: true,
+      name: "Custom webhook retry UI", owner: "Client Sponsor", status: "Blocked >48h", days: 2,
+      badge: "Call scope drift · just caught",
+      boardSays: "Not Logged", realitySrc: "TODAY'S CALL",
+      realityShort: "Webhook retry UI asked for on today's call",
+      reality: "Caught on today's call transcript: the client asked for a custom webhook retry UI. It is not in the signed SOW.",
+      unblock: "Send the scope-guardrail note. Leave the retry UI out of this sprint.",
+      slip: "An unlogged call ask becomes a week of build.",
+      ping: "Client Sponsor — on today's call you asked for a custom webhook retry UI. That is not in the signed Day-30 SOW. We will not build it this sprint. We can scope it as phase 2 after cutover.\n— Ops Lead",
+      actions: [
+        { act: "copyping", label: "Copy Client Scope-Guardrail Note" },
+        { act: "resolve", label: "Mark Resolved" }
+      ],
+      evidence: ""
+    },
     gates: [
       { id: "g1", code: "GATE-01", name: "Executive Sponsor & Weekly 15-min Decision Slot", status: "PASS", owner: "Client Sponsor", sla: "Day 1 · 24h",
-        need: "One named sponsor who can say yes or no, and a recurring 15-minute slot. Not a committee.",
-        have: "Thursday 15-min is booked. The sponsor is the only person who can change quote policy.",
-        miss: "Do not freeze scope from a group chat. If the slot slips, book the dispatcher before day 4 and keep the sponsor for decisions only.",
-        action: "Put the 15-min slot back on the calendar today. Name the one person who can approve a quote rule.",
-        slip: "Open questions wait a week and the build sits on policy." },
-      { id: "g2", code: "GATE-02", name: "API/Admin/Sandbox Credentials & Market Coverage Check", status: "PASS", owner: "Ops Lead + Lead Engineer", sla: "Day 3 · 72h",
-        need: "Sandbox credentials that actually receive a message, and a written check that we can reach customers on a business account. A personal SIM does not count.",
-        have: "Sandbox webhook accepted a test voice note on day 2. Moving the real business number is a day-23 cutover, not a reason to skip the check.",
-        miss: "If credentials are still with IT at 72 hours, the day-30 date moves one for one. A screenshot of a settings page is not a credential.",
-        action: "Get a working sandbox key today, or a dated commit from IT. Confirm the customer-facing number is a business account.",
-        slip: "Week 3 becomes a rewrite when the number cannot send templates.",
-        note: GATE_NOTE },
-      { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "BLOCKED", owner: "Ops Lead + Client Dispatcher", sla: "Day 3 · 72h",
-        need: "30 real jobs, including voice-note only, a blurry model plate, no address, and a part that was never logged.",
-        have: "18 jobs are in the sheet. The other 12 were closed in a voice note nobody transcribed, or the tech left without writing the part down.",
-        miss: "Hard stop on the production build. Staging may transcribe the 18. Quote ranges do not ship off the clean 18 alone.",
-        action: "Pull the 12 jobs with no closeout today, including any part that was swapped and never written down.",
-        slip: "The quote model learns the tidy jobs and misses the first real blurry plate." },
-      { id: "g4", code: "GATE-04", name: "Exception & Human-in-the-Loop Escalation Owner", status: "PASS", owner: "Client Dispatcher", sla: "Day 3 · 72h",
-        need: "A named person for warranty, commercial multi-unit, and any quote off the table. Plus a backup if that person is on a route.",
-        have: "Client Dispatcher is named. Field Tech Lead is the backup. Grey areas default to draft-and-hold.",
-        miss: "If this is still 'the team' at 48 hours, every grey-area action stays a draft. Do not invent an approver.",
-        action: "Name the person who clicks approve, and the backup. One line on the tracker.",
-        slip: "The office will not adopt a tool that might text a customer or invoice a guessed part." },
-      { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "PASS", owner: "Ops Lead + Client Sponsor", sla: "Day 3 · 72h",
-        need: "Three numbers the sponsor has agreed: touch time per request, time-to-quote, and how often a quote gets reworked.",
-        have: "Signed day 3. Median first WhatsApp to a sent quote is 3.4 hours. Coordinator touch time is about 18 minutes. About 1 in 4 quotes is reworked because the model number was guessed.",
-        miss: "Write the numbers down and get a one-line yes before build. Otherwise day 30 is a debate about whether it feels faster.",
-        action: "Send the three baseline numbers and get a one-line yes from the Client Sponsor today.",
-        slip: "Day-30 ROI has no starting line." }
-    ],
-    steps: [
-      { id: "s1", code: "STEP-01", name: "Intake", lane: "ai",
-        line: "40-second Spanish/English voice notes, blurry model plates, often no address.",
-        claim: "The customer fills in a booking form with the address, the unit, and the problem.",
-        actual: "They send a 40-second voice note in Spanish over a compressor, a photo of a model plate with the last digits blown out, or “¿puedes venir hoy?” and nothing else. Sometimes all three, out of order.",
-        rule: "Transcribe Spanish and English. OCR the plate. Match the phone number to old jobs. If address or model confidence is under 0.8, leave it blank and ask. Never invent a model number.",
-        human: "Client Dispatcher steps in for warranty, a commercial multi-unit, or a thread that has turned.",
-        sla: "Draft the reply in under 5 minutes. If the webhook is quiet for 15 minutes, ping the dispatch channel.",
-        fallback: "Coordinator uses the pinned two-question list. Unread threads older than 15 minutes get a loud ping.",
-        source: "WhatsApp thread → intake sheet" },
-      { id: "s2", code: "STEP-02", name: "Triage & quote", lane: "unblock",
-        line: "The price list is the lead tech's memory, and he is usually on a roof.",
-        claim: "The coordinator checks the price list and sends a quote.",
-        actual: "There is no price list. The coordinator messages the Field Tech Lead and waits about three hours. A normal diagnostic goes cold while a capacitor price sits in someone's head.",
-        rule: "Match unit family and symptom to the historical job table. Propose the diagnostic fee and a repair range. If the pair is not in the table, draft the quote and hold it. Do not send a number that is not written down.",
-        human: "Client Dispatcher clicks send when the job is over the cap, off the table, or commercial. Under the cap, auto-send stays off until the sponsor writes the cap down.",
-        sla: "Standard draft in 10 minutes. Human click the same day, before 4pm. No answer by then and the quote does not go out.",
-        fallback: "A one-page diagnostic matrix pinned in the dispatch channel, so a standard job never waits on a roof.",
-        source: "Historical job and pricing table" },
-      { id: "s3", code: "STEP-03", name: "Dispatch", lane: "ai",
-        line: "Routes change in the group chat. The missing part shows up in the driveway.",
-        claim: "The job goes on the calendar and a tech is assigned.",
-        actual: "The route changes in the group chat. Nobody checks parts until the tech is on site and needs a dual capacitor that is on another truck.",
-        rule: "Build the job card before it leaves: pin, voice-note summary, plate photo, and the likely parts from the quote table. Prefer a route that already carries those parts.",
-        human: "Client Dispatcher confirms the morning route before cards go out. After 7:30am, swaps are a human call.",
-        sla: "Cards out by 7:30am. Same-day add-ons wait for the dispatcher.",
-        fallback: "A static 7:30am text of the day's route to each tech.",
-        source: "Dispatch board" },
-      { id: "s4", code: "STEP-04", name: "Closeout", lane: "human",
-        line: "Techs leave. The part they swapped never hits the invoice.",
-        claim: "The tech marks the job complete and the office sends the invoice.",
-        actual: "The tech leaves. The part is not logged. The office spends Friday reconstructing the week. A dual capacitor that was swapped never reaches the invoice, so nobody should guess it in.",
-        rule: "When the tech leaves the site, ask for a 15-second voice note or a photo of the old part. Extract the part, the symptom, and the labor. Stage the invoice. Do not mark it paid. If the part was not on the card, flag it.",
-        human: "Client Dispatcher checks the amount and releases the payment link. Field Tech Lead reviews any part that was not on the job card.",
-        sla: "Prompt goes out as they leave. No note by 6pm and the job gets an end-of-day check-in. No human click, no invoice.",
-        fallback: "A 6pm sweep of anything still marked on site.",
-        source: "Job history and billing log" },
-      { id: "s5", code: "STEP-05", name: "Learning loop", lane: "human",
-        line: "Corrections die in the chat, so the same wrong price comes back tomorrow.",
-        claim: "If the system is wrong, someone complains and it gets fixed.",
-        actual: "The dispatcher edits a drafted quote inside the thread. The correction dies there. Tomorrow the same unit family is priced off a guess.",
-        rule: "Every edit and every rejected quote writes one row: what the agent proposed, what the human sent, the part, the unit family. No row, no learning.",
-        human: "Ops Lead and the Client Dispatcher spend 15 minutes on Friday moving repeated corrections into the plain-text rules file.",
-        sla: "The row is written the same day. The rules file is updated Friday, or the correction does not count as learned.",
-        fallback: "processes/dispatch-rules.md stays a plain file the company owns. It is not trapped in a prompt.",
-        source: "processes/dispatch-rules.md" }
-    ],
-    rows: [
-      { id: "r1", code: "R-01", gateId: "g1", phase: PHASES[0], name: "Executive sponsor and Thursday 15-min slot locked", source: "Kickoff transcript", owner: "Client Sponsor", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Recurring Thursday hold is on the calendar. One sponsor, not a thread." },
-      { id: "r2", code: "R-02", gateId: "g5", phase: PHASES[0], name: "Baseline locked: 3.4h to quote, 18 min touch, ~25% rework", source: "Kickoff + dispatcher count", owner: "Ops Lead", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Sponsor replied yes to the three numbers on day 3." },
-      { id: "r3", code: "R-03", gateId: "g2", phase: PHASES[0], name: "Sandbox webhook receives a test voice note", source: "Task Board", owner: "Lead Engineer", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Day 2. A real voice note hit the sandbox. Production number is still later." },
-      { id: "r4", code: "R-04", gateId: "g3", phase: PHASES[1], name: "Collect 30 historical WhatsApp jobs (voice notes, unit photos, and the final invoice)", source: "Discovery transcript", owner: "Ops Lead + Client Dispatcher", status: "Blocked >48h", days: 3, unblock: "18/30 jobs received; 12 are missing a closeout or a logged part. Send the Client Dispatcher a WhatsApp export today.", slip: "Quote ranges get trained on 18 tidy jobs.", evidence: "" },
-      { id: "r5", code: "R-05", phase: PHASES[1], name: "Lock the written price-cap for auto-quoting versus a human click", source: "Thursday sync", owner: "Client Sponsor", status: "Blocked >48h", days: 2, unblock: "Yes or no today: under the diagnostic cap a standard quote can auto-send. Over the cap, the dispatcher clicks.", slip: "Auto-send stays unwired and week 3 slips a day.", evidence: "" },
-      { id: "r6", code: "R-06", phase: PHASES[1], name: "Field Tech Lead writes capacitor, contactor, and compressor ranges", source: "Shadow notes", owner: "Field Tech Lead", status: "In Progress", days: 1, unblock: "25 minutes off a roof, not a form. Three unit families is enough to start.", slip: "STEP-02 keeps drafting and holding.", evidence: "" },
-      { id: "r7", code: "R-07", phase: PHASES[1], name: "Exception map reviewed with the dispatcher", source: "Task Board", owner: "Ops Lead", status: "In Progress", days: 0, unblock: "Walk STEP-01 through STEP-04 once with the Client Dispatcher. Mark anything we still have wrong.", slip: "Engineering builds the happy path.", evidence: "" },
-      { id: "r8", code: "R-08", phase: PHASES[2], name: "Staging intake on the jobs we actually have", source: "Engineering board", owner: "Lead Engineer", status: "Upcoming", days: 0, unblock: "Starts when the ground-truth gate is pass. Not before.", slip: "", evidence: "" },
-      { id: "r9", code: "R-09", phase: PHASES[2], name: "Shadow-run the WhatsApp intake parser on live A/C and fridge tickets", source: "Written scope", owner: "Ops Lead + Client Dispatcher", status: "Upcoming", days: 0, unblock: "Three real days. Not a demo hour.", slip: "", evidence: "" },
-      { id: "r10", code: "R-10", phase: PHASES[3], name: "Kill-switch drill run by the dispatcher, plus the 2-page runbook", source: "Handoff checklist", owner: "Client Dispatcher", status: "Upcoming", days: 0, unblock: "Client staff turns it off. We don't.", slip: "", evidence: "" },
-      { id: "r11", code: "R-11", gateId: "g4", phase: PHASES[0], name: "Escalation owner named: dispatcher, with the field tech lead as backup", source: "Kickoff", owner: "Ops Lead", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Named on day 3. Grey areas stay draft-and-hold." },
-      { id: "r12", code: "R-12", phase: PHASES[1], name: "Pin the two-question list for threads that arrive with no address", source: "Dispatch channel", owner: "Client Dispatcher", status: "In Progress", days: 0, unblock: "Pin the two questions in the dispatch channel before Friday's pulse.", slip: "Unread threads keep waiting on a callback.", evidence: "" }
-    ],
-    handoff: [
-      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "OPEN", owner: "Client Dispatcher", detail: "The agent runs beside the live dispatcher on the messy set. Misses are marked needs-human, not guessed. A named person signs the accuracy number." },
-      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Dispatcher", detail: "Client staff, not the sprint team, turns it off and runs the manual path once. The drill has a date." },
-      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "OPEN", owner: "Ops Lead", detail: "A short Loom and two pages: what the agent does, what the human clicks, what to do when the webhook is quiet." },
-      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "A failed staging run already posts to the client channel in plain language. Weekly cap is 200k tokens, warn at 70%, stop at 100%." },
-      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Ops Lead + Client Sponsor", detail: "The day-3 baseline is locked. The comparison waits on the shadow week. Hours, time-to-quote, rework. The sponsor signs the delta, not a vibe." },
-      { id: "h6", name: "30-Day Post-Launch Check-In", status: "SIGNED", owner: "Client Sponsor", detail: "The hold is on the calendar with the sponsor, 30 days after the go-live date. Agenda is the correction log." }
-    ]
-  },
-  fintech: {
-    id: "fintech",
-    button: "B · Fintech BaaS & Multi-Market KYB Cutover Sprint (Consumer Payments App)",
-    kicker: "Fintech BaaS & Multi-Market KYB Cutover Sprint",
-    blurb: "A consumer payments app. The BaaS vendor was signed before the Ops Lead joined and could not support the target markets. Day 2 caught it. The pivot partner is Rain. A reusable KYB pack is why the second filing is a 3-week cutover, not a from-scratch rebuild. Same lesson as Sophon Labs, run here as a sprint.",
-    day: 14,
-    when: "Friday",
-    phase: "Phase 03: Build & Shadow Run",
-    noun: "KYB file",
-    formPhase: PHASES[2],
-    slotLine: "The next 15-min sponsor slot works if a reply is harder.",
-    roi: { volume: 40, before: 90, after: 25, error: 22, reworkMin: 45, rate: 55, cost: 18000 },
-    drift: {
-      rowId: "f8",
-      call: "if we submit all three markets together the launch date still holds.",
-      written: "A market goes live only with a coverage row, a complete KYB pack, and a written sponsor sign-off for that market. Market 3 was not in the inherited contract.",
-      wont: "No production submission for market 3 this sprint. Markets 1 and 2 can shadow on Rain.",
-      closed: "The call asked to submit all three markets together. The market 3 decision is marked shipped, so this drift is closed.",
-      noteLine: "On the last call the sponsor wanted all three markets submitted together. Written scope says market 3 stays out until there is a written decision, so we will not send it."
-    },
-    call: `Client Sponsor: if we submit all three markets together the launch date still holds. let's not split it.
-Ops Lead: market 3 was never in the inherited contract. Rain can cover it on the matrix. We don't have the legal opinion, and 8 of the KYB files are missing the UBO page.
-Client Compliance: i can send those 8 a specific list today. i can't sign a pack with a cropped passport photo.
-Lead Engineer: Rain sandbox is live. i won't point production at market 3 off a verbal go.
-Ops Lead: then the written line is markets 1 and 2 in shadow. market 3 is out until the sponsor says otherwise, in writing.`,
-    slack: `Client Compliance [Mon 11:04]: 22 of 30 files are in the folder. the other 8 are phone photos. two passports cut off the MRZ. one proof of address is expired.
-Ops Lead [Mon 11:22]: don't fill the gaps. mark them needs-human. i'm not putting a guessed UBO in a partner pack.
-Lead Engineer [Wed 9:16]: Rain sandbox accepted a test entity. coverage matrix shows all three markets. production keys wait until the sponsor signs the baseline.
-Client Sponsor [Thu 16:02]: can we do the baseline numbers next week? slammed.`,
-    board: `GATE-05  Baseline 11 days / 40% bounce   Blocked      sitting 4d   Client Sponsor
-KYB-30   Historical files                 22/30        sitting 2d   Client Compliance
-MKT-3    Legal opinion or explicit cut    Blocked      sitting 3d   Client Sponsor
-RAIN-1   Sandbox + coverage matrix        Shipped                   Lead Engineer
-PACK-1   Reusable KYB pack v1             Shipped                   Ops Lead`,
-    slackPull: "Slack: 8 files are phone photos, two passports cut the MRZ, one proof of address is expired. Do not fill a UBO from memory.",
-    gates: [
-      { id: "g1", code: "GATE-01", name: "Executive Sponsor & Weekly 15-min Decision Slot", status: "PASS", owner: "Client Sponsor", sla: "Day 1 · 24h",
-        need: "One sponsor who can pick a partner or drop a market, and a 15-minute slot that actually happens.",
-        have: "The slot is recurring. The day-2 pivot to Rain was decided there, not in a side thread.",
-        miss: "Do not take a vendor decision from a group chat.",
-        action: "Put the 15-min slot back on the calendar today. Market calls do not get made anywhere else.",
+        need: "One named sponsor who can say yes or no, and a recurring 15-minute slot.",
+        have: "Thursday 15-min is booked. The day-2 vendor pivot was decided there, in writing.",
+        miss: "Do not take a vendor decision from a side thread.",
+        action: "Put the 15-min slot back on the calendar today.",
         slip: "The launch date becomes the decision-maker." },
       { id: "g2", code: "GATE-02", name: "API/Admin/Sandbox Credentials & Market Coverage Check", status: "PASS", owner: "Ops Lead + Lead Engineer", sla: "Day 3 · 72h",
-        need: "A written coverage matrix for every target market, and a sandbox key that accepts a test entity. The contract logo is not coverage.",
-        have: "Day 2: the inherited vendor does not cover markets 2 or 3. Rain's sandbox does, and the key accepted a test entity. Production keys wait on the baseline sign-off.",
-        miss: "If this is still unchecked at 72 hours, stop build. Finding out in week 3 is a rewrite.",
-        action: "Confirm the sandbox key today and match each target market to a row in the matrix. No row, no build.",
-        slip: "We design the product around a market the partner cannot serve.",
+        need: "A written coverage row for each jurisdiction, and a sandbox key that accepts a test entity.",
+        have: "Day 2: the inherited vendor misses two of the three jurisdictions. The replacement sandbox accepted a test entity in all three. Production keys are still an intake card, not a reason to reopen this gate.",
+        miss: "If coverage is still unchecked at 72 hours, stop the build.",
+        action: "Match each jurisdiction to a matrix row before any production ticket.",
+        slip: "We design the cutover around a jurisdiction the vendor cannot serve.",
         note: GATE_NOTE },
-      { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "AT RISK", owner: "Client Compliance", sla: "Day 3 · 72h",
-        need: "30 real KYB files, including bounces and incomplete ones. Phone photos count only if the pages are actually readable.",
-        have: "22 of 30 are in the folder. 8 are phone photos: two passports crop the MRZ, one proof of address is expired, UBO pages are missing.",
-        miss: "Do not let the pack look done because 22 files were clean. The 8 are the test.",
-        action: "Send the 8 applicants a specific missing-doc list today. No cropped passport photos in the pack.",
-        slip: "Rain bounces the first real submission for a page we already knew was missing." },
+      { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "BLOCKED", owner: "Client Sponsor", sla: "Day 3 · 72h",
+        need: "30 real KYB packs, including non-US multi-UBO cases, not only the clean files.",
+        have: "18 of 30 are in the intake folder. The sponsor promised all 30 on Tuesday at 10:14. The missing 12 are the non-US multi-UBO cases.",
+        miss: "Hard stop on calling the shadow run representative. Staging may score the 18. It may not train the cutover on them alone.",
+        action: "Upload the 12 missing non-US multi-UBO packs today.",
+        slip: "The model learns the tidy files and misses the first real multi-UBO pack." },
       { id: "g4", code: "GATE-04", name: "Exception & Human-in-the-Loop Escalation Owner", status: "PASS", owner: "Client Compliance", sla: "Day 3 · 72h",
-        need: "A named person for PEP hits, sanctions questions, and any file the agent cannot classify. Ops Lead does not approve KYB.",
-        have: "Client Compliance is named. Anything ugly defaults to needs-human and does not get submitted.",
-        miss: "If the owner is 'the team', the pack will ship with a gap someone was hoping not to notice.",
-        action: "Name the person who can refuse a file. Write the backup.",
-        slip: "A bad pack goes to the partner because nobody wanted to be the one who stopped it." },
-      { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "BLOCKED", owner: "Client Sponsor", sla: "Day 3 · 72h",
-        need: "Two signed numbers: first-pass cycle time, and the share of files that bounce on documents.",
-        have: "The numbers are known and not signed. First pass on the old vendor was 11 days. About 40% bounced for documents. Unsigned numbers do not count.",
-        miss: "Hard stop on calling this sprint done. Build of the pack can continue. Day-30 ROI cannot.",
-        action: "Sign the two baseline numbers today: 11-day first pass, 40% document bounce.",
+        need: "A named person for sanctions questions, UBO gaps, and any file under the confidence threshold.",
+        have: "Client Compliance is named. Anything unsigned defaults to needs-human and does not auto-approve.",
+        miss: "If the owner is still 'the team', the pack ships with a gap.",
+        action: "Name the person who can refuse a file, and the backup.",
+        slip: "A bad pack goes to the vendor because nobody wanted to stop it." },
+      { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "PASS", owner: "Ops Lead + Client Sponsor", sla: "Day 3 · 72h",
+        need: "A signed cycle time the day-30 number has to beat.",
+        have: "Signed. Median cycle time is 4.2 days per pack. The day-30 target is 14 minutes. The target is not a result yet.",
+        miss: "Unsigned numbers do not count on day 30.",
+        action: "Keep the 4.2-day baseline next to every later claim.",
         slip: "Day 30 turns into whether it feels faster." }
     ],
     steps: [
-      { id: "s1", code: "STEP-01", name: "Document intake", lane: "ai",
-        line: "Phone photos of passports, expired proofs of address, articles in Spanish.",
-        claim: "The applicant uploads a complete KYB package.",
-        actual: "Files arrive as WhatsApp PDFs, a passport photo with the MRZ cropped, an expired utility bill, and articles of incorporation in Spanish. Names do not match across the pages.",
-        rule: "Classify the document, check the expiry, check the name against the entity. If the UBO page or a valid proof of address is missing, mark needs-human. Do not fill the gap.",
-        human: "Client Compliance reviews any failed match or any PEP hit. Ops Lead does not approve a KYB file.",
-        sla: "Completeness check the same day the file lands.",
-        fallback: "The file sits in a needs-human queue. Nobody submits a partial pack.",
-        source: "Applicant document folder" },
-      { id: "s2", code: "STEP-02", name: "Market coverage check", lane: "ai",
-        line: "The vendor was signed earlier. Two target markets were never in the contract.",
-        claim: "The signed BaaS vendor supports the markets on the slide.",
-        actual: "It does not. Markets 2 and 3 were not in the contract. The product was already drawn around them. A logo on a slide is not coverage.",
-        rule: "A country and a product must exist as a row in the partner matrix, or the workflow stops. Do not discover this from a production API error.",
-        human: "The Client Sponsor decides whether to pivot partners or drop the market. Ops Lead does not pick a vendor alone.",
-        sla: "The matrix is checked inside the first 72 hours, before build tickets.",
-        fallback: "If the matrix is missing, build stops.",
-        source: "Partner coverage matrix, country by product",
-        note: "Resolved on this sprint: the inherited vendor failed on day 2. Rain covers all three markets in sandbox. Market 3 still needs a written go before any live submission." },
-      { id: "s3", code: "STEP-03", name: "KYB pack assembly", lane: "ai",
-        line: "The pack that cleared the first partner is the pack the new partner gets.",
-        claim: "Each partner gets a fresh KYB build.",
-        actual: "The second filing is only fast if the first pack was saved as files: entity, directors, UBO, source of funds, address. Gaps stay labeled. Nothing is retyped from memory.",
-        rule: "Assemble the pack from the saved files plus the new partner's checklist. Where this partner asks for something new, add a labeled gap. Do not rewrite the pack.",
-        human: "Client Compliance signs the pack before it is sent. Ops Lead never hits submit.",
-        sla: "Draft pack in one business day once the documents are complete.",
-        fallback: "The previous pack remains the source. A bounce sends us back to that file, not to a blank folder.",
-        source: "Versioned KYB pack" },
-      { id: "s4", code: "STEP-04", name: "Partner submission & exceptions", lane: "human",
-        line: "A bounce is a missing document, not a reason to resubmit the whole company.",
-        claim: "If the partner bounces the file, the applicant starts over.",
-        actual: "Most bounces are one missing page. A full resubmission burns the week and introduces new mismatches.",
-        rule: "Map the bounce to a document type. Ask once, with that list. Log the bounce. Do not open a second full pack.",
-        human: "Client Compliance reads the bounce and approves the reply. A PEP hit or a sanctions question stops the line.",
-        sla: "Bounce triaged within 4 business hours.",
-        fallback: "The bounce log is a plain sheet. If the partner portal is down, the ask still goes out the same day.",
-        source: "Partner bounce log" },
-      { id: "s5", code: "STEP-05", name: "Cutover by market", lane: "unblock",
-        line: "Sandbox coverage is not a production go for every market.",
-        claim: "All target markets go live the same day.",
-        actual: "Market 3 still needs a legal opinion the sponsor has not booked. Shipping all three together repeats the original mistake under a new logo.",
-        rule: "A market goes live only when three things are true: coverage row, complete KYB pack, written sponsor sign-off for that market. Otherwise it stays out.",
-        human: "Client Sponsor signs each market. Client Compliance owns the pack after handoff.",
-        sla: "One market in shadow before the second is enabled. Market 3 does not ride along.",
-        fallback: "Markets 1 and 2 can run on the manual pack if the API is down. Market 3 stays off.",
-        source: "Market go-live checklist" }
+      { id: "s1", code: "STEP-01", name: "Document intake", lane: "unblock",
+        claim: "The applicant uploads a complete KYB pack.",
+        actual: "Packs arrive with a missing UBO page, a non-US entity, and names that do not match across the documents. Eighteen of thirty are in. Twelve are not.",
+        rule: "Classify each document and check the name against the entity. A missing UBO page is needs-human. Do not fill the gap.",
+        human: "Client Compliance reviews any failed match. Ops Lead does not approve a KYB file.",
+        sla: "Completeness check the same day the file lands." },
+      { id: "s2", code: "STEP-02", name: "Vendor coverage", lane: "ai",
+        claim: "The signed vendor supports all three jurisdictions.",
+        actual: "It does not. Two target jurisdictions were outside the inherited contract. A logo on a slide is not coverage.",
+        rule: "A jurisdiction needs a matrix row and a sandbox key that accepts a test entity, or the workflow stops.",
+        human: "The Client Sponsor decides whether to pivot vendors. Ops Lead does not pick a vendor alone.",
+        sla: "The matrix is checked inside the first 72 hours, before build tickets." },
+      { id: "s3", code: "STEP-03", name: "Pack assembly", lane: "ai",
+        claim: "Each vendor gets a fresh KYB build.",
+        actual: "The second filing is only fast if the first pack was saved as files. Gaps stay labeled. Nothing is retyped from memory.",
+        rule: "Assemble from the saved files plus the new vendor's checklist. Where the checklist asks for something new, add a labeled gap.",
+        human: "Client Compliance signs the pack before it is sent.",
+        sla: "Draft pack in one business day once the documents are complete." },
+      { id: "s4", code: "STEP-04", name: "Exception routing", lane: "human",
+        claim: "Anything under a dollar cap can auto-approve.",
+        actual: "The confidence threshold and the under-$25k volume cap are not signed. A Thursday call also asked for legacy sanctions re-screening, which is not in the SOW.",
+        rule: "Auto-approve only inside a signed threshold. Everything else routes to Client Compliance. An out-of-SOW ask gets a phase-2 note, not a build ticket.",
+        human: "Client Compliance owns the yes or no. Ops Lead sends the deferral note.",
+        sla: "A threshold decision the same day it is asked. No sign-off, no auto-approval." },
+      { id: "s5", code: "STEP-05", name: "Sandbox-to-production cutover", lane: "unblock",
+        claim: "All three jurisdictions go to production on day 30 because the tickets moved.",
+        actual: "Sandbox coverage is not a production go. The kill switch has been pulled in staging on complete files only. Twelve packs are still missing.",
+        rule: "A jurisdiction goes live only with a coverage row, a complete pack, a signed threshold, and a kill-switch drill by client staff.",
+        human: "Client Sponsor signs each jurisdiction. Client Compliance owns the pack after handoff.",
+        sla: "One jurisdiction in shadow before the next is enabled." }
     ],
     rows: [
-      { id: "f1", code: "R-01", gateId: "g2", phase: PHASES[0], name: "Coverage check on the inherited BaaS vendor", source: "Day-2 working note", owner: "Ops Lead", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Markets 2 and 3 are not in the contract. Caught on day 2, before build." },
-      { id: "f2", code: "R-02", gateId: "g1", phase: PHASES[0], name: "Sponsor decision: pivot partner, do not build on the inherited vendor", source: "Decision slot", owner: "Client Sponsor", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Written in the slot notes. Rain is the pivot. The old vendor is not the build target." },
-      { id: "f3", code: "R-03", phase: PHASES[0], name: "Rain sandbox key and a coverage row for each target market", source: "Task Board", owner: "Lead Engineer", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Sandbox accepted a test entity. Three markets are on the matrix. Production keys are not requested yet." },
-      { id: "f4", code: "R-04", phase: PHASES[1], name: "Reusable KYB pack carried over: entity, directors, UBO, source of funds, address", source: "Pack folder", owner: "Ops Lead", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "v1 of the pack is the file Rain will get. Gaps are labeled, not rewritten." },
-      { id: "f5", code: "R-05", gateId: "g3", phase: PHASES[1], name: "30 historical KYB files, including bounced and unreadable ones", source: "Compliance folder", owner: "Client Compliance", status: "In Progress", days: 2, unblock: "Send the 8 incomplete files a specific missing-doc list today. No cropped passport photos.", slip: "The pack gets signed on 22 clean files.", evidence: "" },
-      { id: "f6", code: "R-06", gateId: "g5", phase: PHASES[1], name: "Sponsor signs the baseline: 11-day first pass, 40% document bounce", source: "Decision slot", owner: "Client Sponsor", status: "Blocked >48h", days: 4, unblock: "Sign the two baseline numbers today: 11-day first pass, 40% document bounce.", slip: "Day-30 ROI has nothing to stand next to.", evidence: "" },
-      { id: "f7", code: "R-07", phase: PHASES[2], name: "Shadow-submit 10 complete packs to Rain", source: "Engineering board", owner: "Lead Engineer + Ops Lead", status: "In Progress", days: 0, unblock: "Only files Client Compliance has already signed. No partials in the batch.", slip: "", evidence: "" },
-      { id: "f8", code: "R-08", phase: PHASES[2], name: "Market 3: legal opinion, or a written decision that it is out of this sprint", source: "Thursday call", owner: "Client Sponsor", status: "Blocked >48h", days: 3, unblock: "Market 3 is in this sprint or it is out. One written line today. We will not submit it on a verbal go.", slip: "Someone submits market 3 to protect a launch date.", evidence: "" },
-      { id: "f9", code: "R-09", phase: PHASES[3], name: "Kill-switch drill run by client staff", source: "Handoff checklist", owner: "Client Compliance", status: "Upcoming", days: 0, unblock: "Client Compliance turns it off and files one pack by hand.", slip: "", evidence: "" },
-      { id: "f10", code: "R-10", phase: PHASES[3], name: "Handoff: client compliance owns the pack and the Friday correction pass", source: "Handoff checklist", owner: "Client Compliance", status: "Upcoming", days: 0, unblock: "They update the pack file. We don't keep the keys.", slip: "", evidence: "" }
+      { id: "k1", code: "K-01", phase: PHASES[3], name: "Production keys for the three jurisdictions", owner: "Client Sponsor", status: "Upcoming", days: 0, wait: "Client SLA · keys not issued", unblock: "Send production keys, or a dated commit from the vendor.", slip: "Cutover waits one day for every day the keys wait.", evidence: "" },
+      { id: "k2", code: "K-02", phase: PHASES[3], name: "Kill-switch drill, run by client staff", owner: "Client Compliance", status: "Upcoming", days: 0, wait: "Not started · client staff has to pull it", unblock: "Client Compliance pulls the kill switch once and files one pack by hand.", slip: "A drill we run ourselves does not count.", evidence: "" },
+      { id: "k3", code: "K-03", phase: PHASES[3], name: "Sandbox-to-production cutover checklist", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Held until the 12 missing packs land", unblock: "Walk the checklist once the intake folder is complete.", slip: "Cutover on the easy 18 repeats the vendor miss.", evidence: "" },
+      { id: "k4", code: "K-04", phase: PHASES[1], name: "Exception router for multi-UBO misses", owner: "Lead Engineer", status: "In Progress", days: 0, evalPct: 87, evalText: "Shadow Run: 26/30 clean · 4 edge cases failing", unblock: "Fix the four multi-UBO edge cases before any cutover talk.", evidence: "" },
+      { id: "k5", code: "K-05", phase: PHASES[1], name: "KYB pack assembler", owner: "Ops Lead", status: "In Progress", days: 1, evalPct: 87, evalText: "Shadow Eval: 87% match vs. human reviewer (target: 95% for Day-23 cutover)", unblock: "Raise the reviewer match from 87% to 95% before day 23.", evidence: "" },
+      { id: "k6", code: "K-06", gateId: "g3", phase: PHASES[0], order: 1, name: "30 historical KYB packs", owner: "Client Sponsor", status: "In Progress", days: 3,
+        badge: "Silent client stall · 54h", boardSays: "In Progress", realitySrc: "SLACK / CALL",
+        realityShort: "Waiting 54h on 12 multi-UBO files",
+        reality: "Client Sponsor promised 30 historical KYB packs on Tue 10:14 AM. Only 18 are uploaded. The missing 12 are the non-US multi-UBO cases.",
+        unblock: "Upload the 12 missing non-US multi-UBO packs today.",
+        slip: "The shadow run learns the easy 18 and misses the first real multi-UBO file.",
+        ping: "Client Sponsor — you said Tuesday at 10:14 that the 30 historical KYB packs would be in the folder that afternoon. We have 18. The 12 missing are the non-US multi-UBO cases. Can you upload those today?\n— Ops Lead",
+        actions: [
+          { act: "copyping", label: "Copy Client Follow-Up Ping" },
+          { act: "resolve", label: "Mark Resolved" }
+        ],
+        evidence: "" },
+      { id: "k7", code: "K-07", phase: PHASES[1], order: 2, name: "Sanctions re-screen for legacy accounts", owner: "Ops Lead", status: "Blocked >48h", days: 2,
+        badge: "Call scope drift vs. SOW", boardSays: "Not Logged", realitySrc: "THU SYNC",
+        realityShort: "Re-screen asked for · not in the SOW",
+        reality: "Thu sync transcript at 18:40: Client Ops Lead asked to add automated sanctions re-screening for legacy accounts. It is not in the Day-30 SOW and is about six engineering days.",
+        unblock: "Defer legacy sanctions re-screening to phase 2, in writing.",
+        slip: "Six unplanned engineering days land on the cutover week.",
+        ping: "Client Ops Lead — on Thursday's sync you asked for automated sanctions re-screening on legacy accounts. That is not in the Day-30 SOW and is about six engineering days. We are logging it to the phase-2 backlog and will not build it this sprint.\n— Ops Lead",
+        actions: [
+          { act: "copyping", label: "Copy Phase-2 Deferral Note" },
+          { act: "phase2", label: "Log to Phase-2 Backlog" }
+        ],
+        evidence: "" },
+      { id: "k8", code: "K-08", phase: PHASES[1], order: 3, name: "Auto-approval confidence threshold", owner: "Client Compliance", status: "Blocked >48h", days: 2,
+        badge: "Unannounced blocker · 49h", boardSays: "On Track", realitySrc: "CLIENT SLACK",
+        realityShort: "No sign-off on the auto-approval cap",
+        reality: "Client Slack, #sprint-kyb: the Compliance Officer has not signed off on the auto-approval confidence threshold, including the under-$25k volume cap.",
+        unblock: "Yes or no today on auto-approval under the $25k volume cap.",
+        slip: "Day 23 cutover ships an approval rule nobody signed.",
+        ping: "Client Compliance — yes or no today: auto-approval under the $25k volume cap, at the confidence threshold we walked through. Without that sign-off, nothing auto-approves.\n— Ops Lead",
+        actions: [
+          { act: "copyping", label: "Copy Yes/No Decision Ping" }
+        ],
+        evidence: "" },
+      { id: "k9", code: "K-09", gateId: "g2", phase: PHASES[0], name: "Vendor coverage gap caught on day 2", owner: "Ops Lead", status: "Shipped", days: 0, impact: "Wrong vendor stopped before build", evidence: "The inherited vendor does not cover two of the three jurisdictions. Caught on day 2, before engineering started." },
+      { id: "k10", code: "K-10", gateId: "g5", phase: PHASES[0], name: "Baseline signed: 4.2 days per KYB pack", owner: "Client Sponsor", status: "Shipped", days: 0, impact: "Baseline locked · Day-30 target 14 min, not cut over", evidence: "The sponsor signed the 4.2-day cycle time. Fourteen minutes is the target, not a result." },
+      { id: "k11", code: "K-11", phase: PHASES[1], name: "Completeness check on the 18 complete packs", owner: "Lead Engineer", status: "Shipped", days: 0, impact: "38 min → 11 min on complete files · Staging kill-switch verified", evidence: "Measured on complete files only. The 12 missing packs are not in this number. Staging kill-switch was pulled once. Production is not cut over." }
     ],
     handoff: [
-      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Compliance", detail: "10 complete packs are in shadow with Rain. The sign-off waits until the 8 unreadable files are either fixed or explicitly excluded." },
-      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Compliance", detail: "Not run yet. The person who drills it has to be client staff. A drill we run ourselves does not count." },
-      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "IN PROGRESS", owner: "Ops Lead", detail: "The KYB pack is the seed of the runbook. The Loom is not recorded. Two pages still have to name who submits and who refuses." },
+      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Compliance", detail: "The exception router is 26 of 30 in shadow. Sign-off waits until the 12 missing packs are in, or explicitly excluded." },
+      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Compliance", detail: "Staging was pulled once on the completeness check. The production drill has to be client staff. A drill we run ourselves does not count." },
+      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "OPEN", owner: "Ops Lead", detail: "Two pages still have to name who submits a pack and who refuses one. The Loom is not recorded." },
       { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "A failed sandbox call posts to the client channel. Weekly cap is 150k tokens, warn at 70%, hard stop at 100%." },
-      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "Blocked upstream. The 11-day / 40% numbers are not signed, so there is nothing to compare on day 30 yet." },
-      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked. It gets booked when a market actually has a go-live date. Agenda will be the bounce log." }
+      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "The 4.2-day baseline is signed. The comparison waits on the shadow week. Fourteen minutes is a target, not a claim." },
+      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked. It gets booked when a jurisdiction actually has a go-live date." }
+    ]
+  },
+  support: {
+    id: "support",
+    day: 14,
+    when: "Friday",
+    noun: "ticket",
+    formPhase: PHASES[2],
+    slotLine: "The next 15-min sponsor slot works if a reply is harder.",
+    roi: { volume: 240, before: 18, after: 4, error: 12, reworkMin: 15, rate: 28, cost: 18000 },
+    drift: {
+      rowId: "u7",
+      call: "can we rewrite the help center and add saved-reply macros while the bot is in there.",
+      written: "Day-30 scope is tier-1 drafts, a QA rubric, and a confidence threshold for human handoff. A help-center rewrite is not in the SOW.",
+      wont: "We will not rewrite the help center or build saved-reply macros this sprint.",
+      closed: "The call asked for a help-center rewrite. That card is no longer an open drift, so this item is closed.",
+      noteLine: "Thursday's sync asked for a help-center rewrite and saved-reply macros. That is outside the Day-30 SOW, so it goes to phase 2."
+    },
+    call: "Client Ops Lead: can we rewrite the help center and add saved-reply macros while the bot is in there.\nOps Lead: that is not in the day-30 SOW. It is a separate project. I will log it to phase 2.\nClient Support Lead: the 30 hard tickets are almost in. I sent most of them Monday.\nOps Lead: we have 22. The 8 we do not have are the angry multi-thread cases. Those are the test.\nClient Support Lead: I also have not signed the auto-send threshold. QA is still reading it.",
+    slack: "Client Support Lead [Mon 9:40]: sending the 30 hard tickets today, including the angry ones.\nOps Lead [Wed 15:10]: folder has 22. The 8 missing are multi-thread complaints. Do not score the rubric on the easy 22.\nClient Support Lead [Thu 11:02]: QA has not signed the auto-send confidence threshold. Nothing sends itself until that is a yes.\nLead Engineer [Fri 8:44]: tier-1 drafts are 24 of 30 clean in shadow. Six edge cases still hand off late.",
+    board: "TIX-30  Hard tickets               In Progress\nMACRO   Help-center rewrite        Not on the board\nQA-01   Auto-send threshold        On Track\nTIER    Tier-1 drafts              In Progress  24/30",
+    slackPull: "Slack: 22 of 30 hard tickets are in the folder. The 8 missing are the angry multi-thread cases. Do not score the rubric on the easy 22.",
+    catchToast: "Caught on today's call transcript: Client asked for a public help-center rewrite. Not in the signed SOW.",
+    catch: {
+      id: "u-catch", code: "U-12", phase: PHASES[2], order: 0, injected: true,
+      name: "Public help-center rewrite", owner: "Client Sponsor", status: "Blocked >48h", days: 2,
+      badge: "Call scope drift · just caught",
+      boardSays: "Not Logged", realitySrc: "TODAY'S CALL",
+      realityShort: "Help-center rewrite asked for on today's call",
+      reality: "Caught on today's call transcript: the client asked for a public help-center rewrite and saved-reply macros. Neither is in the signed SOW.",
+      unblock: "Send the scope-guardrail note. Leave the rewrite out of this sprint.",
+      slip: "An unlogged call ask swallows the cutover week.",
+      ping: "Client Sponsor — on today's call you asked for a public help-center rewrite and saved-reply macros. That is not in the signed Day-30 SOW. We will not build it this sprint. We can scope it as phase 2 after the handoff.\n— Ops Lead",
+      actions: [
+        { act: "copyping", label: "Copy Client Scope-Guardrail Note" },
+        { act: "resolve", label: "Mark Resolved" }
+      ],
+      evidence: ""
+    },
+    gates: [
+      { id: "g1", code: "GATE-01", name: "Executive Sponsor & Weekly 15-min Decision Slot", status: "PASS", owner: "Client Sponsor", sla: "Day 1 · 24h",
+        need: "One sponsor who can approve a threshold, and a 15-minute slot that actually happens.",
+        have: "The slot is recurring. Threshold calls do not get made in the moderator channel.",
+        miss: "Do not take an auto-send rule from a group chat.",
+        action: "Put the 15-min slot back on the calendar today.",
+        slip: "The queue goes live on a rule nobody owns." },
+      { id: "g2", code: "GATE-02", name: "API/Admin/Sandbox Credentials & Market Coverage Check", status: "PASS", owner: "Ops Lead + Lead Engineer", sla: "Day 3 · 72h",
+        need: "A sandbox token that can read a ticket and draft a reply, without production send rights.",
+        have: "Sandbox token accepted a test ticket on day 2. The production token is still an intake card. Send rights stay off.",
+        miss: "A screenshot of the helpdesk settings page is not a token.",
+        action: "Confirm the sandbox token can draft, and that it cannot send.",
+        slip: "Week 3 becomes a permissions rewrite.",
+        note: GATE_NOTE },
+      { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "BLOCKED", owner: "Client Support Lead", sla: "Day 3 · 72h",
+        need: "30 real hard tickets, including angry multi-thread cases, not only password resets.",
+        have: "22 of 30 are in the folder. The 8 missing are the multi-thread complaints the lead promised Monday.",
+        miss: "Do not sign the rubric because 22 tickets were easy.",
+        action: "Send the 8 missing hard tickets today.",
+        slip: "Tier-1 looks accurate and fails the first angry thread." },
+      { id: "g4", code: "GATE-04", name: "Exception & Human-in-the-Loop Escalation Owner", status: "PASS", owner: "Client Support Lead", sla: "Day 3 · 72h",
+        need: "A named moderator for anything under the confidence threshold, plus a backup.",
+        have: "Client Support Lead is named. A second moderator is the backup. Low confidence never auto-sends.",
+        miss: "If the owner is 'the queue', the agent will send a draft nobody read.",
+        action: "Keep the named moderator on the threshold card until they sign it.",
+        slip: "A wrong reply goes out because the queue was quiet." },
+      { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "PASS", owner: "Ops Lead + Client Sponsor", sla: "Day 3 · 72h",
+        need: "Signed first-response time and reopen rate.",
+        have: "Signed. Median first response is 18 minutes. About 38% of tier-1 tickets reopen. The day-30 target on password resets is 4 minutes. That target is not a result yet.",
+        miss: "Unsigned numbers do not count on day 30.",
+        action: "Keep the 18-minute baseline next to every later claim.",
+        slip: "Day 30 turns into whether the queue feels faster." }
+    ],
+    steps: [
+      { id: "s1", code: "STEP-01", name: "Ticket intake", lane: "ai",
+        claim: "Every ticket arrives with an account id and one clear question.",
+        actual: "Hard tickets paste a log, skip the account id, and stack two problems in one thread. Twenty-two of thirty are in. Eight are not.",
+        rule: "Extract the account, the ask, and whether the thread is angry. If the account is missing, leave it blank and ask. Do not guess the customer.",
+        human: "Client Support Lead steps in for billing disputes and any thread that has already been escalated once.",
+        sla: "Triage the same day the ticket lands." },
+      { id: "s2", code: "STEP-02", name: "Tier-1 draft", lane: "ai",
+        claim: "A moderator reads the macro list and replies.",
+        actual: "Six moderators triage by hand. The draft agent proposes a tier-1 reply. It does not send.",
+        rule: "Draft from the signed rubric only. If confidence is under the threshold, route to a human. Never invent a policy.",
+        human: "A moderator sends anything under the threshold. Auto-send stays off until the threshold is signed.",
+        sla: "Draft in under 2 minutes. Human send the same shift." },
+      { id: "s3", code: "STEP-03", name: "QA rubric", lane: "human",
+        claim: "Quality is a feeling the lead has on Fridays.",
+        actual: "Each shadow draft is scored against the rubric by a reviewer. The score is the shadow eval on the card.",
+        rule: "A draft needs a rubric score to count. No score, no accuracy claim.",
+        human: "Client Support Lead signs the weekly score. Ops Lead does not grade customer replies.",
+        sla: "Score the shadow set before the Friday pulse." },
+      { id: "s4", code: "STEP-04", name: "Confidence handoff", lane: "human",
+        claim: "The bot can send once the ticket looks routine.",
+        actual: "QA has not signed the auto-send threshold. The board still says on track.",
+        rule: "Auto-send only above a signed confidence threshold. Angry threads, billing, and a second contact always go to a person.",
+        human: "Client Support Lead owns the threshold. A second moderator is the backup.",
+        sla: "Yes or no on the threshold the day it is asked." },
+      { id: "s5", code: "STEP-05", name: "Queue cutover", lane: "unblock",
+        claim: "The whole queue flips to the agent on day 30.",
+        actual: "One slice, password resets, has a measured shadow time. The other five queues have not had a kill-switch drill.",
+        rule: "A queue goes live only after the threshold is signed, the hard-ticket set is complete, and a moderator has pulled the kill switch.",
+        human: "Client Support Lead turns it off. We do not.",
+        sla: "One queue in shadow before a second queue is enabled." }
+    ],
+    rows: [
+      { id: "u1", code: "U-01", phase: PHASES[3], name: "Production helpdesk token, send rights off", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Client SLA · token not issued", unblock: "Issue a production token that can draft and cannot send.", slip: "Cutover waits on a permission we could have named on day 3.", evidence: "" },
+      { id: "u2", code: "U-02", phase: PHASES[3], name: "Kill-switch drill, run by a moderator", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Not started · a moderator has to pull it", unblock: "A moderator pulls the kill switch and answers one ticket by hand.", slip: "A drill we run ourselves does not count.", evidence: "" },
+      { id: "u3", code: "U-03", phase: PHASES[3], name: "Cutover checklist for the six-moderator queue", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Held until the threshold is signed", unblock: "Walk the checklist after the auto-send threshold is a yes or a no.", slip: "The queue goes live on an unsigned rule.", evidence: "" },
+      { id: "u4", code: "U-04", phase: PHASES[2], name: "Tier-1 draft resolver", owner: "Lead Engineer", status: "In Progress", days: 1, evalPct: 80, evalText: "Shadow Run: 24/30 clean · 6 edge cases failing", unblock: "Fix the six late handoffs before any queue is called live.", evidence: "" },
+      { id: "u5", code: "U-05", phase: PHASES[2], name: "QA rubric matcher", owner: "Ops Lead", status: "In Progress", days: 0, evalPct: 91, evalText: "Shadow Eval: 91% match vs. human reviewer (target: 95% for Day-23 cutover)", unblock: "Close the four points to the day-23 target.", evidence: "" },
+      { id: "u6", code: "U-06", gateId: "g3", phase: PHASES[2], order: 1, name: "30 hard tickets for the rubric", owner: "Client Support Lead", status: "In Progress", days: 3,
+        badge: "Silent client stall · 51h", boardSays: "In Progress", realitySrc: "SLACK / CALL",
+        realityShort: "Waiting 51h on 8 angry multi-thread tickets",
+        reality: "Client Support Lead promised 30 hard tickets on Monday. Only 22 are in the folder. The missing 8 are the angry multi-thread cases.",
+        unblock: "Send the 8 missing multi-thread tickets today.",
+        slip: "The rubric looks done and fails the first angry thread.",
+        ping: "Client Support Lead — you said Monday the 30 hard tickets would be in the folder, including the angry ones. We have 22. The 8 missing are the multi-thread complaints. Can you send those today?\n— Ops Lead",
+        actions: [
+          { act: "copyping", label: "Copy Client Follow-Up Ping" },
+          { act: "resolve", label: "Mark Resolved" }
+        ],
+        evidence: "" },
+      { id: "u7", code: "U-07", phase: PHASES[2], order: 2, name: "Help-center rewrite and saved-reply macros", owner: "Ops Lead", status: "Blocked >48h", days: 2,
+        badge: "Call scope drift vs. SOW", boardSays: "Not Logged", realitySrc: "THU SYNC",
+        realityShort: "Help-center rewrite asked for · not in the SOW",
+        reality: "Thu sync transcript at 18:40: Client Ops Lead asked to rewrite the help center and add saved-reply macros. Neither is in the Day-30 SOW.",
+        unblock: "Defer the help-center rewrite and macros to phase 2, in writing.",
+        slip: "The cutover week gets spent on a rewrite nobody scoped.",
+        ping: "Client Ops Lead — on Thursday's sync you asked for a help-center rewrite and saved-reply macros. That is not in the Day-30 SOW. We are logging it to the phase-2 backlog and will not build it this sprint.\n— Ops Lead",
+        actions: [
+          { act: "copyping", label: "Copy Phase-2 Deferral Note" },
+          { act: "phase2", label: "Log to Phase-2 Backlog" }
+        ],
+        evidence: "" },
+      { id: "u8", code: "U-08", phase: PHASES[2], order: 3, name: "Auto-send confidence threshold", owner: "Client Support Lead", status: "Blocked >48h", days: 2,
+        badge: "Unannounced blocker · 49h", boardSays: "On Track", realitySrc: "CLIENT SLACK",
+        realityShort: "QA has not signed the auto-send threshold",
+        reality: "Client Slack: QA has not signed the auto-send confidence threshold. The board still says the queue is on track.",
+        unblock: "Yes or no today on the auto-send confidence threshold.",
+        slip: "A queue goes live and sends a draft nobody approved.",
+        ping: "Client Support Lead — yes or no today on the auto-send confidence threshold. Without that sign-off, every tier-1 draft stays a draft.\n— Ops Lead",
+        actions: [
+          { act: "copyping", label: "Copy Yes/No Decision Ping" }
+        ],
+        evidence: "" },
+      { id: "u9", code: "U-09", gateId: "g4", phase: PHASES[0], name: "Tier-1 versus escalate, signed", owner: "Client Support Lead", status: "Shipped", days: 0, impact: "Routing rules written · humans still send", evidence: "Billing, a second contact, and any angry thread go to a person. Signed in week 1." },
+      { id: "u10", code: "U-10", gateId: "g5", phase: PHASES[0], name: "Baseline signed: 18 min first response", owner: "Client Sponsor", status: "Shipped", days: 0, impact: "Baseline locked · Day-30 target 4 min on tier-1, not cut over", evidence: "The sponsor signed 18 minutes and a 38% reopen rate. Four minutes is the target on password resets, not a result." },
+      { id: "u11", code: "U-11", phase: PHASES[2], name: "Password-reset shadow slice", owner: "Lead Engineer", status: "Shipped", days: 0, impact: "18 min → 4 min on tier-1 password resets · Staging kill-switch verified", evidence: "Measured on password resets only. The other queues are not in this number. Staging kill-switch was pulled once. The live queue is not cut over." }
+    ],
+    handoff: [
+      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Support Lead", detail: "Tier-1 drafts are 24 of 30 in shadow. Sign-off waits on the 8 missing hard tickets and the 95% reviewer target." },
+      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Support Lead", detail: "Staging was pulled once on the password-reset slice. A moderator still has to pull it on the live queue." },
+      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "IN PROGRESS", owner: "Ops Lead", detail: "The rubric is the seed. The Loom is not recorded. Two pages still have to name who sends and who refuses." },
+      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "A failed draft posts to the moderator channel. Weekly cap is 200k tokens, warn at 70%, hard stop at 100%." },
+      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "The 18-minute baseline is signed. The comparison waits until a queue is actually in shadow for a week." },
+      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked. Agenda will be the reopen log, not a tour of the drafts." }
     ]
   }
 };
-
 let state;
 let runToken = 0;
 let scrollTab = false;
@@ -660,7 +717,7 @@ function buildPrompt() {
 function buildBrief(sources) {
   const sc = current();
   const src = sources || state.sources;
-  const used = ["Live tracker", "Intake gates"];
+  const used = ["Live tracker", "Intake gates", "Signed SOW"];
   if (src.call) used.push("Call Transcripts");
   if (src.slack) used.push("Client Slack");
   if (src.board) used.push("Task Board");
@@ -693,12 +750,13 @@ function makeLog(sources) {
   const blocked = state.gates.filter(g => g.status === "BLOCKED").length;
   return [
     "$ /sprint-pulse  day " + sc.day + "  " + sc.when.toLowerCase(),
-    "call transcript ................ " + mark(src.call),
-    "client slack ................... " + mark(src.slack),
+    "scanning call transcripts ...... " + mark(src.call),
+    "scanning client slack ......... " + mark(src.slack),
+    "scanning signed sow ........... included",
     "task board ..................... " + mark(src.board),
     "live tracker ................... " + state.rows.length + " rows, " + stalledRows().length + " over 48h",
     "intake gates ................... " + pass + " pass, " + risk + " at risk, " + blocked + " blocked",
-    "rule ........................... 48h of silence = flag",
+    "cross-surface diff ............ " + (state.justCaught ? "1 new card in Caught Slipping" : "no new drift"),
     "writing the " + sc.when.toLowerCase() + " brief ........ done"
   ];
 }
@@ -753,7 +811,15 @@ function loadScenario(id) {
     pulse: null,
     view: "tracker",
     form: { title: "", phase: sc.formPhase, owner: "Ops Lead", action: "" },
-    formError: ""
+    formError: "",
+    filter: "all",
+    sheet: null,
+    cardId: null,
+    flagged: {},
+    toast: "",
+    injected: false,
+    justCaught: false,
+    scanning: false
   };
 }
 function markStale() {
@@ -836,28 +902,61 @@ function removeRow(id) {
 }
 function setScenario(id) {
   if (!SCENARIOS[id] || id === state.scenarioId) return;
-  const tab = state.view;
-  const search = state.search;
   loadScenario(id);
-  state.view = tab;
-  state.search = search;
+  state.filter = "all";
+  state.sheet = null;
+  state.cardId = null;
   const url = new URL(location.href);
-  if (id === "field") url.searchParams.delete("scenario");
-  else url.searchParams.set("scenario", "fintech");
+  if (id === "kyb") url.searchParams.delete("scenario");
+  else url.searchParams.set("scenario", "support");
+  if (location.hash && location.hash !== "#tracker") url.hash = location.hash;
   history.replaceState(null, "", url);
+  syncSheetFromHash();
   render();
 }
 function resetScenario() {
-  const tab = state.view;
   loadScenario(state.scenarioId);
-  state.view = tab;
+  state.filter = "all";
+  state.sheet = null;
+  state.cardId = null;
+  if (location.hash) history.replaceState(null, "", location.pathname + location.search);
   render();
+}
+function catchDrift() {
+  const sc = current();
+  if (!sc.catch || state.rows.some(r => r.id === sc.catch.id)) {
+    state.justCaught = false;
+    return false;
+  }
+  state.rows.unshift(clone(sc.catch));
+  state.injected = true;
+  state.justCaught = true;
+  state.scanning = true;
+  state.toast = sc.catchToast;
+  if (!state.flagged) state.flagged = {};
+  state.flagged[sc.catch.id] = true;
+  return true;
+}
+function clearDriftFields(r) {
+  r.badge = "";
+  r.boardSays = "";
+  r.reality = "";
+  r.realityShort = "";
+  r.injected = false;
 }
 function revealTab() {
   if (!scrollTab) return;
   scrollTab = false;
   const panel = document.getElementById("panel");
   if (panel) panel.scrollIntoView({ block: "start" });
+}
+function scheduleScan() {
+  if (!state.scanning) return;
+  setTimeout(() => {
+    state.scanning = false;
+    const col = document.querySelector('[data-col="slip"]');
+    if (col) col.classList.remove("scanning");
+  }, 1500);
 }
 function runPulse() {
   const token = ++runToken;
@@ -873,7 +972,7 @@ function runPulse() {
     state.pulse.shown += 1;
     const pre = document.getElementById("term");
     if (pre) pre.textContent = state.pulse.lines.slice(0, state.pulse.shown).join("\n");
-    if (state.pulse.shown < state.pulse.lines.length) setTimeout(step, reduce ? 0 : 80);
+    if (state.pulse.shown < state.pulse.lines.length) setTimeout(step, reduce ? 0 : 160);
     else {
       state.pulse.phase = "done";
       state.pulse.result = buildBrief(state.pulse.sources);
@@ -902,14 +1001,14 @@ function copyText(text, btn) {
 }
 
 const COLS = [
-  ["backlog", "Intake & Backlog"],
-  ["progress", "In Progress"],
-  ["slip", "Slipping >48h"],
-  ["shipped", "Shipped"]
+  ["backlog", "01 · 72h Client Intake Gate", "Live client SLA and missing sample payloads"],
+  ["progress", "02 · Build & Shadow-Run Evals", "Shadow-run accuracy, on the card"],
+  ["slip", "03 · ⚠️ Caught Slipping (Board ≠ Reality)", "Cross-surface diff, not a late ticket"],
+  ["shipped", "04 · Production Cutover & Verified ROI", "Verified slices only. Production is still ahead."]
 ];
 const SPRINT_NAME = {
-  field: "Sprint #04 · WhatsApp Field-Service Dispatch",
-  fintech: "Sprint #05 · Fintech BaaS & KYB Cutover"
+  kyb: "Sprint #04 · Multi-Market Vendor & KYB Cutover",
+  support: "Sprint #05 · Support Triage & Escalation Automation"
 };
 const GATE_TITLE = {
   g1: "Executive Sponsor",
@@ -919,8 +1018,10 @@ const GATE_TITLE = {
   g5: "Baseline Metric"
 };
 const STEP_FOR = {
-  r4: "s1", r5: "s2", r6: "s2", r7: "s1", r8: "s1", r9: "s1", r12: "s1", r10: "s4",
-  f5: "s1", f6: "s1", f8: "s5", f1: "s2", f3: "s2", f4: "s3"
+  k1: "s5", k2: "s5", k3: "s5", k4: "s4", k5: "s3", k6: "s1", k7: "s4", k8: "s4", k9: "s2", k10: "s2", k11: "s3",
+  "k-catch": "s5",
+  u1: "s5", u2: "s5", u3: "s5", u4: "s2", u5: "s3", u6: "s1", u7: "s2", u8: "s4", u9: "s2", u10: "s1", u11: "s2",
+  "u-catch": "s2"
 };
 let suppressClick = false;
 
@@ -946,7 +1047,7 @@ function columnOf(r) {
   return "backlog";
 }
 function isClientBlock(r) {
-  return isStall(r) && String(r.owner).indexOf("Client Sponsor") !== -1;
+  return isStall(r) && String(r.owner).indexOf("Client") !== -1;
 }
 function passes(r) {
   const f = state.filter || "all";
@@ -955,9 +1056,10 @@ function passes(r) {
   return true;
 }
 function ageOf(r) {
-  if (r.status === "Shipped") return { bad: false, text: "Shipped" };
-  if (isClientBlock(r)) return { bad: true, text: "Blocked by Client" };
-  if (isStall(r)) return { bad: true, text: Math.max(48, r.days * 24) + "h untouched" };
+  if (r.badge) return { bad: columnOf(r) === "slip", text: r.badge };
+  if (r.status === "Shipped") return { bad: false, text: "Verified" };
+  if (columnOf(r) === "progress" && r.evalText) return { bad: false, text: "Shadow run" };
+  if (columnOf(r) === "backlog") return { bad: false, text: "Intake" };
   if (r.days <= 0) return { bad: false, text: "Updated today" };
   if (r.days === 1) return { bad: false, text: "Updated 1d ago" };
   return { bad: false, text: "Updated " + r.days + "d ago" };
@@ -970,7 +1072,7 @@ function gatePhrase() {
   const names = {
     g1: "Executive Sponsor",
     g2: "Sandbox & Coverage",
-    g3: state.scenarioId === "field" ? "30 Historical Runs (18/30 sent)" : "30 KYB files still incomplete",
+    g3: state.scenarioId === "support" ? "30 hard tickets (22/30 in)" : "30 KYB packs (18/30 in)",
     g4: "Escalation Owner",
     g5: "Baseline metric unsigned"
   };
@@ -1011,11 +1113,10 @@ function openHash(hash) {
 }
 
 function topbar() {
-  const sc = current();
   const slips = state.rows.filter(isStall).length;
   const clients = state.rows.filter(isClientBlock).length;
   const filter = state.filter || "all";
-  const opts = ["field", "fintech"].map(id => {
+  const opts = ["kyb", "support"].map(id => {
     const on = state.scenarioId === id ? " on" : "";
     return '<button type="button" class="' + on + '" data-act="scenario" data-id="' + id + '">' + esc(sprintLabel(id)) + "</button>";
   }).join("");
@@ -1023,14 +1124,16 @@ function topbar() {
     const on = filter === id ? " on" : "";
     return '<button type="button" class="' + on + '" data-act="filter" data-id="' + id + '">' + label + (hot ? ' <span class="n">' + hot + "</span>" : "") + "</button>";
   }
-  return '<header class="top"><div class="brand"><div class="logo">REGEN8</div><div class="by">30-Day Sprint Board · Built by Naffy Quehen</div></div>' +
-    '<div class="controls"><details class="pick"><summary>' + esc(sprintLabel(state.scenarioId)) + '</summary><div class="menu">' + opts + "</div></details>" +
-    '<div class="filters">' +
-    filt("all", "All Cards (" + state.rows.length + ")") +
-    filt("slip", "⚠ Slipping &gt;48h ", "(" + slips + ")") +
-    filt("client", "Blocked by Client (" + clients + ")") +
-    "</div>" +
-    '<button type="button" class="run" data-act="pulse">⚡ Run /sprint-pulse</button></div></header>';
+  const reset = state.injected ? '<button type="button" class="reset" data-act="reset">Reset Demo</button>' : "";
+  return '<header class="top"><div class="brand"><div class="logo">REGEN8</div>' +
+    '<details class="pick"><summary>' + esc(sprintLabel(state.scenarioId)) + '</summary><div class="menu">' + opts + "</div></details>" +
+    '<div class="by">Built by Naffy Quehen</div></div>' +
+    '<div class="controls"><div class="filters">' +
+    filt("all", "All (" + state.rows.length + ")") +
+    filt("slip", "Caught slipping ", "(" + slips + ")") +
+    filt("client", "Waiting on client ", "(" + clients + ")") +
+    "</div>" + reset +
+    '<button type="button" class="run" data-act="pulse">⚡ Sync Calls + Slack (/sprint-pulse)</button></div></header>';
 }
 function strip() {
   const sc = current();
@@ -1042,29 +1145,50 @@ function strip() {
     : '<button type="button" class="texty" data-act="gates">' + esc(g.head) + " → View Gate Checklist</button>";
   return '<div class="strip"><div><b>Day ' + sc.day + " of 30</b> <span class=\"muted\">· " + esc(phaseNow(sc.day)) + '</span><span class="meter" aria-hidden="true"><span style="width:' + pct + '%"></span></span></div>' +
     gateBtn +
-    '<button type="button" class="texty' + (slips ? " hot" : "") + '" data-act="watch">' + slips + " card" + (slips === 1 ? "" : "s") + " untouched &gt;48h</button>" +
+    '<button type="button" class="texty' + (slips ? " hot" : "") + '" data-act="watch">' + slips + " where board ≠ reality</button>" +
     '<button type="button" class="texty quiet" data-act="roi">Day-30 handoff</button>' +
     '<button type="button" class="texty quiet" data-act="map">Workflow map</button></div>';
 }
+function evidenceHTML(r) {
+  const col = columnOf(r);
+  if (col === "slip" && r.boardSays) {
+    return '<div class="diff"><div>TICKET SAYS: ' + esc(r.boardSays) + '</div><div class="real">REALITY (' + esc(r.realitySrc || "SLACK / CALL") + "): " + esc(r.realityShort || r.reality || "") + "</div></div>";
+  }
+  if (col === "progress" && r.evalText) {
+    const pct = Math.max(0, Math.min(100, Number(r.evalPct) || 0));
+    return '<div class="eval"><div class="lab">' + esc(r.evalText) + '</div><span class="meter" aria-hidden="true"><span style="width:' + pct + '%"></span></span></div>';
+  }
+  if (col === "shipped" && r.impact) return '<p class="impact">' + esc(r.impact) + "</p>";
+  if (col === "backlog" && r.wait) return '<p class="impact">' + esc(r.wait) + "</p>";
+  return "";
+}
+function actionsHTML(r) {
+  if (columnOf(r) !== "slip" || !r.actions || !r.actions.length) return "";
+  return '<div class="card-actions">' + r.actions.map(a =>
+    '<button type="button" data-act="' + esc(a.act) + '" data-id="' + esc(r.id) + '" data-label="' + esc(a.label) + '">' + esc(a.label) + "</button>"
+  ).join("") + "</div>";
+}
 function cardHTML(r) {
   const age = ageOf(r);
-  const slip = columnOf(r) === "slip";
   const flagged = state.flagged && state.flagged[r.id] ? " flagged" : "";
   const moves = COLS.filter(c => c[0] !== columnOf(r)).map(c =>
     '<button type="button" data-act="moveto" data-id="' + esc(r.id) + '" data-to="' + c[0] + '">' + esc(c[1]) + "</button>"
   ).join("");
+  const foot = columnOf(r) === "slip"
+    ? '<div class="card-f"><span class="owner">' + esc(r.owner) + "</span></div>" + actionsHTML(r)
+    : '<div class="card-f"><span class="owner">' + esc(r.owner) + '</span><details class="move"><summary>Move</summary><div class="menu">' + moves + "</div></details></div>";
   return '<article class="card' + flagged + '" draggable="true" data-card="' + esc(r.id) + '">' +
-    '<div class="micro"><span class="phase">' + esc(phaseTag(r)) + '</span><span class="age' + (age.bad ? " bad" : "") + '">' + esc(age.text) + "</span></div>" +
+    '<div class="micro"><span class="age' + (age.bad ? " bad" : "") + '">' + esc(age.text) + "</span></div>" +
     "<h3>" + esc(r.name) + "</h3>" +
-    (slip && r.unblock ? '<p class="callout">' + esc(r.unblock) + "</p>" : "") +
-    '<div class="card-f"><span class="owner">' + esc(r.owner) + '</span><details class="move"><summary>Move</summary><div class="menu">' + moves + "</div></details></div></article>";
+    evidenceHTML(r) + foot + "</article>";
 }
 function board() {
   return '<div class="board">' + COLS.map(c => {
     const rows = state.rows.filter(r => columnOf(r) === c[0] && passes(r));
-    if (c[0] === "slip") rows.sort((a, b) => b.days - a.days);
-    const body = rows.length ? rows.map(cardHTML).join("") : '<p class="empty">' + (c[0] === "slip" ? "Nothing slipping." : "Clear.") + "</p>";
-    return '<section class="col' + (c[0] === "slip" ? " slip" : "") + '" data-col="' + c[0] + '"><div class="col-h"><h2>' + esc(c[1]) + '</h2><span class="cnt">' + rows.length + "</span></div><div class=\"cards\">" + body + "</div></section>";
+    if (c[0] === "slip") rows.sort((a, b) => (a.order ?? 9) - (b.order ?? 9));
+    const body = rows.length ? rows.map(cardHTML).join("") : '<p class="empty">' + (c[0] === "slip" ? "Nothing the board has missed." : "Clear.") + "</p>";
+    const scan = c[0] === "slip" && state.scanning ? " scanning" : "";
+    return '<section class="col' + (c[0] === "slip" ? " slip" : "") + scan + '" data-col="' + c[0] + '"><div class="col-h"><h2>' + esc(c[1]) + '</h2><span class="cnt">' + rows.length + '</span></div><p class="col-sub">' + esc(c[2] || "") + '</p><div class="cards">' + body + "</div></section>";
   }).join("") + "</div>";
 }
 function gateSheet() {
@@ -1087,16 +1211,19 @@ function cardSheet() {
     ? (r.evidence || "Shipped.")
     : (r.unblock || "Name the one action that clears this in the next 24 hours.");
   const slip = r.slip ? "<p>" + esc(r.slip) + "</p>" : "";
+  const diff = r.boardSays
+    ? "<p><b>Ticket says.</b> " + esc(r.boardSays) + "</p><p><b>Reality.</b> " + esc(r.reality || r.realityShort || "") + "</p>"
+    : "";
   const ex = step
     ? "<p><b>What actually happens.</b> " + esc(step.actual) + "</p><p><b>Rule.</b> " + esc(step.rule) + "</p><p><b>Human.</b> " + esc(step.human) + " " + esc(step.sla) + "</p>"
     : "<p>No exception rule is linked yet. The card still needs an owner and a next action.</p>";
-  const ping = r.owner + " — " + (r.unblock || r.name) + "\n— Ops Lead";
-  const copy = columnOf(r) === "slip"
-    ? '<button type="button" class="cp" data-act="copyping" data-label="Copy client follow-up">Copy client follow-up</button>'
+  const ping = r.ping || (r.owner + " — " + (r.unblock || r.name) + "\n— Ops Lead");
+  const copy = r.ping || columnOf(r) === "slip"
+    ? '<button type="button" class="cp" data-act="copyping" data-id="' + esc(r.id) + '" data-label="Copy client note">Copy client note</button>'
     : "";
   return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="Card"><button type="button" class="x" data-act="close" aria-label="Close">×</button>' +
     '<p class="kicker">' + esc(phaseTag(r)) + " · " + esc(r.owner) + "</p><h2>" + esc(r.name) + "</h2>" +
-    '<div class="block"><h3>Done when</h3><p>' + esc(done) + "</p>" + slip + "</div>" +
+    '<div class="block"><h3>Done when</h3><p>' + esc(done) + "</p>" + slip + diff + "</div>" +
     '<div class="block"><h3>Exception rule</h3>' + ex + "</div>" +
     '<div class="block"><h3>Scope guardrail</h3>' + sow + "</div>" +
     '<div class="rowbtns">' + copy + '<button type="button" class="cp" data-act="close">Close</button></div>' +
@@ -1146,7 +1273,7 @@ function pulseSheet() {
   const mark = id => state.sources[id] ? "✓ " : "";
   const p = state.pulse;
   let body = '<p class="lead">No brief yet.</p>';
-  if (p && p.phase === "running") body = '<p class="lead">Reading the three feeds and the board.</p>';
+  if (p && p.phase === "running") body = '<p class="lead">Scanning call transcripts, client Slack, and the signed SOW.</p>';
   else if (p && p.result) {
     const b = p.result;
     body = (p.stale ? '<p class="lead">The board changed after this run.</p>' : "") +
@@ -1172,8 +1299,19 @@ function overlay() {
   if (state.sheet === "pulse") return pulseSheet();
   return "";
 }
+function whyLine() {
+  return '<p class="why"><b>Why not just Linear or Trello?</b> Linear only knows what someone remembers to type into a ticket. This board diffs your live Task Board against Call Transcripts, Client Slack, and the signed SOW, auto-flagging silent client stalls (&gt;48h), unlogged call scope creep, and shadow-run eval failures before they blow up Day 30.</p>';
+}
+function toastHTML() {
+  if (!state.toast) return "";
+  const id = current().catch ? current().catch.id : "";
+  return '<div class="toast" role="status"><p>' + esc(state.toast) + '</p><div class="card-actions">' +
+    '<button type="button" data-act="copyping" data-id="' + esc(id) + '" data-label="Copy Client Scope-Guardrail Note">Copy Client Scope-Guardrail Note</button>' +
+    '<button type="button" data-act="reset" data-label="Reset Demo">Reset Demo</button>' +
+    '<button type="button" data-act="hidetoast" data-label="Dismiss">Dismiss</button></div></div>';
+}
 function shell() {
-  return '<div class="wrap">' + topbar() + strip() + board() + "</div>" + overlay();
+  return '<div class="wrap">' + topbar() + whyLine() + strip() + board() + "</div>" + overlay() + toastHTML();
 }
 function render() {
   if (!state.filter) state.filter = "all";
@@ -1182,7 +1320,7 @@ function render() {
   const live = document.getElementById("live");
   if (live) {
     const g = gatePhrase();
-    live.textContent = "Day " + current().day + ". " + g.head + ". " + state.rows.filter(isStall).length + " cards slipping.";
+    live.textContent = "Day " + current().day + ". " + g.head + ". " + state.rows.filter(isStall).length + " where the board does not match reality.";
   }
 }
 function paintRoi() {
@@ -1206,9 +1344,36 @@ function onClick(e) {
     if (act === "roi") { openHash("#handoff"); return; }
     if (act === "map") { openHash("#map"); return; }
     if (act === "pulse") {
-      state.sheet = "pulse";
       if (location.hash !== "#pulse") location.hash = "#pulse";
-      runPulse();
+      else {
+        catchDrift();
+        runPulse();
+        scheduleScan();
+      }
+      return;
+    }
+    if (act === "reset") { resetScenario(); return; }
+    if (act === "hidetoast") { state.toast = ""; render(); return; }
+    if (act === "resolve") {
+      const r = state.rows.find(x => x.id === id);
+      if (!r) return;
+      r.status = "In Progress";
+      r.days = 0;
+      clearDriftFields(r);
+      markStale();
+      render();
+      return;
+    }
+    if (act === "phase2") {
+      const r = state.rows.find(x => x.id === id);
+      if (!r) return;
+      r.status = "Upcoming";
+      r.days = 0;
+      clearDriftFields(r);
+      r.wait = "Phase-2 backlog · out of this SOW";
+      r.phase = PHASES[1];
+      markStale();
+      render();
       return;
     }
     if (act === "gate") { cycleGate(id); return; }
@@ -1231,8 +1396,10 @@ function onClick(e) {
       return;
     }
     if (act === "copyping") {
+      const row = id && state.rows.find(x => x.id === id);
       const area = document.getElementById("ping");
-      if (area) copyText(area.value, t);
+      const text = (row && (row.ping || row.unblock)) || (area && area.value) || "";
+      if (text) copyText(text, t);
       return;
     }
     return;
@@ -1283,33 +1450,28 @@ document.addEventListener("drop", e => {
   e.preventDefault();
   moveTo(e.dataTransfer.getData("text/plain"), col.dataset.col);
 });
-window.addEventListener("hashchange", () => { syncSheetFromHash(); render(); });
-function setScenario(id) {
-  if (!SCENARIOS[id] || id === state.scenarioId) return;
-  loadScenario(id);
-  state.filter = "all";
-  state.sheet = null;
-  state.cardId = null;
-  state.flagged = {};
-  const url = new URL(location.href);
-  if (id === "field") url.searchParams.delete("scenario");
-  else url.searchParams.set("scenario", "fintech");
-  if (location.hash && location.hash !== "#tracker") url.hash = location.hash;
-  history.replaceState(null, "", url);
+window.addEventListener("hashchange", () => {
   syncSheetFromHash();
-  render();
-}
+  if (location.hash === "#pulse") {
+    catchDrift();
+    runPulse();
+    scheduleScan();
+  } else render();
+});
 function init() {
   const params = new URLSearchParams(location.search);
-  const id = params.get("scenario") === "fintech" ? "fintech" : "field";
+  const raw = params.get("scenario");
+  const id = raw === "support" || raw === "fintech" ? "support" : "kyb";
   loadScenario(id);
   state.filter = "all";
   state.sheet = null;
   state.cardId = null;
-  state.flagged = {};
   syncSheetFromHash();
-  render();
-  if (location.hash === "#pulse") runPulse();
+  if (location.hash === "#pulse") {
+    catchDrift();
+    runPulse();
+    scheduleScan();
+  } else render();
 }
 init();
 </script>
