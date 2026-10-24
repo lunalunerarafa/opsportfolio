@@ -715,11 +715,11 @@
     <div class="pace-left">
       <span class="pace-status" id="pace-badge">
         <span class="pace-dot"></span>
-        <span id="pace-badge-text">AT RISK · 1.5d Buffer Left (3 Blockers in Stage 03)</span>
+        <span id="pace-badge-text">AT RISK</span>
       </span>
-      <span class="kpi-chip" id="kpi-progress"><strong>Progress:</strong> 6/12 Done · 1 Active · 3 Blocked</span>
-      <span class="kpi-chip"><strong>Cutover:</strong> Oct 31 (Day 24) · <strong>Close:</strong> Nov 6</span>
-      <span class="kpi-chip"><strong>Parallel Run KPI:</strong> Prep 48m → <strong>11.5m</strong> · Rejections 24% → <strong>4.2%</strong></span>
+      <span class="kpi-chip" id="kpi-progress"><strong>Progress:</strong> 6/12 Done · 1 On Pace · 3 Flagged</span>
+      <span class="kpi-chip" id="kpi-buffer"><strong>Buffer:</strong> 1.5d Left · <strong>Deploy:</strong> Oct 31 · <strong>Day-30 Handover:</strong> Nov 6</span>
+      <span class="kpi-chip"><strong>Impact vs. Baseline:</strong> Prep 48m → <strong>11.5m/acct</strong> (~15 hrs/wk saved)</span>
     </div>
 
     <div class="pace-right">
@@ -788,14 +788,14 @@ const SOURCE_OPTIONS = [
   "Signed SOW (Day 2)",
   "Discovery Call Transcript",
   "Ops Audit (40 Packets)",
-  "Cutover Runbook"
+  "Handover Runbook"
 ];
 
 const DEP_OPTIONS = [
-  "Blocks Oct 31 Cutover",
+  "Blocks Oct 31 Go-Live",
   "Blocks Trust Router",
   "Would Slip Nov 6 (+6d)",
-  "Feeds M-11 Cutover",
+  "Feeds Oct 31 Go-Live",
   "Needs M-08, M-09",
   "Needs M-11",
   "Unlocks M-02",
@@ -851,7 +851,7 @@ const DEFAULT_CARDS = [
     badgeType: "ok",
     dep: "Unlocks M-02",
     blocker: false,
-    note: "Scoped to Household Onboarding only. Baseline across 40 prior households: 48m prep & 24% form rejection rate.",
+    note: "Scoped to Household Onboarding only. Baseline across 40 prior households: 48m manual prep per account & 24% kicked back for missing docs.",
     details: "Signed SOW mandate on Oct 9 (Day 2). Deferred quarterly fee-billing and portfolio rebalancing asks to keep the 30-day sprint strictly focused on Household Onboarding."
   },
   {
@@ -883,8 +883,8 @@ const DEFAULT_CARDS = [
     badgeType: "ok",
     dep: "Unlocks M-06",
     blocker: false,
-    note: "68% of custodian rejections trace to trust titling mismatches, missing beneficiary SSNs, or outdated statements.",
-    details: "Completed 1 day ahead of schedule on Oct 11. Gave engineering the exact top-10 rejection patterns before Stage 02 started."
+    note: "68% of kicked-back applications trace to trust titling mismatches, missing beneficiary SSNs, or outdated statements.",
+    details: "Completed 1 day ahead of schedule on Oct 11. Gave engineering the exact top-10 error patterns before Stage 02 started."
   },
 
   // Stage 02: Oct 13 – Oct 19 (Days 6–12)
@@ -941,23 +941,23 @@ const DEFAULT_CARDS = [
   {
     id: "M-07",
     col: "stage3",
-    stageLabel: "03 Parallel Run",
-    title: "Parallel shadow run on standard households (18/30)",
+    stageLabel: "03 Build & Deploy",
+    title: "Validation run beside live team (18/30 households)",
     owner: "Lead Eng (Regen8)",
     targetDate: "2026-10-26",
     status: "on_pace",
     source: "GitHub #58 CI eval",
     badge: "On Pace · Due Oct 26",
     badgeType: "ok",
-    dep: "Feeds M-11 Cutover",
+    dep: "Feeds Oct 31 Go-Live",
     blocker: false,
-    note: "Running beside live team: 18 standard households processed at 11.5m prep time with 95.8% form accuracy.",
-    details: "Standard individual, joint, and IRA households are already beating the ≤12m target in parallel testing."
+    note: "Running beside live team: 18 households completed in 11.5m avg prep time (down from 48m baseline).",
+    details: "Standard individual, joint, and IRA households are already beating the ≤12m target against the Day-1 baseline."
   },
   {
     id: "M-08",
     col: "stage3",
-    stageLabel: "03 Parallel Run",
+    stageLabel: "03 Build & Deploy",
     title: "Missing 12 complex-trust test packets from client",
     owner: "Sarah (Lead CSA · Client)",
     targetDate: "2026-10-21",
@@ -965,22 +965,22 @@ const DEFAULT_CARDS = [
     source: "Slack #meridian-ext",
     badge: "Blocked · Due Oct 21",
     badgeType: "danger",
-    dep: "Blocks Oct 31 Cutover",
+    dep: "Blocks Oct 31 Go-Live",
     blocker: true,
     sent: false,
     channelType: "slack",
     channelTarget: "#meridian-onboarding-ext",
     recipientEmail: "sarah@meridianwealth.example",
-    reason: "18/30 uploaded. Need remaining 12 trust packets by Oct 25 to hold Oct 31 cutover (-1.5d buffer).",
+    reason: "18/30 uploaded (due Oct 21 — 2d overdue). Need remaining 12 trust packets by Oct 25 to hold Oct 31 deploy.",
     actionLabel: "Slack #meridian-ext ↗",
     details: "Standard packets are done, but complex multi-entity trust validation is blocked until Sarah uploads the remaining 12 redacted trust PDFs.",
-    draftSubject: "Meridian × Regen8: Remaining 12 trust test packets for Oct 31 cutover",
-    draftText: "Hi Sarah — quick check-in on our Oct 31 cutover schedule. The first 18 household packets are running great in parallel testing (prep time is down from 48m to 11.5m), but the remaining 12 trust packets were due Wednesday (Oct 21). If we can get those uploaded by Sunday/Monday (Oct 25–26), we'll hold our Oct 31 live cutover with zero slip. Want me to jump on a 10-minute screen share today to help batch-export them from Salesforce?"
+    draftSubject: "Meridian × Regen8: Remaining 12 trust test packets for Oct 31 go-live",
+    draftText: "Hi Sarah — quick check-in on our Oct 31 go-live schedule. The first 18 household packets are validating cleanly (prep time is down from 48m to 11.5m), but the remaining 12 trust packets were due Wednesday (Oct 21). If we can get those uploaded by Sunday/Monday (Oct 25–26), we'll hold our Oct 31 go-live with zero slip. Want me to jump on a 10-minute screen share today to help batch-export them from Salesforce?"
   },
   {
     id: "M-09",
     col: "stage3",
-    stageLabel: "03 Parallel Run",
+    stageLabel: "03 Build & Deploy",
     title: "CCO sign-off on co-trustee routing rule",
     owner: "Mark (CCO · Client)",
     targetDate: "2026-10-24",
@@ -997,13 +997,13 @@ const DEFAULT_CARDS = [
     reason: "CCO asked in Slack Oct 21 whether co-trustees need dual DocuSign routing — unanswered 49h.",
     actionLabel: "Ping in Slack Thread ↗",
     details: "Engineering needs a simple YES/NO from Compliance by Saturday Oct 24 to lock the exception router.",
-    draftSubject: "YES/NO needed: Corporate co-trustee routing boundary (Oct 31 cutover)",
-    draftText: "Hi Mark — to keep our Oct 31 cutover on schedule, could you reply YES or NO on this routing rule by tomorrow?\n\n• Proposed Rule: Any household with a corporate co-trustee or multi-signer POA routes to your CCO queue for approval before the CSA can stage the Schwab envelope.\n\nIf you reply 'YES', we'll lock that rule in staging today."
+    draftSubject: "YES/NO needed: Corporate co-trustee routing boundary (Oct 31 go-live)",
+    draftText: "Hi Mark — to keep our Oct 31 go-live on schedule, could you reply YES or NO on this routing rule by tomorrow?\n\n• Proposed Rule: Any household with a corporate co-trustee or multi-signer POA routes to your CCO queue for approval before the CSA can stage the Schwab envelope.\n\nIf you reply 'YES', we'll lock that rule in staging today."
   },
   {
     id: "M-10",
     col: "stage3",
-    stageLabel: "03 Parallel Run",
+    stageLabel: "03 Build & Deploy",
     title: "Mid-sprint client ask: add quarterly fee-billing audit",
     owner: "David (Sponsor · Client)",
     targetDate: "2026-10-22",
@@ -1021,7 +1021,7 @@ const DEFAULT_CARDS = [
     actionLabel: "Send Scope-Guard Email ↗",
     details: "Protects the Nov 6 Day-30 deadline by logging fee-billing as the #1 expansion workflow for Sprint #2 instead of derailing Household Onboarding.",
     draftSubject: "Protecting our Nov 6 Household Onboarding go-live + queueing Fee-Billing for Sprint #2",
-    draftText: "Hi David — loved the discussion on Thursday's call about automating quarterly fee-billing checks. Because adding fee-billing logic now would add ~6 engineering days and push Household Onboarding past our Nov 6 (Day-30) go-live, I've logged Automated Fee-Billing at the top of our Stage 04 Expansion Plan so we can kick it off right after Nov 6 cutover."
+    draftText: "Hi David — loved the discussion on Thursday's call about automating quarterly fee-billing checks. Because adding fee-billing logic now would add ~6 engineering days and push Household Onboarding past our Nov 6 (Day-30) go-live, I've logged Automated Fee-Billing at the top of our Stage 04 Expansion Plan so we can kick it off right after Nov 6 go-live."
   },
 
   // Stage 04: Oct 31 – Nov 6 (Days 24–30 · Upcoming)
@@ -1029,11 +1029,11 @@ const DEFAULT_CARDS = [
     id: "M-11",
     col: "stage4",
     stageLabel: "04 Handover",
-    title: "CSA live cutover & manual-override drill",
+    title: "Production go-live & manual-override check",
     owner: "Lead CSA + Ops Lead",
     targetDate: "2026-10-31",
     status: "scheduled",
-    source: "Cutover Runbook",
+    source: "Handover Runbook",
     badge: "Due Oct 31",
     badgeType: "neutral",
     dep: "Needs M-08, M-09",
@@ -1049,7 +1049,7 @@ const DEFAULT_CARDS = [
     owner: "Regen8 Ops Lead",
     targetDate: "2026-11-05",
     status: "scheduled",
-    source: "Cutover Runbook",
+    source: "Handover Runbook",
     badge: "Due Nov 5",
     badgeType: "neutral",
     dep: "Needs M-11",
@@ -1059,7 +1059,7 @@ const DEFAULT_CARDS = [
   }
 ];
 
-const STORAGE_KEY = "regen8_sprint_cards_v16";
+const STORAGE_KEY = "regen8_sprint_cards_v20";
 let cards = [];
 try {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -1102,7 +1102,7 @@ function renderBoard() {
     },
     {
       key: "stage3",
-      title: "03 · Build & Parallel Run",
+      title: "03 · Build & Deploy",
       dates: "Oct 20 – Oct 30 (Today: Oct 23)",
       paceTag: "",
       paceClass: "warn",
@@ -1112,7 +1112,7 @@ function renderBoard() {
       key: "stage4",
       title: "04 · Improve & Expand",
       dates: "Oct 31 – Nov 6 (Days 24–30)",
-      paceTag: "Cutover Oct 31",
+      paceTag: "Go-Live Oct 31",
       paceClass: "",
       active: false
     }
@@ -1126,16 +1126,19 @@ function renderBoard() {
   const paceBadgeText = document.getElementById('pace-badge-text');
   const kpiProgress = document.getElementById('kpi-progress');
 
+  const kpiBuffer = document.getElementById('kpi-buffer');
   if (kpiProgress) {
-    kpiProgress.innerHTML = `<strong>Progress:</strong> ${doneCount}/${cards.length} Done · ${activeCount} On Pace · ${activeBlockers} Blocked`;
+    kpiProgress.innerHTML = `<strong>Progress:</strong> ${doneCount}/${cards.length} Done · ${activeCount} On Pace · ${activeBlockers} Flagged`;
   }
 
   if (activeBlockers > 0) {
     paceBadge.className = 'pace-status';
-    paceBadgeText.textContent = `AT RISK · 1.5d Buffer Left (${activeBlockers} Stage-03 Blockers)`;
+    paceBadgeText.textContent = `AT RISK`;
+    if (kpiBuffer) kpiBuffer.innerHTML = `<strong>Buffer:</strong> 1.5d Left · <strong>Deploy:</strong> Oct 31 · <strong>Day-30 Handover:</strong> Nov 6`;
   } else {
     paceBadge.className = 'pace-status on-track';
-    paceBadgeText.textContent = `ON TRACK · +3d Schedule Buffer · Oct 31 Cutover Clear`;
+    paceBadgeText.textContent = `ON TRACK`;
+    if (kpiBuffer) kpiBuffer.innerHTML = `<strong>Buffer:</strong> +3d Ahead · <strong>Deploy:</strong> Oct 31 · <strong>Day-30 Handover:</strong> Nov 6`;
   }
 
 
@@ -1149,7 +1152,7 @@ function renderBoard() {
     colEl.className = 'board-col' + (col.active && activeBlockers > 0 ? ' active-col' : '');
 
     const tagText = col.key === 'stage3'
-      ? (activeBlockers > 0 ? `1.5d Buffer · ${activeBlockers} At Risk` : `On Pace · 0 Blockers`)
+      ? (activeBlockers > 0 ? `Active · ${activeBlockers} Flagged` : `On Pace · 0 Blockers`)
       : col.paceTag;
 
     const tagClass = col.key === 'stage3'
@@ -1323,7 +1326,7 @@ function resolveCard(id) {
   c.targetDate = "2026-10-23";
   c.badge = "Done · Oct 23";
   c.badgeType = "ok";
-  c.note = "Unblocked on Oct 23 and verified in Stage 03 parallel run.";
+  c.note = "Unblocked on Oct 23 and verified in Stage 03.";
   saveCards();
   renderBoard();
   showToast(`Cleared ${c.id}: ${c.title}`);
@@ -1355,7 +1358,7 @@ function openCardModal(id) {
         <select id="edit-stage">
           <option value="stage1" ${c.col === 'stage1' ? 'selected' : ''}>01 · Align & Discover (Oct 8–12)</option>
           <option value="stage2" ${c.col === 'stage2' ? 'selected' : ''}>02 · Decompose & Redesign (Oct 13–19)</option>
-          <option value="stage3" ${c.col === 'stage3' ? 'selected' : ''}>03 · Build & Parallel Run (Oct 20–30)</option>
+          <option value="stage3" ${c.col === 'stage3' ? 'selected' : ''}>03 · Build & Deploy (Oct 20–30)</option>
           <option value="stage4" ${c.col === 'stage4' ? 'selected' : ''}>04 · Improve & Expand (Oct 31–Nov 6)</option>
         </select>
       </div>
@@ -1413,7 +1416,7 @@ function saveCardEdits(id) {
   const stageMap = {
     stage1: "01 Align",
     stage2: "02 Redesign",
-    stage3: "03 Parallel Run",
+    stage3: "03 Build & Deploy",
     stage4: "04 Handover"
   };
   const newCol = document.getElementById('edit-stage').value;
@@ -1469,7 +1472,7 @@ function openDay1SetupModal() {
       </div>
       <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
         <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">3 · CALL TRANSCRIPTS, SLACK & EMAIL BLOCKER RADAR</strong>
-        <div style="font-size:12px;color:var(--ink-secondary);">Client blockers, compliance threads waiting &gt;24h, and mid-sprint scope creep are flagged directly from call transcripts (<code>M-10</code>), client Slack channels (<code>M-08</code>, <code>M-09</code>), and email—staging one-click unblock messages before they slip Day-30 cutover.</div>
+        <div style="font-size:12px;color:var(--ink-secondary);">Client blockers, compliance threads waiting &gt;24h, and mid-sprint scope creep are flagged directly from call transcripts (<code>M-10</code>), client Slack channels (<code>M-08</code>, <code>M-09</code>), and email—staging one-click unblock messages before they slip Day-30 go-live.</div>
       </div>
     </div>
 
@@ -1499,7 +1502,7 @@ function openAddModal() {
         <select id="new-stage">
           <option value="stage1">01 · Align & Discover (Oct 8–12)</option>
           <option value="stage2">02 · Decompose & Redesign (Oct 13–19)</option>
-          <option value="stage3" selected>03 · Build & Parallel Run (Oct 20–30)</option>
+          <option value="stage3" selected>03 · Build & Deploy (Oct 20–30)</option>
           <option value="stage4">04 · Improve & Expand (Oct 31–Nov 6)</option>
         </select>
       </div>
@@ -1532,7 +1535,7 @@ function openAddModal() {
       <div class="form-field">
         <label>Critical Path Dependency</label>
         <select id="new-dep">
-          ${buildSelectOptions(DEP_OPTIONS, "Blocks Oct 31 Cutover")}
+          ${buildSelectOptions(DEP_OPTIONS, "Blocks Oct 31 Go-Live")}
         </select>
       </div>
     </div>
@@ -1568,7 +1571,7 @@ function submitNewCard(nextId) {
   const stageMap = {
     stage1: "01 Align",
     stage2: "02 Redesign",
-    stage3: "03 Parallel Run",
+    stage3: "03 Build & Deploy",
     stage4: "04 Handover"
   };
 
@@ -1594,7 +1597,7 @@ function submitNewCard(nextId) {
     actionLabel: "Slack #meridian-ext ↗",
     details: note,
     draftSubject: `Follow-up: ${title}`,
-    draftText: `Hi ${owner.split(' ')[0]} — quick follow-up on "${title}" (${badge}) so we stay on track for our Oct 31 cutover.`
+    draftText: `Hi ${owner.split(' ')[0]} — quick follow-up on "${title}" (${badge}) so we stay on track for our Oct 31 go-live.`
   });
 
   saveCards();
@@ -1617,7 +1620,7 @@ function openBlueprintModal() {
     ["02 · Context", "Assembles trust docs, beneficiary IDs, and prior statements against Schwab/Fidelity rules."],
     ["03 · Decision", "CSA approves standard households; Chief Compliance Officer signs off on complex trust & POA accounts."],
     ["04 · Action", "Stages validated Schwab transfer envelope for client signature and updates Salesforce."],
-    ["05 · Learning ↻", "Every human edit or custodian rejection reason updates the pre-check ruleset."]
+    ["05 · Learning ↻", "Every human edit or flagged exception updates the pre-check ruleset."]
   ];
   const sheet = document.getElementById('modal-sheet');
   sheet.innerHTML = `
@@ -1646,22 +1649,31 @@ function openHandoffModal() {
     <div class="modal-header">
       <div>
         <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">STAGE 04 · NOV 5 HANDOVER & BASELINE ROI</div>
-        <h2 class="modal-title">Parallel Run (Oct 23) vs. Day-1 Baseline (Oct 8)</h2>
+        <h2 class="modal-title">Stage 03 Validation vs. Day-1 Baseline (Oct 8)</h2>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="row-list">
       <div class="row-item">
-        <strong>CSA Manual Prep Time / Household</strong>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;">48 mins → <strong style="color:var(--ok);">11.5 mins</strong> (Target ≤12m)</span>
+        <div>
+          <strong>CSA Manual Prep Time / Account</strong>
+          <div style="font-size:11px;color:var(--ink-muted);">Day-1 audit (40 prior packets) vs. Stage-03 run (18 live packets)</div>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;">48.0m → <strong style="color:var(--ok);">11.5m</strong> (-36.5m/acct)</span>
       </div>
       <div class="row-item">
-        <strong>Custodian Form Rejection (NIGO) Rate</strong>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;">24% → <strong style="color:var(--ok);">4.2%</strong> (Target &lt;5%)</span>
+        <div>
+          <strong>Applications Kicked Back for Missing/Wrong Info</strong>
+          <div style="font-size:11px;color:var(--ink-muted);">Caught pre-submission by the 42 codified Schwab/Fidelity checks</div>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;">24.0% → <strong style="color:var(--ok);">4.2%</strong> (Target &lt;5%)</span>
       </div>
       <div class="row-item">
-        <strong>Hours Returned to Client Service Team</strong>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;"><strong style="color:var(--ok);">~15.5 hrs/week returned</strong></span>
+        <div>
+          <strong>Weekly Hours Returned to Client Service Team</strong>
+          <div style="font-size:11px;color:var(--ink-muted);">Formula: 36.5 mins saved/acct × 25 weekly onboardings ÷ 60</div>
+        </div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;"><strong style="color:var(--ok);">15.2 hrs/wk saved</strong></span>
       </div>
     </div>
     <div class="draft-box">Nov 5 Ownership Transfer Checklist:
@@ -1676,14 +1688,14 @@ function openDigestModal() {
   const activeBlockers = cards.filter(c => c.blocker);
   const blockerLines = activeBlockers.length > 0
     ? activeBlockers.map(b => `• [${b.id} · Owner: ${b.owner} · ${b.badge} · via ${b.source}] ${b.title} — ${b.reason}`).join('\n')
-    : `• All Stage 03 blockers cleared — on schedule for Oct 31 live cutover.`;
+    : `• All Stage 03 blockers cleared — on schedule for Oct 31 go-live.`;
 
   const subject = "Meridian Wealth × Regen8 — Week 3 Sprint Pulse (Fri Oct 23 · Day 16 of 30)";
-  const text = `SPRINT WINDOW: Oct 8 – Nov 6, 2026 | LIVE CUTOVER: Oct 31 | NEXT SYNC: Tue Oct 27, 11:00 ET
+  const text = `SPRINT WINDOW: Oct 8 – Nov 6, 2026 | GO-LIVE: Oct 31 | NEXT SYNC: Tue Oct 27, 11:00 ET
 
 1. SCHEDULE & PACE SUMMARY
 • Stage 01 (Oct 8–12) & Stage 02 (Oct 13–19) closed on schedule.
-• Stage 03 Parallel Run (Oct 20–30) is beating baseline on the first 18 households (prep time cut from 48m → 11.5m via GitHub #58 CI eval).
+• Stage 03 Build & Deploy (Oct 20–30) is beating baseline on the first 18 households (prep time cut from 48m → 11.5m via GitHub #58 CI eval).
 
 2. ACTION ITEMS & CRITICAL PATH BLOCKERS (${activeBlockers.length} OPEN)
 ${blockerLines}`;
