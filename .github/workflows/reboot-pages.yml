@@ -29,6 +29,10 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           set +e
+          # Let GitHub's automatic Pages run create its deployment, then cancel
+          # it here. Cancelling the same build version while both are creating
+          # drops both deploys.
+          sleep 25
           http() {
             label="$1"
             shift
