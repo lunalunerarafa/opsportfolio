@@ -256,7 +256,7 @@
 
   /* Board Container */
   .board-container {
-    padding: 12px 20px 16px;
+    padding: 10px 20px 14px;
     flex: 1;
     overflow-x: auto;
   }
@@ -344,7 +344,7 @@
   .col-cards {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
   }
 
   /* Clean 3-Row Card Structure */
@@ -352,7 +352,7 @@
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 8.5px 10px;
+    padding: 7.5px 10px;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
     transition: transform 0.12s ease, border-color 0.12s ease;
@@ -704,13 +704,13 @@
         <button class="view-btn active" id="btn-view-board" onclick="switchView('board')">Board</button>
         <button class="view-btn" id="btn-view-table" onclick="switchView('table')">Schedule &amp; RAID</button>
       </div>
-      <button class="btn" onclick="openDay1SetupModal()">⚡ Day-1 Sprint Intake</button>
+      <button class="btn" onclick="openDay1SetupModal()">Sprint Config &amp; Sync</button>
       <button class="btn" onclick="openAddModal()">+ Log Item</button>
       <button class="btn btn-primary" onclick="openDigestModal()">Send Weekly Sponsor Pulse ↗</button>
     </div>
   </header>
 
-  <!-- Row 2: Overall Sprint Health, Buffer & Live Parallel-Run KPIs -->
+  <!-- Row 2: Overall Sprint Health, Buffer & Impact vs. Baseline -->
   <section class="pace-bar">
     <div class="pace-left">
       <span class="pace-status" id="pace-badge">
@@ -918,7 +918,7 @@ const DEFAULT_CARDS = [
     dep: "Unlocks M-09",
     blocker: false,
     note: "Client Service Associates approve standard accounts; Chief Compliance Officer approves complex trust & POA accounts.",
-    details: "Locked Oct 17: AI agents only assemble context and pre-check forms while named staff hold explicit sign-off authority."
+    details: "Done · Oct 17: AI agents only assemble context and pre-check forms while named staff hold explicit sign-off authority."
   },
   {
     id: "M-06",
@@ -1059,7 +1059,7 @@ const DEFAULT_CARDS = [
   }
 ];
 
-const STORAGE_KEY = "regen8_sprint_cards_v20";
+const STORAGE_KEY = "regen8_sprint_cards_v22";
 let cards = [];
 try {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -1455,30 +1455,46 @@ function openDay1SetupModal() {
   sheet.innerHTML = `
     <div class="modal-header">
       <div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">ZERO-BUSYWORK SPRINT INTAKE & LIVE SIGNAL SYNC</div>
-        <h2 class="modal-title">How This 30-Day Tracker Initializes & Updates</h2>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">MERIDIAN WEALTH · SPRINT PARAMETERS & CONNECTED SOURCES</div>
+        <h2 class="modal-title">Sprint Configuration & Signal Sync</h2>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
 
     <div class="row-list">
-      <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">1 · DAY-0 TEMPLATE + SOW & DISCOVERY TRANSCRIPT INTAKE</strong>
-        <div style="font-size:12px;color:var(--ink-secondary);">Every engagement starts from our standard 12-milestone 4-stage skeleton. From the signed SOW and Day-1 kickoff call transcript, we lock the 5 sprint variables: priority workflow, system of record, human sign-off owners, baseline metric, and 30-sample eval dataset owner.</div>
+      <div class="row-item">
+        <div>
+          <strong>Priority Workflow & System of Record</strong>
+          <div style="font-size:11.5px;color:var(--ink-secondary);">Household Onboarding & Account Transfer · Salesforce FSC + Schwab Advisor Center</div>
+        </div>
+        <span class="badge badge-ok">Locked · Oct 9</span>
       </div>
-      <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">2 · GITHUB WEBHOOK AUTO-SYNC (DEVS NEVER DO PM BUSYWORK)</strong>
-        <div style="font-size:12px;color:var(--ink-secondary);">Engineers never manually move cards—PR merges (<code>gh#14</code>, <code>gh#29</code>, <code>gh#41</code>) and CI shadow-eval runs (<code>gh#58</code>) automatically update engineering milestones and accuracy metrics.</div>
+      <div class="row-item">
+        <div>
+          <strong>GitHub Webhook · <code>regen8/meridian-onboarding</code></strong>
+          <div style="font-size:11.5px;color:var(--ink-secondary);">PR merges (<code>gh#14</code>, <code>gh#29</code>, <code>gh#41</code>) & CI eval runs (<code>gh#58</code>) update milestones automatically</div>
+        </div>
+        <span class="badge badge-ok">● Connected</span>
       </div>
-      <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">3 · CALL TRANSCRIPTS, SLACK & EMAIL BLOCKER RADAR</strong>
-        <div style="font-size:12px;color:var(--ink-secondary);">Client blockers, compliance threads waiting &gt;24h, and mid-sprint scope creep are flagged directly from call transcripts (<code>M-10</code>), client Slack channels (<code>M-08</code>, <code>M-09</code>), and email—staging one-click unblock messages before they slip Day-30 go-live.</div>
+      <div class="row-item">
+        <div>
+          <strong>Slack Watch · <code>#meridian-onboarding-ext</code> &amp; <code>#meridian-compliance-ext</code></strong>
+          <div style="font-size:11.5px;color:var(--ink-secondary);">Flags client & compliance threads unanswered &gt;24h (<code>M-08</code>, <code>M-09</code>)</div>
+        </div>
+        <span class="badge badge-ok">● Connected</span>
+      </div>
+      <div class="row-item">
+        <div>
+          <strong>Call Transcripts &amp; Client Email Parser</strong>
+          <div style="font-size:11.5px;color:var(--ink-secondary);">Flags mid-sprint scope additions and action items from weekly sync transcripts (<code>M-10</code>)</div>
+        </div>
+        <span class="badge badge-ok">● Connected</span>
       </div>
     </div>
 
     <div style="display:flex;justify-content:space-between;align-items:center;padding-top:4px;">
       <button class="btn" onclick="resetDefaultSprint()">Reset Demo Sprint</button>
-      <button class="btn btn-primary" onclick="closeModal()">Got It</button>
+      <button class="btn btn-primary" onclick="closeModal()">Done</button>
     </div>
   `;
   document.getElementById('modal-backdrop').classList.add('open');
