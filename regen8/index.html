@@ -787,11 +787,11 @@ const DEP_OPTIONS = [
 ];
 
 const STATUS_META = {
-  done:        { label: "Verified / Closed", badgeType: "ok",      blocker: false },
+  done:        { label: "Done",              badgeType: "ok",      blocker: false },
   on_pace:     { label: "On Pace",           badgeType: "ok",      blocker: false },
-  overdue:     { label: "Blocked · Overdue", badgeType: "danger",  blocker: true  },
-  at_risk:     { label: "At Risk · Waiting", badgeType: "danger",  blocker: true  },
-  scope_guard: { label: "Scope Creep Guard", badgeType: "danger",  blocker: true  },
+  overdue:     { label: "Blocked",           badgeType: "danger",  blocker: true  },
+  at_risk:     { label: "Blocked",           badgeType: "danger",  blocker: true  },
+  scope_guard: { label: "Scope Risk",        badgeType: "danger",  blocker: true  },
   scheduled:   { label: "Scheduled",         badgeType: "neutral", blocker: false }
 };
 
@@ -807,12 +807,12 @@ function formatShortDate(isoDate) {
 
 function computeBadge(targetDate, status, customSuffix) {
   const shortD = formatShortDate(targetDate);
-  if (status === "done") return `Closed ${shortD}`;
+  if (status === "done") return `Done · ${shortD}`;
   if (status === "on_pace") return `On Pace · Due ${shortD}`;
-  if (status === "overdue") return `Due ${shortD} · Overdue`;
-  if (status === "at_risk") return `Due ${shortD} · At Risk`;
-  if (status === "scope_guard") return `Scope Guard · +6d Risk`;
-  return `Target ${shortD}`;
+  if (status === "overdue") return `Blocked · Due ${shortD}`;
+  if (status === "at_risk") return `Blocked · Due ${shortD}`;
+  if (status === "scope_guard") return `Scope Risk · ${shortD}`;
+  return `Due ${shortD}`;
 }
 
 const DEFAULT_CARDS = [
@@ -826,7 +826,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-09",
     status: "done",
     source: "Signed SOW (Day 2)",
-    badge: "Signed Oct 9",
+    badge: "Done · Oct 9",
     badgeType: "ok",
     dep: "Unlocks M-02",
     blocker: false,
@@ -842,7 +842,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-11",
     status: "done",
     source: "GitHub #14 merged",
-    badge: "Verified Oct 11",
+    badge: "Done · Oct 11",
     badgeType: "ok",
     dep: "Unlocks M-04",
     blocker: false,
@@ -858,7 +858,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-11",
     status: "done",
     source: "Ops Audit (40 Packets)",
-    badge: "Closed Oct 11 (+1d)",
+    badge: "Done · Oct 11",
     badgeType: "ok",
     dep: "Unlocks M-06",
     blocker: false,
@@ -876,7 +876,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-15",
     status: "done",
     source: "GitHub #29 merged",
-    badge: "Signed Oct 15",
+    badge: "Done · Oct 15",
     badgeType: "ok",
     dep: "Unlocks M-07",
     blocker: false,
@@ -892,7 +892,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-17",
     status: "done",
     source: "Discovery Call Transcript",
-    badge: "Signed Oct 17",
+    badge: "Done · Oct 17",
     badgeType: "ok",
     dep: "Unlocks M-09",
     blocker: false,
@@ -908,7 +908,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-19",
     status: "done",
     source: "GitHub #41 merged",
-    badge: "Locked Oct 19",
+    badge: "Done · Oct 19",
     badgeType: "ok",
     dep: "Unlocks Stage 03",
     blocker: false,
@@ -942,7 +942,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-21",
     status: "overdue",
     source: "Slack #meridian-ext",
-    badge: "Due Oct 21 · Overdue 2d",
+    badge: "Blocked · Due Oct 21",
     badgeType: "danger",
     dep: "Blocks Oct 31 Cutover",
     blocker: true,
@@ -965,7 +965,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-24",
     status: "at_risk",
     source: "Slack Thread (49h)",
-    badge: "Due Oct 24 · Wait 49h",
+    badge: "Blocked · Due Oct 24",
     badgeType: "danger",
     dep: "Blocks Trust Router",
     blocker: true,
@@ -988,7 +988,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-22",
     status: "scope_guard",
     source: "Oct 22 Call Transcript",
-    badge: "Scope Guard · +6d Risk",
+    badge: "Scope Risk · Oct 22",
     badgeType: "danger",
     dep: "Would Slip Nov 6 (+6d)",
     blocker: true,
@@ -1013,7 +1013,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-10-31",
     status: "scheduled",
     source: "Cutover Runbook",
-    badge: "Target Oct 31",
+    badge: "Due Oct 31",
     badgeType: "neutral",
     dep: "Needs M-08, M-09",
     blocker: false,
@@ -1029,7 +1029,7 @@ const DEFAULT_CARDS = [
     targetDate: "2026-11-05",
     status: "scheduled",
     source: "Cutover Runbook",
-    badge: "Target Nov 5",
+    badge: "Due Nov 5",
     badgeType: "neutral",
     dep: "Needs M-11",
     blocker: false,
@@ -1038,7 +1038,7 @@ const DEFAULT_CARDS = [
   }
 ];
 
-const STORAGE_KEY = "regen8_sprint_cards_v14";
+const STORAGE_KEY = "regen8_sprint_cards_v15";
 let cards = [];
 try {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -1067,7 +1067,7 @@ function renderBoard() {
       key: "stage1",
       title: "01 · Align & Discover",
       dates: "Oct 8 – Oct 12 (Days 1–5)",
-      paceTag: "Closed Oct 11 ✓",
+      paceTag: "Done · Oct 11 ✓",
       paceClass: "done",
       active: false
     },
@@ -1075,7 +1075,7 @@ function renderBoard() {
       key: "stage2",
       title: "02 · Decompose & Redesign",
       dates: "Oct 13 – Oct 19 (Days 6–12)",
-      paceTag: "Closed Oct 19 ✓",
+      paceTag: "Done · Oct 19 ✓",
       paceClass: "done",
       active: false
     },
@@ -1282,7 +1282,7 @@ function resolveCard(id) {
   c.blocker = false;
   c.status = "done";
   c.targetDate = "2026-10-23";
-  c.badge = "Cleared Oct 23";
+  c.badge = "Done · Oct 23";
   c.badgeType = "ok";
   c.note = "Unblocked on Oct 23 and verified in Stage 03 parallel run.";
   saveCards();
@@ -1323,12 +1323,11 @@ function openCardModal(id) {
       <div class="form-field">
         <label>Status</label>
         <select id="edit-status">
-          <option value="done" ${c.status === 'done' ? 'selected' : ''}>Verified / Closed</option>
+          <option value="done" ${c.status === 'done' ? 'selected' : ''}>Done</option>
           <option value="on_pace" ${c.status === 'on_pace' ? 'selected' : ''}>On Pace</option>
-          <option value="overdue" ${c.status === 'overdue' ? 'selected' : ''}>Blocked · Overdue</option>
-          <option value="at_risk" ${c.status === 'at_risk' ? 'selected' : ''}>At Risk · Waiting on Client</option>
-          <option value="scope_guard" ${c.status === 'scope_guard' ? 'selected' : ''}>Scope Creep Guard (+6d Risk)</option>
-          <option value="scheduled" ${c.status === 'scheduled' ? 'selected' : ''}>Scheduled (Upcoming)</option>
+          <option value="overdue" ${(c.status === 'overdue' || c.status === 'at_risk') ? 'selected' : ''}>Blocked</option>
+          <option value="scope_guard" ${c.status === 'scope_guard' ? 'selected' : ''}>Scope Risk</option>
+          <option value="scheduled" ${c.status === 'scheduled' ? 'selected' : ''}>Scheduled</option>
         </select>
       </div>
       <div class="form-field">
@@ -1468,12 +1467,11 @@ function openAddModal() {
       <div class="form-field">
         <label>Status</label>
         <select id="new-status">
-          <option value="overdue" selected>Blocked · Overdue</option>
-          <option value="at_risk">At Risk · Waiting on Client</option>
-          <option value="scope_guard">Scope Creep Guard</option>
+          <option value="overdue" selected>Blocked</option>
+          <option value="scope_guard">Scope Risk</option>
           <option value="on_pace">On Pace</option>
-          <option value="scheduled">Scheduled (Upcoming)</option>
-          <option value="done">Verified / Closed</option>
+          <option value="scheduled">Scheduled</option>
+          <option value="done">Done</option>
         </select>
       </div>
       <div class="form-field">
