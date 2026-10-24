@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Regen8 · AI Sprint Control Tower</title>
-<meta name="description" content="A 30-day sprint control tower. The board is diffed against call transcripts, client Slack, and the signed SOW.">
+<meta name="description" content="30-day sprint board. Intake gates, shadow-run scores, and board-versus-reality diffs.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121212'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%23FF3B18'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,9 +83,8 @@ button{cursor:pointer}
 .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;align-items:stretch}
 .col{background:var(--bone);border-radius:18px;padding:16px 12px 20px;min-height:520px}
 .col.over{background:#E7E0D0}
-.col-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:2px 8px 6px}
+.col-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:2px 8px 14px}
 .col h2{margin:0;font-family:var(--font-display);font-weight:500;font-size:15px;letter-spacing:-.02em;line-height:1.25}
-.col-sub{margin:0 8px 14px;font-size:12.5px;line-height:1.35;color:var(--muted)}
 .col.slip{box-shadow:inset 0 3px 0 var(--ember)}
 .col.slip h2{color:var(--ember)}
 .cnt{font-family:var(--font-mono);font-size:12px;color:var(--faint)}
@@ -125,7 +124,7 @@ button{cursor:pointer}
   overflow:auto;border-radius:18px;padding:28px 32px 32px
 }
 .drawer{top:0;right:0;bottom:0;width:min(440px,100vw);overflow:auto;padding:32px 32px 48px}
-.sheet h2{font-family:var(--font-display);font-weight:500;font-size:26px;letter-spacing:-.03em;margin:0 0 8px;line-height:1.15}
+.sheet h2{font-family:var(--font-display);font-weight:500;font-size:26px;letter-spacing:-.03em;margin:0 0 8px;padding-right:36px;line-height:1.15}
 .sheet .lead{color:var(--muted);margin:0 0 22px;font-size:14.5px}
 .x{position:absolute;top:18px;right:18px;border:0;background:transparent;font-size:20px;line-height:1;color:var(--faint);padding:6px}
 .x:hover{color:var(--ink)}
@@ -167,8 +166,6 @@ button{cursor:pointer}
 .step b{color:var(--ink);font-weight:500}
 
 
-.why{margin:0 0 22px;max-width:860px;font-size:13.5px;line-height:1.45;color:var(--muted)}
-.why b{color:var(--ink);font-weight:500}
 .diff{margin:12px 0 0;background:var(--paper);border-radius:10px;padding:8px 10px;font-family:var(--font-mono);font-size:11px;line-height:1.45}
 .diff .real{color:var(--ember);margin-top:3px}
 .eval{margin:12px 0 0}
@@ -224,9 +221,6 @@ const LANES = [
   ["human", "Human-in-the-Loop Gate"],
   ["unblock", "Needs Client Unblock"]
 ];
-const PULSE_NOTE = "At Sophon Labs (~15-person remote team), I built a Claude Code bot that read Slack, Linear, and call transcripts every Wednesday and Friday, flagged anything stuck 7+ days, and killed round-robin status updates from Monday all-hands (~3 hrs/week saved). Here is that same workflow adapted for a 30-day client sprint (where 48 hours of silence = 2 weeks of normal project drift).";
-const GATE_NOTE = "Why this gate exists: At Sophon Labs, I inherited a BaaS vendor signed before my time that couldn't actually support our target markets. Verifying vendor coverage and sandbox credentials in the first 72 hours prevents week-3 rewrites.";
-
 const SCENARIOS = {
   kyb: {
     id: "kyb",
@@ -234,20 +228,20 @@ const SCENARIOS = {
     when: "Wednesday",
     noun: "KYB pack",
     formPhase: PHASES[1],
-    slotLine: "Thursday's 15-min slot works if a reply is harder.",
+    slotLine: "Thursday 15:00 decision slot.",
     roi: { volume: 8, before: 38, after: 11, error: 15, reworkMin: 25, rate: 55, cost: 18000 },
     drift: {
       rowId: "k7",
       call: "can we add automated sanctions re-screening for the legacy accounts too.",
       written: "Day-30 scope is the vendor cutover: intake, AML/UBO checks, exception routing, and sandbox-to-production. Legacy re-screening is not in the SOW.",
-      wont: "We will not build sanctions re-screening this sprint. It is about six engineering days and belongs in phase 2.",
+      wont: "Not this sprint. +6 eng days. Phase 2.",
       closed: "The Thursday call asked for legacy sanctions re-screening. That card is no longer an open drift, so this item is closed.",
       noteLine: "Thursday's sync asked for automated sanctions re-screening on legacy accounts. That is outside the Day-30 SOW, so it goes to phase 2."
     },
-    call: "Client Ops Lead: while we are in there, can we add automated sanctions re-screening for the legacy accounts too.\nOps Lead: that is not in the day-30 SOW. It is about six engineering days. I will log it to phase 2.\nClient Sponsor: sending the 30 historical KYB files this afternoon.\nClient Compliance: I have not signed the auto-approval confidence threshold. Nothing under the $25k volume cap goes out until I do.\nOps Lead: then the board can say on track and still be wrong. We need a yes or no today.",
-    slack: "Client Sponsor [Tue 10:14]: sending the 30 historical KYB files this afternoon.\nOps Lead [Thu 16:02]: folder has 18 packs. The 12 missing are the non-US multi-UBO cases.\nClient Compliance [Wed 11:40]: holding sign-off on the auto-approval confidence threshold. The volume cap under $25k is not agreed.\nLead Engineer [Thu 9:05]: exception router is 26 of 30 clean in shadow. Four multi-UBO edge cases still fail. Not a cutover.",
+    call: "Client Ops Lead: while we are in there, can we add automated sanctions re-screening for the legacy accounts too.\nOps Lead: that is outside the day-30 SOW. About six engineering days. Logging it to phase 2.\nClient Sponsor: sending the 30 historical KYB files this afternoon.\nClient Compliance: I have not signed the auto-approval confidence threshold. Nothing under the $25k volume cap goes out until I do.\nOps Lead: need a yes or no today.",
+    slack: "Client Sponsor [Tue 10:14]: sending the 30 historical KYB files this afternoon.\nOps Lead [Thu 16:02]: folder has 18 packs. 12 non-US multi-UBO packs still missing.\nClient Compliance [Wed 11:40]: holding sign-off on the auto-approval confidence threshold. The volume cap under $25k is not agreed.\nLead Engineer [Thu 9:05]: exception router is 26 of 30 clean in shadow. Four multi-UBO edge cases still fail.",
     board: "KYB-30  Historical packs            In Progress\nSANC    Legacy re-screening         Not on the board\nTHRESH  Auto-approval threshold     On Track\nROUTE   Exception router            In Progress  26/30",
-    slackPull: "Slack: 18 of 30 KYB packs are in the folder. The 12 missing are non-US multi-UBO cases. Do not train the shadow run on the easy 18.",
+    slackPull: "Slack: 18/30 KYB packs in the folder. 12 non-US multi-UBO packs missing.",
     catchToast: "Caught on today's call transcript: Client asked for custom webhook retry UI. Not in the signed SOW.",
     catch: {
       id: "k-catch", code: "K-12", phase: PHASES[1], order: 0, injected: true,
@@ -257,7 +251,7 @@ const SCENARIOS = {
       realityShort: "Webhook retry UI asked for on today's call",
       reality: "Caught on today's call transcript: the client asked for a custom webhook retry UI. It is not in the signed SOW.",
       unblock: "Send the scope-guardrail note. Leave the retry UI out of this sprint.",
-      slip: "An unlogged call ask becomes a week of build.",
+      slip: "Outside signed SOW.",
       ping: "Client Sponsor — on today's call you asked for a custom webhook retry UI. That is not in the signed Day-30 SOW. We will not build it this sprint. We can scope it as phase 2 after cutover.\n— Ops Lead",
       actions: [
         { act: "copyping", label: "Copy Client Scope-Guardrail Note" },
@@ -268,80 +262,79 @@ const SCENARIOS = {
     gates: [
       { id: "g1", code: "GATE-01", name: "Executive Sponsor & Weekly 15-min Decision Slot", status: "PASS", owner: "Client Sponsor", sla: "Day 1 · 24h",
         need: "One named sponsor who can say yes or no, and a recurring 15-minute slot.",
-        have: "Thursday 15-min is booked. The day-2 vendor pivot was decided there, in writing.",
-        miss: "Do not take a vendor decision from a side thread.",
-        action: "Put the 15-min slot back on the calendar today.",
-        slip: "The launch date becomes the decision-maker." },
+        have: "Thursday 15:00 slot booked. Vendor change recorded Day 2.",
+        miss: "No written sponsor decision.",
+        action: "Book the Thursday 15:00 slot.",
+        slip: "Vendor decision unowned." },
       { id: "g2", code: "GATE-02", name: "API/Admin/Sandbox Credentials & Market Coverage Check", status: "PASS", owner: "Ops Lead + Lead Engineer", sla: "Day 3 · 72h",
         need: "A written coverage row for each jurisdiction, and a sandbox key that accepts a test entity.",
-        have: "Day 2: the inherited vendor misses two of the three jurisdictions. The replacement sandbox accepted a test entity in all three. Production keys are still an intake card, not a reason to reopen this gate.",
-        miss: "If coverage is still unchecked at 72 hours, stop the build.",
-        action: "Match each jurisdiction to a matrix row before any production ticket.",
-        slip: "We design the cutover around a jurisdiction the vendor cannot serve.",
-        note: GATE_NOTE },
+        have: "Day 2: prior vendor covers 1 of 3 jurisdictions. Replacement sandbox accepted a test entity in all 3. Production keys outstanding.",
+        miss: "Coverage unchecked at 72h.",
+        action: "Match each jurisdiction to a matrix row.",
+        slip: "2 of 3 jurisdictions uncovered." },
       { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "BLOCKED", owner: "Client Sponsor", sla: "Day 3 · 72h",
-        need: "30 real KYB packs, including non-US multi-UBO cases, not only the clean files.",
-        have: "18 of 30 are in the intake folder. The sponsor promised all 30 on Tuesday at 10:14. The missing 12 are the non-US multi-UBO cases.",
-        miss: "Hard stop on calling the shadow run representative. Staging may score the 18. It may not train the cutover on them alone.",
-        action: "Upload the 12 missing non-US multi-UBO packs today.",
-        slip: "The model learns the tidy files and misses the first real multi-UBO pack." },
+        need: "30 historical KYB packs, including non-US multi-UBO cases.",
+        have: "18/30 in the intake folder. Sponsor committed Tue 10:14. Missing: 12 non-US multi-UBO packs. 54h.",
+        miss: "12 packs.",
+        action: "Upload the 12 non-US multi-UBO packs.",
+        slip: "Shadow set is 18/30." },
       { id: "g4", code: "GATE-04", name: "Exception & Human-in-the-Loop Escalation Owner", status: "PASS", owner: "Client Compliance", sla: "Day 3 · 72h",
-        need: "A named person for sanctions questions, UBO gaps, and any file under the confidence threshold.",
-        have: "Client Compliance is named. Anything unsigned defaults to needs-human and does not auto-approve.",
-        miss: "If the owner is still 'the team', the pack ships with a gap.",
-        action: "Name the person who can refuse a file, and the backup.",
-        slip: "A bad pack goes to the vendor because nobody wanted to stop it." },
+        need: "Named owner for sanctions hits, UBO gaps, and files under the threshold.",
+        have: "Owner: Client Compliance. Unsigned files: needs-human. No auto-approval.",
+        miss: "Owner unassigned.",
+        action: "Confirm Client Compliance and the backup.",
+        slip: "Exception owner unassigned." },
       { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "PASS", owner: "Ops Lead + Client Sponsor", sla: "Day 3 · 72h",
-        need: "A signed cycle time the day-30 number has to beat.",
-        have: "Signed. Median cycle time is 4.2 days per pack. The day-30 target is 14 minutes. The target is not a result yet.",
-        miss: "Unsigned numbers do not count on day 30.",
-        action: "Keep the 4.2-day baseline next to every later claim.",
-        slip: "Day 30 turns into whether it feels faster." }
+        need: "Signed cycle time.",
+        have: "Signed. 4.2 days/pack. Day-30 target: 14 min.",
+        miss: "Baseline unsigned.",
+        action: "Get the 4.2 days/pack baseline signed.",
+        slip: "No signed baseline." }
     ],
     steps: [
       { id: "s1", code: "STEP-01", name: "Document intake", lane: "unblock",
-        claim: "The applicant uploads a complete KYB pack.",
-        actual: "Packs arrive with a missing UBO page, a non-US entity, and names that do not match across the documents. Eighteen of thirty are in. Twelve are not.",
-        rule: "Classify each document and check the name against the entity. A missing UBO page is needs-human. Do not fill the gap.",
-        human: "Client Compliance reviews any failed match. Ops Lead does not approve a KYB file.",
-        sla: "Completeness check the same day the file lands." },
+        claim: "Applicant uploads a complete KYB pack.",
+        actual: "18/30 packs in. 12 missing a UBO page on non-US entities. Names mismatch across documents.",
+        rule: "Missing UBO page or name mismatch: needs-human. No inferred fields.",
+        human: "Client Compliance.",
+        sla: "Same day the file lands." },
       { id: "s2", code: "STEP-02", name: "Vendor coverage", lane: "ai",
-        claim: "The signed vendor supports all three jurisdictions.",
-        actual: "It does not. Two target jurisdictions were outside the inherited contract. A logo on a slide is not coverage.",
-        rule: "A jurisdiction needs a matrix row and a sandbox key that accepts a test entity, or the workflow stops.",
-        human: "The Client Sponsor decides whether to pivot vendors. Ops Lead does not pick a vendor alone.",
-        sla: "The matrix is checked inside the first 72 hours, before build tickets." },
+        claim: "Signed vendor covers 3 jurisdictions.",
+        actual: "Prior vendor covers 1 of 3. Replacement sandbox accepted a test entity in all 3 on day 2.",
+        rule: "No matrix row, or no sandbox accept: stop.",
+        human: "Client Sponsor approves the vendor change.",
+        sla: "Inside 72h." },
       { id: "s3", code: "STEP-03", name: "Pack assembly", lane: "ai",
-        claim: "Each vendor gets a fresh KYB build.",
-        actual: "The second filing is only fast if the first pack was saved as files. Gaps stay labeled. Nothing is retyped from memory.",
-        rule: "Assemble from the saved files plus the new vendor's checklist. Where the checklist asks for something new, add a labeled gap.",
-        human: "Client Compliance signs the pack before it is sent.",
-        sla: "Draft pack in one business day once the documents are complete." },
+        claim: "Each vendor gets a new KYB build.",
+        actual: "Pack is the saved file set plus the new checklist. New items are labeled gaps.",
+        rule: "Assemble from saved files. New checklist items stay labeled gaps.",
+        human: "Client Compliance signs before send.",
+        sla: "One business day after the documents are complete." },
       { id: "s4", code: "STEP-04", name: "Exception routing", lane: "human",
-        claim: "Anything under a dollar cap can auto-approve.",
-        actual: "The confidence threshold and the under-$25k volume cap are not signed. A Thursday call also asked for legacy sanctions re-screening, which is not in the SOW.",
-        rule: "Auto-approve only inside a signed threshold. Everything else routes to Client Compliance. An out-of-SOW ask gets a phase-2 note, not a build ticket.",
-        human: "Client Compliance owns the yes or no. Ops Lead sends the deferral note.",
-        sla: "A threshold decision the same day it is asked. No sign-off, no auto-approval." },
+        claim: "Files under the cap auto-approve.",
+        actual: "Threshold and <$25k cap unsigned. Thu 18:40: legacy sanctions re-screening requested. +6 eng days. Outside SOW.",
+        rule: "Auto-approve only inside a signed threshold. Else Client Compliance. Out-of-SOW asks go to phase 2.",
+        human: "Client Compliance: yes/no. Ops Lead logs the deferral.",
+        sla: "Same day. Unsigned: no auto-approval." },
       { id: "s5", code: "STEP-05", name: "Sandbox-to-production cutover", lane: "unblock",
-        claim: "All three jurisdictions go to production on day 30 because the tickets moved.",
-        actual: "Sandbox coverage is not a production go. The kill switch has been pulled in staging on complete files only. Twelve packs are still missing.",
-        rule: "A jurisdiction goes live only with a coverage row, a complete pack, a signed threshold, and a kill-switch drill by client staff.",
+        claim: "3 jurisdictions cut over on day 30.",
+        actual: "Staging kill-switch pulled on 18 complete packs. 12 packs missing. Production keys not issued.",
+        rule: "Live requires a coverage row, a complete pack, a signed threshold, and a client-run kill-switch drill.",
         human: "Client Sponsor signs each jurisdiction. Client Compliance owns the pack after handoff.",
-        sla: "One jurisdiction in shadow before the next is enabled." }
+        sla: "One jurisdiction in shadow before the next." }
     ],
     rows: [
-      { id: "k1", code: "K-01", phase: PHASES[3], name: "Production keys for the three jurisdictions", owner: "Client Sponsor", status: "Upcoming", days: 0, wait: "Client SLA · keys not issued", unblock: "Send production keys, or a dated commit from the vendor.", slip: "Cutover waits one day for every day the keys wait.", evidence: "" },
-      { id: "k2", code: "K-02", phase: PHASES[3], name: "Kill-switch drill, run by client staff", owner: "Client Compliance", status: "Upcoming", days: 0, wait: "Not started · client staff has to pull it", unblock: "Client Compliance pulls the kill switch once and files one pack by hand.", slip: "A drill we run ourselves does not count.", evidence: "" },
-      { id: "k3", code: "K-03", phase: PHASES[3], name: "Sandbox-to-production cutover checklist", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Held until the 12 missing packs land", unblock: "Walk the checklist once the intake folder is complete.", slip: "Cutover on the easy 18 repeats the vendor miss.", evidence: "" },
-      { id: "k4", code: "K-04", phase: PHASES[1], name: "Exception router for multi-UBO misses", owner: "Lead Engineer", status: "In Progress", days: 0, evalPct: 87, evalText: "Shadow Run: 26/30 clean · 4 edge cases failing", unblock: "Fix the four multi-UBO edge cases before any cutover talk.", evidence: "" },
-      { id: "k5", code: "K-05", phase: PHASES[1], name: "KYB pack assembler", owner: "Ops Lead", status: "In Progress", days: 1, evalPct: 87, evalText: "Shadow Eval: 87% match vs. human reviewer (target: 95% for Day-23 cutover)", unblock: "Raise the reviewer match from 87% to 95% before day 23.", evidence: "" },
+      { id: "k1", code: "K-01", phase: PHASES[3], name: "Production keys for the three jurisdictions", owner: "Client Sponsor", status: "Upcoming", days: 0, wait: "Awaiting vendor production keys (3 jurisdictions)", unblock: "Issue production keys for 3 jurisdictions.", slip: "Cutover blocked on keys.", evidence: "" },
+      { id: "k2", code: "K-02", phase: PHASES[3], name: "Client-operated kill-switch drill", owner: "Client Compliance", status: "Upcoming", days: 0, wait: "Scheduled for Day 21 · Client Compliance", unblock: "Client Compliance pulls the kill switch and files one pack.", slip: "Production drill open.", evidence: "" },
+      { id: "k3", code: "K-03", phase: PHASES[3], name: "Sandbox-to-production cutover checklist", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Blocked by G3 (12 missing multi-UBO packs)", unblock: "Checklist opens when G3 is 30/30.", slip: "Checklist blocked on G3.", evidence: "" },
+      { id: "k4", code: "K-04", phase: PHASES[1], name: "Exception router for multi-UBO misses", owner: "Lead Engineer", status: "In Progress", days: 0, evalPct: 87, evalText: "Shadow Eval: 26/30 clean (4 multi-UBO misses)", unblock: "4 multi-UBO misses open.", evidence: "" },
+      { id: "k5", code: "K-05", phase: PHASES[1], name: "KYB pack assembler", owner: "Ops Lead", status: "In Progress", days: 1, evalPct: 87, evalText: "Shadow Eval: 87% reviewer match (cutover target: 95%)", unblock: "Reviewer match 87%. Target 95%.", evidence: "" },
       { id: "k6", code: "K-06", gateId: "g3", phase: PHASES[0], order: 1, name: "30 historical KYB packs", owner: "Client Sponsor", status: "In Progress", days: 3,
         badge: "Silent client stall · 54h", boardSays: "In Progress", realitySrc: "SLACK / CALL",
-        realityShort: "Waiting 54h on 12 multi-UBO files",
-        reality: "Client Sponsor promised 30 historical KYB packs on Tue 10:14 AM. Only 18 are uploaded. The missing 12 are the non-US multi-UBO cases.",
-        unblock: "Upload the 12 missing non-US multi-UBO packs today.",
-        slip: "The shadow run learns the easy 18 and misses the first real multi-UBO file.",
+        realityShort: "18/30 uploaded · 12 non-US multi-UBO packs overdue 54h",
+        reality: "Tue 10:14: Client Sponsor committed 30 historical KYB packs. 18 uploaded. 12 non-US multi-UBO packs missing. 54h.",
+        unblock: "Upload the 12 non-US multi-UBO packs.",
+        slip: "12 packs overdue 54h.",
         ping: "Client Sponsor — you said Tuesday at 10:14 that the 30 historical KYB packs would be in the folder that afternoon. We have 18. The 12 missing are the non-US multi-UBO cases. Can you upload those today?\n— Ops Lead",
         actions: [
           { act: "copyping", label: "Copy Client Follow-Up Ping" },
@@ -350,10 +343,10 @@ const SCENARIOS = {
         evidence: "" },
       { id: "k7", code: "K-07", phase: PHASES[1], order: 2, name: "Sanctions re-screen for legacy accounts", owner: "Ops Lead", status: "Blocked >48h", days: 2,
         badge: "Call scope drift vs. SOW", boardSays: "Not Logged", realitySrc: "THU SYNC",
-        realityShort: "Re-screen asked for · not in the SOW",
-        reality: "Thu sync transcript at 18:40: Client Ops Lead asked to add automated sanctions re-screening for legacy accounts. It is not in the Day-30 SOW and is about six engineering days.",
-        unblock: "Defer legacy sanctions re-screening to phase 2, in writing.",
-        slip: "Six unplanned engineering days land on the cutover week.",
+        realityShort: "Asked on Thu call (+6 eng days) · outside signed SOW",
+        reality: "Thu 18:40: Client Ops Lead requested automated sanctions re-screening for legacy accounts. +6 eng days. Outside the signed SOW.",
+        unblock: "Log to phase 2. Not in this sprint.",
+        slip: "+6 eng days. Outside signed SOW.",
         ping: "Client Ops Lead — on Thursday's sync you asked for automated sanctions re-screening on legacy accounts. That is not in the Day-30 SOW and is about six engineering days. We are logging it to the phase-2 backlog and will not build it this sprint.\n— Ops Lead",
         actions: [
           { act: "copyping", label: "Copy Phase-2 Deferral Note" },
@@ -362,26 +355,26 @@ const SCENARIOS = {
         evidence: "" },
       { id: "k8", code: "K-08", phase: PHASES[1], order: 3, name: "Auto-approval confidence threshold", owner: "Client Compliance", status: "Blocked >48h", days: 2,
         badge: "Unannounced blocker · 49h", boardSays: "On Track", realitySrc: "CLIENT SLACK",
-        realityShort: "No sign-off on the auto-approval cap",
-        reality: "Client Slack, #sprint-kyb: the Compliance Officer has not signed off on the auto-approval confidence threshold, including the under-$25k volume cap.",
-        unblock: "Yes or no today on auto-approval under the $25k volume cap.",
-        slip: "Day 23 cutover ships an approval rule nobody signed.",
+        realityShort: "Auto-approval cap (<$25k) unsigned by Compliance · 49h",
+        reality: "#sprint-kyb: Compliance has not signed the auto-approval confidence threshold. Volume cap under $25k unsigned. 49h.",
+        unblock: "Yes/no on auto-approval under $25k.",
+        slip: "Threshold unsigned 49h.",
         ping: "Client Compliance — yes or no today: auto-approval under the $25k volume cap, at the confidence threshold we walked through. Without that sign-off, nothing auto-approves.\n— Ops Lead",
         actions: [
           { act: "copyping", label: "Copy Yes/No Decision Ping" }
         ],
         evidence: "" },
-      { id: "k9", code: "K-09", gateId: "g2", phase: PHASES[0], name: "Vendor coverage gap caught on day 2", owner: "Ops Lead", status: "Shipped", days: 0, impact: "Wrong vendor stopped before build", evidence: "The inherited vendor does not cover two of the three jurisdictions. Caught on day 2, before engineering started." },
-      { id: "k10", code: "K-10", gateId: "g5", phase: PHASES[0], name: "Baseline signed: 4.2 days per KYB pack", owner: "Client Sponsor", status: "Shipped", days: 0, impact: "Baseline locked · Day-30 target 14 min, not cut over", evidence: "The sponsor signed the 4.2-day cycle time. Fourteen minutes is the target, not a result." },
-      { id: "k11", code: "K-11", phase: PHASES[1], name: "Completeness check on the 18 complete packs", owner: "Lead Engineer", status: "Shipped", days: 0, impact: "38 min → 11 min on complete files · Staging kill-switch verified", evidence: "Measured on complete files only. The 12 missing packs are not in this number. Staging kill-switch was pulled once. Production is not cut over." }
+      { id: "k9", code: "K-09", gateId: "g2", phase: PHASES[0], name: "Jurisdiction coverage check & vendor cutover", owner: "Ops Lead", status: "Shipped", days: 0, impact: "2 of 3 target markets unsupported by prior vendor · switched Day 2", evidence: "Day 2. Prior vendor covers 1 of 3 jurisdictions. Replacement vendor selected." },
+      { id: "k10", code: "K-10", gateId: "g5", phase: PHASES[0], name: "Baseline cycle time signed", owner: "Client Sponsor", status: "Shipped", days: 0, impact: "4.2 days/pack baseline signed · Day-30 target: 14 min", evidence: "Signed. 4.2 days/pack. Day-30 target: 14 min." },
+      { id: "k11", code: "K-11", phase: PHASES[1], name: "Document completeness parser (18 packs)", owner: "Lead Engineer", status: "Shipped", days: 0, impact: "38 min → 11 min per pack · staging kill-switch verified", evidence: "18 complete packs. 38 min → 11 min. Staging kill-switch verified. 12 packs excluded." }
     ],
     handoff: [
-      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Compliance", detail: "The exception router is 26 of 30 in shadow. Sign-off waits until the 12 missing packs are in, or explicitly excluded." },
-      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Compliance", detail: "Staging was pulled once on the completeness check. The production drill has to be client staff. A drill we run ourselves does not count." },
-      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "OPEN", owner: "Ops Lead", detail: "Two pages still have to name who submits a pack and who refuses one. The Loom is not recorded." },
-      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "A failed sandbox call posts to the client channel. Weekly cap is 150k tokens, warn at 70%, hard stop at 100%." },
-      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "The 4.2-day baseline is signed. The comparison waits on the shadow week. Fourteen minutes is a target, not a claim." },
-      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked. It gets booked when a jurisdiction actually has a go-live date." }
+      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Compliance", detail: "Exception router 26/30. Open until the 12 missing packs are in or excluded." },
+      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Compliance", detail: "Staging pull recorded on the completeness check. Production drill owner: Client Compliance. Open." },
+      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "OPEN", owner: "Ops Lead", detail: "Runbook not recorded. Needs submit owner and refuse owner." },
+      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "Failed sandbox call posts to the client channel. Cap 150k tokens/week. Warn 70%. Stop 100%." },
+      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "Baseline signed: 4.2 days/pack. Day-30 target: 14 min. Comparison not run." },
+      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked. No go-live date yet." }
     ]
   },
   support: {
@@ -390,20 +383,20 @@ const SCENARIOS = {
     when: "Friday",
     noun: "ticket",
     formPhase: PHASES[2],
-    slotLine: "The next 15-min sponsor slot works if a reply is harder.",
+    slotLine: "Next 15-min sponsor slot.",
     roi: { volume: 240, before: 18, after: 4, error: 12, reworkMin: 15, rate: 28, cost: 18000 },
     drift: {
       rowId: "u7",
       call: "can we rewrite the help center and add saved-reply macros while the bot is in there.",
       written: "Day-30 scope is tier-1 drafts, a QA rubric, and a confidence threshold for human handoff. A help-center rewrite is not in the SOW.",
-      wont: "We will not rewrite the help center or build saved-reply macros this sprint.",
+      wont: "Not this sprint. Phase 2.",
       closed: "The call asked for a help-center rewrite. That card is no longer an open drift, so this item is closed.",
       noteLine: "Thursday's sync asked for a help-center rewrite and saved-reply macros. That is outside the Day-30 SOW, so it goes to phase 2."
     },
-    call: "Client Ops Lead: can we rewrite the help center and add saved-reply macros while the bot is in there.\nOps Lead: that is not in the day-30 SOW. It is a separate project. I will log it to phase 2.\nClient Support Lead: the 30 hard tickets are almost in. I sent most of them Monday.\nOps Lead: we have 22. The 8 we do not have are the angry multi-thread cases. Those are the test.\nClient Support Lead: I also have not signed the auto-send threshold. QA is still reading it.",
-    slack: "Client Support Lead [Mon 9:40]: sending the 30 hard tickets today, including the angry ones.\nOps Lead [Wed 15:10]: folder has 22. The 8 missing are multi-thread complaints. Do not score the rubric on the easy 22.\nClient Support Lead [Thu 11:02]: QA has not signed the auto-send confidence threshold. Nothing sends itself until that is a yes.\nLead Engineer [Fri 8:44]: tier-1 drafts are 24 of 30 clean in shadow. Six edge cases still hand off late.",
+    call: "Client Ops Lead: can we rewrite the help center and add saved-reply macros while the bot is in there.\nOps Lead: outside the day-30 SOW. Logging it to phase 2.\nClient Support Lead: the 30 hard tickets are almost in. I sent most of them Monday.\nOps Lead: 22 of 30 are in. 8 multi-thread tickets are missing.\nClient Support Lead: I have not signed the auto-send threshold. QA is still reading it.",
+    slack: "Client Support Lead [Mon 9:40]: sending the 30 hard tickets today, including the angry ones.\nOps Lead [Wed 15:10]: folder has 22. 8 multi-thread tickets still missing.\nClient Support Lead [Thu 11:02]: QA has not signed the auto-send confidence threshold.\nLead Engineer [Fri 8:44]: tier-1 drafts are 24 of 30 clean in shadow. Six edge cases still hand off late.",
     board: "TIX-30  Hard tickets               In Progress\nMACRO   Help-center rewrite        Not on the board\nQA-01   Auto-send threshold        On Track\nTIER    Tier-1 drafts              In Progress  24/30",
-    slackPull: "Slack: 22 of 30 hard tickets are in the folder. The 8 missing are the angry multi-thread cases. Do not score the rubric on the easy 22.",
+    slackPull: "Slack: 22/30 hard tickets in the folder. 8 multi-thread tickets missing.",
     catchToast: "Caught on today's call transcript: Client asked for a public help-center rewrite. Not in the signed SOW.",
     catch: {
       id: "u-catch", code: "U-12", phase: PHASES[2], order: 0, injected: true,
@@ -413,7 +406,7 @@ const SCENARIOS = {
       realityShort: "Help-center rewrite asked for on today's call",
       reality: "Caught on today's call transcript: the client asked for a public help-center rewrite and saved-reply macros. Neither is in the signed SOW.",
       unblock: "Send the scope-guardrail note. Leave the rewrite out of this sprint.",
-      slip: "An unlogged call ask swallows the cutover week.",
+      slip: "Outside signed SOW.",
       ping: "Client Sponsor — on today's call you asked for a public help-center rewrite and saved-reply macros. That is not in the signed Day-30 SOW. We will not build it this sprint. We can scope it as phase 2 after the handoff.\n— Ops Lead",
       actions: [
         { act: "copyping", label: "Copy Client Scope-Guardrail Note" },
@@ -424,80 +417,79 @@ const SCENARIOS = {
     gates: [
       { id: "g1", code: "GATE-01", name: "Executive Sponsor & Weekly 15-min Decision Slot", status: "PASS", owner: "Client Sponsor", sla: "Day 1 · 24h",
         need: "One sponsor who can approve a threshold, and a 15-minute slot that actually happens.",
-        have: "The slot is recurring. Threshold calls do not get made in the moderator channel.",
-        miss: "Do not take an auto-send rule from a group chat.",
-        action: "Put the 15-min slot back on the calendar today.",
-        slip: "The queue goes live on a rule nobody owns." },
+        have: "15-min slot recurring. Threshold owner: Client Sponsor.",
+        miss: "No written sponsor decision.",
+        action: "Book the 15-min slot.",
+        slip: "Threshold decision unowned." },
       { id: "g2", code: "GATE-02", name: "API/Admin/Sandbox Credentials & Market Coverage Check", status: "PASS", owner: "Ops Lead + Lead Engineer", sla: "Day 3 · 72h",
         need: "A sandbox token that can read a ticket and draft a reply, without production send rights.",
-        have: "Sandbox token accepted a test ticket on day 2. The production token is still an intake card. Send rights stay off.",
-        miss: "A screenshot of the helpdesk settings page is not a token.",
-        action: "Confirm the sandbox token can draft, and that it cannot send.",
-        slip: "Week 3 becomes a permissions rewrite.",
-        note: GATE_NOTE },
+        have: "Day 2: sandbox token accepted a test ticket. Production token outstanding. Send rights off.",
+        miss: "No token that can draft.",
+        action: "Confirm sandbox draft access and send rights off.",
+        slip: "Production send stays off until the token is issued." },
       { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "BLOCKED", owner: "Client Support Lead", sla: "Day 3 · 72h",
-        need: "30 real hard tickets, including angry multi-thread cases, not only password resets.",
-        have: "22 of 30 are in the folder. The 8 missing are the multi-thread complaints the lead promised Monday.",
-        miss: "Do not sign the rubric because 22 tickets were easy.",
-        action: "Send the 8 missing hard tickets today.",
-        slip: "Tier-1 looks accurate and fails the first angry thread." },
+        need: "30 hard tickets, including multi-thread cases.",
+        have: "22/30 in the folder. Client Support Lead committed Monday. Missing: 8 multi-thread tickets. 51h.",
+        miss: "8 tickets.",
+        action: "Send the 8 multi-thread tickets.",
+        slip: "Shadow set is 22/30." },
       { id: "g4", code: "GATE-04", name: "Exception & Human-in-the-Loop Escalation Owner", status: "PASS", owner: "Client Support Lead", sla: "Day 3 · 72h",
-        need: "A named moderator for anything under the confidence threshold, plus a backup.",
-        have: "Client Support Lead is named. A second moderator is the backup. Low confidence never auto-sends.",
-        miss: "If the owner is 'the queue', the agent will send a draft nobody read.",
-        action: "Keep the named moderator on the threshold card until they sign it.",
-        slip: "A wrong reply goes out because the queue was quiet." },
+        need: "Named moderator for drafts under the threshold, plus a backup.",
+        have: "Owner: Client Support Lead. Backup: second moderator. Under threshold: no auto-send.",
+        miss: "Owner unassigned.",
+        action: "Confirm Client Support Lead and the backup.",
+        slip: "Exception owner unassigned." },
       { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "PASS", owner: "Ops Lead + Client Sponsor", sla: "Day 3 · 72h",
         need: "Signed first-response time and reopen rate.",
-        have: "Signed. Median first response is 18 minutes. About 38% of tier-1 tickets reopen. The day-30 target on password resets is 4 minutes. That target is not a result yet.",
-        miss: "Unsigned numbers do not count on day 30.",
-        action: "Keep the 18-minute baseline next to every later claim.",
-        slip: "Day 30 turns into whether the queue feels faster." }
+        have: "Signed. 18 min median first response. 38% reopen. Day-30 target: 4 min on password resets.",
+        miss: "Baseline unsigned.",
+        action: "Get the 18 min / 38% baseline signed.",
+        slip: "No signed baseline." }
     ],
     steps: [
       { id: "s1", code: "STEP-01", name: "Ticket intake", lane: "ai",
-        claim: "Every ticket arrives with an account id and one clear question.",
-        actual: "Hard tickets paste a log, skip the account id, and stack two problems in one thread. Twenty-two of thirty are in. Eight are not.",
-        rule: "Extract the account, the ask, and whether the thread is angry. If the account is missing, leave it blank and ask. Do not guess the customer.",
-        human: "Client Support Lead steps in for billing disputes and any thread that has already been escalated once.",
-        sla: "Triage the same day the ticket lands." },
+        claim: "Ticket includes an account id and one question.",
+        actual: "22/30 hard tickets in. 8 are multi-thread, missing an account id, two asks in one thread.",
+        rule: "Missing account id: leave blank. Already escalated or billing: human.",
+        human: "Client Support Lead.",
+        sla: "Same day." },
       { id: "s2", code: "STEP-02", name: "Tier-1 draft", lane: "ai",
-        claim: "A moderator reads the macro list and replies.",
-        actual: "Six moderators triage by hand. The draft agent proposes a tier-1 reply. It does not send.",
-        rule: "Draft from the signed rubric only. If confidence is under the threshold, route to a human. Never invent a policy.",
-        human: "A moderator sends anything under the threshold. Auto-send stays off until the threshold is signed.",
-        sla: "Draft in under 2 minutes. Human send the same shift." },
+        claim: "Moderator sends from the macro list.",
+        actual: "6 moderators triage by hand. Agent drafts. Agent does not send.",
+        rule: "Draft from the signed rubric. Under threshold: human.",
+        human: "Moderator sends under-threshold drafts. Auto-send off until the threshold is signed.",
+        sla: "Draft under 2 min. Human send same shift." },
       { id: "s3", code: "STEP-03", name: "QA rubric", lane: "human",
-        claim: "Quality is a feeling the lead has on Fridays.",
-        actual: "Each shadow draft is scored against the rubric by a reviewer. The score is the shadow eval on the card.",
-        rule: "A draft needs a rubric score to count. No score, no accuracy claim.",
-        human: "Client Support Lead signs the weekly score. Ops Lead does not grade customer replies.",
-        sla: "Score the shadow set before the Friday pulse." },
+        claim: "QA is a Friday review.",
+        actual: "Reviewer scores each shadow draft against the rubric.",
+        rule: "No rubric score: excluded from the accuracy number.",
+        human: "Client Support Lead signs the weekly score.",
+        sla: "Scored before the Friday pulse." },
       { id: "s4", code: "STEP-04", name: "Confidence handoff", lane: "human",
-        claim: "The bot can send once the ticket looks routine.",
-        actual: "QA has not signed the auto-send threshold. The board still says on track.",
-        rule: "Auto-send only above a signed confidence threshold. Angry threads, billing, and a second contact always go to a person.",
-        human: "Client Support Lead owns the threshold. A second moderator is the backup.",
-        sla: "Yes or no on the threshold the day it is asked." },
+        claim: "Routine tickets auto-send.",
+        actual: "Auto-send threshold unsigned by QA. 49h. Ticket status: On Track.",
+        rule: "Auto-send only above a signed threshold. Angry threads, billing, and second contact stay human.",
+        human: "Client Support Lead. Backup: second moderator.",
+        sla: "Yes/no the day it is asked." },
       { id: "s5", code: "STEP-05", name: "Queue cutover", lane: "unblock",
-        claim: "The whole queue flips to the agent on day 30.",
-        actual: "One slice, password resets, has a measured shadow time. The other five queues have not had a kill-switch drill.",
-        rule: "A queue goes live only after the threshold is signed, the hard-ticket set is complete, and a moderator has pulled the kill switch.",
-        human: "Client Support Lead turns it off. We do not.",
-        sla: "One queue in shadow before a second queue is enabled." }
+        claim: "All 6 queues cut over on day 30.",
+        actual: "Password resets measured in shadow. Kill-switch drill not run on the other 5 queues.",
+        rule: "A queue goes live after the threshold is signed, the 30-ticket set is complete, and a moderator pulls the kill switch.",
+        human: "Client Support Lead.",
+        sla: "One queue in shadow before the next." }
     ],
     rows: [
-      { id: "u1", code: "U-01", phase: PHASES[3], name: "Production helpdesk token, send rights off", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Client SLA · token not issued", unblock: "Issue a production token that can draft and cannot send.", slip: "Cutover waits on a permission we could have named on day 3.", evidence: "" },
-      { id: "u2", code: "U-02", phase: PHASES[3], name: "Kill-switch drill, run by a moderator", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Not started · a moderator has to pull it", unblock: "A moderator pulls the kill switch and answers one ticket by hand.", slip: "A drill we run ourselves does not count.", evidence: "" },
-      { id: "u3", code: "U-03", phase: PHASES[3], name: "Cutover checklist for the six-moderator queue", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Held until the threshold is signed", unblock: "Walk the checklist after the auto-send threshold is a yes or a no.", slip: "The queue goes live on an unsigned rule.", evidence: "" },
-      { id: "u4", code: "U-04", phase: PHASES[2], name: "Tier-1 draft resolver", owner: "Lead Engineer", status: "In Progress", days: 1, evalPct: 80, evalText: "Shadow Run: 24/30 clean · 6 edge cases failing", unblock: "Fix the six late handoffs before any queue is called live.", evidence: "" },
-      { id: "u5", code: "U-05", phase: PHASES[2], name: "QA rubric matcher", owner: "Ops Lead", status: "In Progress", days: 0, evalPct: 91, evalText: "Shadow Eval: 91% match vs. human reviewer (target: 95% for Day-23 cutover)", unblock: "Close the four points to the day-23 target.", evidence: "" },
+      { id: "u1", code: "U-01", phase: PHASES[3], name: "Production helpdesk token (send off)", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Awaiting production token · send rights off", unblock: "Issue a production token with send rights off.", slip: "Cutover blocked on token.", evidence: "" },
+      { id: "u2", code: "U-02", phase: PHASES[3], name: "Client-operated kill-switch drill", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Scheduled for Day 21 · Client Support Lead", unblock: "Client Support Lead pulls the kill switch and answers one ticket.", slip: "Production drill open.", evidence: "" },
+      { id: "u3", code: "U-03", phase: PHASES[3], name: "Cutover checklist for the six-moderator queue", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Blocked until auto-send threshold is signed", unblock: "Checklist opens after the threshold is signed.", slip: "Checklist blocked on unsigned threshold.", evidence: "" },
+      { id: "u4", code: "U-04", phase: PHASES[2], name: "Tier-1 draft resolver", owner: "Lead Engineer", status: "In Progress", days: 1, evalPct: 80, evalText: "Shadow Eval: 24/30 clean (6 late handoffs)", unblock: "6 late handoffs open.", evidence: "" },
+      { id: "u5", code: "U-05", phase: PHASES[2], name: "QA rubric matcher", owner: "Ops Lead", status: "In Progress", days: 0, evalPct: 91, evalText: "Shadow Eval: 91% reviewer match (cutover target: 95%)", unblock: "Reviewer match 91%. Target 95%.", evidence: "" },
       { id: "u6", code: "U-06", gateId: "g3", phase: PHASES[2], order: 1, name: "30 hard tickets for the rubric", owner: "Client Support Lead", status: "In Progress", days: 3,
         badge: "Silent client stall · 51h", boardSays: "In Progress", realitySrc: "SLACK / CALL",
-        realityShort: "Waiting 51h on 8 angry multi-thread tickets",
-        reality: "Client Support Lead promised 30 hard tickets on Monday. Only 22 are in the folder. The missing 8 are the angry multi-thread cases.",
-        unblock: "Send the 8 missing multi-thread tickets today.",
-        slip: "The rubric looks done and fails the first angry thread.",
+        realityShort: "22/30 uploaded · 8 multi-thread tickets overdue 51h",
+        reality: "Mon 09:40: Client Support Lead committed 30 hard tickets. 22 in folder. 8 multi-thread tickets missing. 51h.",
+        unblock: "Send the 8 multi-thread tickets.",
+        slip: "8 tickets overdue 51h.",
         ping: "Client Support Lead — you said Monday the 30 hard tickets would be in the folder, including the angry ones. We have 22. The 8 missing are the multi-thread complaints. Can you send those today?\n— Ops Lead",
         actions: [
           { act: "copyping", label: "Copy Client Follow-Up Ping" },
@@ -506,10 +498,10 @@ const SCENARIOS = {
         evidence: "" },
       { id: "u7", code: "U-07", phase: PHASES[2], order: 2, name: "Help-center rewrite and saved-reply macros", owner: "Ops Lead", status: "Blocked >48h", days: 2,
         badge: "Call scope drift vs. SOW", boardSays: "Not Logged", realitySrc: "THU SYNC",
-        realityShort: "Help-center rewrite asked for · not in the SOW",
-        reality: "Thu sync transcript at 18:40: Client Ops Lead asked to rewrite the help center and add saved-reply macros. Neither is in the Day-30 SOW.",
-        unblock: "Defer the help-center rewrite and macros to phase 2, in writing.",
-        slip: "The cutover week gets spent on a rewrite nobody scoped.",
+        realityShort: "Asked on Thu call · help-center rewrite outside signed SOW",
+        reality: "Thu 18:40: Client Ops Lead requested a help-center rewrite and saved-reply macros. Outside the signed SOW.",
+        unblock: "Log to phase 2. Not in this sprint.",
+        slip: "Outside signed SOW.",
         ping: "Client Ops Lead — on Thursday's sync you asked for a help-center rewrite and saved-reply macros. That is not in the Day-30 SOW. We are logging it to the phase-2 backlog and will not build it this sprint.\n— Ops Lead",
         actions: [
           { act: "copyping", label: "Copy Phase-2 Deferral Note" },
@@ -518,26 +510,26 @@ const SCENARIOS = {
         evidence: "" },
       { id: "u8", code: "U-08", phase: PHASES[2], order: 3, name: "Auto-send confidence threshold", owner: "Client Support Lead", status: "Blocked >48h", days: 2,
         badge: "Unannounced blocker · 49h", boardSays: "On Track", realitySrc: "CLIENT SLACK",
-        realityShort: "QA has not signed the auto-send threshold",
-        reality: "Client Slack: QA has not signed the auto-send confidence threshold. The board still says the queue is on track.",
-        unblock: "Yes or no today on the auto-send confidence threshold.",
-        slip: "A queue goes live and sends a draft nobody approved.",
+        realityShort: "Auto-send threshold unsigned by QA · 49h",
+        reality: "Client Slack: QA has not signed the auto-send confidence threshold. 49h. Ticket status: On Track.",
+        unblock: "Yes/no on the auto-send threshold.",
+        slip: "Threshold unsigned 49h.",
         ping: "Client Support Lead — yes or no today on the auto-send confidence threshold. Without that sign-off, every tier-1 draft stays a draft.\n— Ops Lead",
         actions: [
           { act: "copyping", label: "Copy Yes/No Decision Ping" }
         ],
         evidence: "" },
-      { id: "u9", code: "U-09", gateId: "g4", phase: PHASES[0], name: "Tier-1 versus escalate, signed", owner: "Client Support Lead", status: "Shipped", days: 0, impact: "Routing rules written · humans still send", evidence: "Billing, a second contact, and any angry thread go to a person. Signed in week 1." },
-      { id: "u10", code: "U-10", gateId: "g5", phase: PHASES[0], name: "Baseline signed: 18 min first response", owner: "Client Sponsor", status: "Shipped", days: 0, impact: "Baseline locked · Day-30 target 4 min on tier-1, not cut over", evidence: "The sponsor signed 18 minutes and a 38% reopen rate. Four minutes is the target on password resets, not a result." },
-      { id: "u11", code: "U-11", phase: PHASES[2], name: "Password-reset shadow slice", owner: "Lead Engineer", status: "Shipped", days: 0, impact: "18 min → 4 min on tier-1 password resets · Staging kill-switch verified", evidence: "Measured on password resets only. The other queues are not in this number. Staging kill-switch was pulled once. The live queue is not cut over." }
+      { id: "u9", code: "U-09", gateId: "g4", phase: PHASES[0], name: "Tier-1 vs escalate routing signed", owner: "Client Support Lead", status: "Shipped", days: 0, impact: "Billing, second contact, and angry threads route to a person", evidence: "Signed week 1. Billing, second contact, angry threads: human." },
+      { id: "u10", code: "U-10", gateId: "g5", phase: PHASES[0], name: "Baseline first response signed", owner: "Client Sponsor", status: "Shipped", days: 0, impact: "18 min first response signed · Day-30 target: 4 min on tier-1", evidence: "Signed. 18 min median first response. 38% reopen. Day-30 target: 4 min on password resets." },
+      { id: "u11", code: "U-11", phase: PHASES[2], name: "Password-reset shadow slice", owner: "Lead Engineer", status: "Shipped", days: 0, impact: "18 min → 4 min on password resets · staging kill-switch verified", evidence: "Password resets only. 18 min → 4 min. Staging kill-switch verified. Other queues excluded." }
     ],
     handoff: [
-      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Support Lead", detail: "Tier-1 drafts are 24 of 30 in shadow. Sign-off waits on the 8 missing hard tickets and the 95% reviewer target." },
-      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Support Lead", detail: "Staging was pulled once on the password-reset slice. A moderator still has to pull it on the live queue." },
-      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "IN PROGRESS", owner: "Ops Lead", detail: "The rubric is the seed. The Loom is not recorded. Two pages still have to name who sends and who refuses." },
-      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "A failed draft posts to the moderator channel. Weekly cap is 200k tokens, warn at 70%, hard stop at 100%." },
-      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "The 18-minute baseline is signed. The comparison waits until a queue is actually in shadow for a week." },
-      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked. Agenda will be the reopen log, not a tour of the drafts." }
+      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Support Lead", detail: "Tier-1 drafts 24/30. Open until the 8 missing tickets are in and reviewer match is 95%." },
+      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Support Lead", detail: "Staging pull recorded on password resets. Live-queue drill owner: Client Support Lead. Open." },
+      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "IN PROGRESS", owner: "Ops Lead", detail: "Loom not recorded. Needs send owner and refuse owner." },
+      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "Failed draft posts to the moderator channel. Cap 200k tokens/week. Warn 70%. Stop 100%." },
+      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "Baseline signed: 18 min first response, 38% reopen. Comparison not run." },
+      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked." }
     ]
   }
 };
@@ -637,13 +629,13 @@ function buildClientNote(src) {
   const sc = current();
   const items = decisionItems();
   if (!items.length) {
-    return "No unblock today. Nothing has been sitting 48 hours, and no intake gate is blocked or at risk.\n— Ops Lead";
+    return "No items over 48h.\n— Ops Lead";
   }
   const drift = sc.drift;
   const row = state.rows.find(r => r.id === drift.rowId);
   const driftLine = src.call && row && row.status !== "Shipped" ? drift.noteLine : "";
   function assemble(n, withDrift, withSlot) {
-    const lines = ["Need these moved today so the sprint doesn't lose another day.", ""];
+    const lines = [];
     items.slice(0, n).forEach((item, i) => {
       lines.push((i + 1) + ". " + item.owner + " — " + item.action);
     });
@@ -1001,10 +993,10 @@ function copyText(text, btn) {
 }
 
 const COLS = [
-  ["backlog", "01 · 72h Client Intake Gate", "Live client SLA and missing sample payloads"],
-  ["progress", "02 · Build & Shadow-Run Evals", "Shadow-run accuracy, on the card"],
-  ["slip", "03 · ⚠️ Caught Slipping (Board ≠ Reality)", "Cross-surface diff, not a late ticket"],
-  ["shipped", "04 · Production Cutover & Verified ROI", "Verified slices only. Production is still ahead."]
+  ["backlog", "01 · 72h Intake Gate"],
+  ["progress", "02 · Build & Shadow Evals"],
+  ["slip", "03 · ⚠️ Caught Slipping (Board ≠ Reality)"],
+  ["shipped", "04 · Verified & Cutover"]
 ];
 const SPRINT_NAME = {
   kyb: "Sprint #04 · Multi-Market Vendor & KYB Cutover",
@@ -1013,7 +1005,7 @@ const SPRINT_NAME = {
 const GATE_TITLE = {
   g1: "Executive Sponsor",
   g2: "Sandbox & Coverage",
-  g3: "30 Messy Real Runs",
+  g3: "30 Historical Runs",
   g4: "Escalation Owner",
   g5: "Baseline Metric"
 };
@@ -1126,8 +1118,7 @@ function topbar() {
   }
   const reset = state.injected ? '<button type="button" class="reset" data-act="reset">Reset Demo</button>' : "";
   return '<header class="top"><div class="brand"><div class="logo">REGEN8</div>' +
-    '<details class="pick"><summary>' + esc(sprintLabel(state.scenarioId)) + '</summary><div class="menu">' + opts + "</div></details>" +
-    '<div class="by">Built by Naffy Quehen</div></div>' +
+    '<details class="pick"><summary>' + esc(sprintLabel(state.scenarioId)) + '</summary><div class="menu">' + opts + "</div></details></div>" +
     '<div class="controls"><div class="filters">' +
     filt("all", "All (" + state.rows.length + ")") +
     filt("slip", "Caught slipping ", "(" + slips + ")") +
@@ -1141,11 +1132,11 @@ function strip() {
   const slips = state.rows.filter(isStall).length;
   const pct = Math.round(sc.day / 30 * 100);
   const gateBtn = g.hot
-    ? '<button type="button" class="texty hot" data-act="gates">' + esc(g.head) + " · " + esc(g.hot) + " → View Gate Checklist</button>"
-    : '<button type="button" class="texty" data-act="gates">' + esc(g.head) + " → View Gate Checklist</button>";
+    ? '<button type="button" class="texty hot" data-act="gates">' + esc(g.head) + " · " + esc(g.hot) + "</button>"
+    : '<button type="button" class="texty" data-act="gates">' + esc(g.head) + "</button>";
   return '<div class="strip"><div><b>Day ' + sc.day + " of 30</b> <span class=\"muted\">· " + esc(phaseNow(sc.day)) + '</span><span class="meter" aria-hidden="true"><span style="width:' + pct + '%"></span></span></div>' +
     gateBtn +
-    '<button type="button" class="texty' + (slips ? " hot" : "") + '" data-act="watch">' + slips + " where board ≠ reality</button>" +
+    '<button type="button" class="texty' + (slips ? " hot" : "") + '" data-act="watch">' + slips + " slipping</button>" +
     '<button type="button" class="texty quiet" data-act="roi">Day-30 handoff</button>' +
     '<button type="button" class="texty quiet" data-act="map">Workflow map</button></div>';
 }
@@ -1186,9 +1177,9 @@ function board() {
   return '<div class="board">' + COLS.map(c => {
     const rows = state.rows.filter(r => columnOf(r) === c[0] && passes(r));
     if (c[0] === "slip") rows.sort((a, b) => (a.order ?? 9) - (b.order ?? 9));
-    const body = rows.length ? rows.map(cardHTML).join("") : '<p class="empty">' + (c[0] === "slip" ? "Nothing the board has missed." : "Clear.") + "</p>";
+    const body = rows.length ? rows.map(cardHTML).join("") : '<p class="empty">None.</p>';
     const scan = c[0] === "slip" && state.scanning ? " scanning" : "";
-    return '<section class="col' + (c[0] === "slip" ? " slip" : "") + scan + '" data-col="' + c[0] + '"><div class="col-h"><h2>' + esc(c[1]) + '</h2><span class="cnt">' + rows.length + '</span></div><p class="col-sub">' + esc(c[2] || "") + '</p><div class="cards">' + body + "</div></section>";
+    return '<section class="col' + (c[0] === "slip" ? " slip" : "") + scan + '" data-col="' + c[0] + '"><div class="col-h"><h2>' + esc(c[1]) + '</h2><span class="cnt">' + rows.length + '</span></div><div class="cards">' + body + "</div></section>";
   }).join("") + "</div>";
 }
 function gateSheet() {
@@ -1197,7 +1188,10 @@ function gateSheet() {
     const note = g.note ? '<p class="note">' + esc(g.note) + "</p>" : "";
     return '<div class="grow"><div><p class="kicker">' + esc(g.code) + " · " + esc(g.sla) + "</p><h3>" + esc(GATE_TITLE[g.id] || g.name) + "</h3><p>" + esc(g.have) + "</p>" + note + '</div><button type="button" class="tag' + (g.status === "BLOCKED" ? " bad" : "") + '" data-act="gate" data-id="' + esc(g.id) + '">' + label + "</button></div>";
   }).join("");
-  return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="72 hour intake gates"><button type="button" class="x" data-act="close" aria-label="Close">×</button><p class="kicker">Before production code</p><h2>72h intake gates</h2><p class="lead">Five things that have to be true in the first three days. One blocked gate keeps the production build locked. Click a status to change it.</p>' + items + "</div>";
+  const blocked = state.gates.filter(g => g.status === "BLOCKED").length;
+  const pass = state.gates.filter(g => g.status === "PASS").length;
+  const status = pass + "/" + state.gates.length + " Gates Cleared" + (blocked ? " · " + blocked + " Blocked" : "");
+  return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="72 hour intake gates"><button type="button" class="x" data-act="close" aria-label="Close">×</button><h2>72h intake gates</h2><p class="lead">' + esc(status) + "</p>" + items + "</div>";
 }
 function cardSheet() {
   const r = state.rows.find(x => x.id === state.cardId);
@@ -1205,39 +1199,35 @@ function cardSheet() {
   const step = state.steps.find(s => s.id === STEP_FOR[r.id]);
   const drift = current().drift;
   const sow = r.id === drift.rowId
-    ? "<p><b>Call.</b> " + esc(drift.call) + "</p><p><b>Written scope.</b> " + esc(drift.written) + "</p><p>" + esc(drift.wont) + "</p>"
-    : "<p>In scope for this 30-day sprint. A new ask on a call does not move the day-30 cutover.</p>";
-  const done = r.status === "Shipped"
-    ? (r.evidence || "Shipped.")
-    : (r.unblock || "Name the one action that clears this in the next 24 hours.");
-  const slip = r.slip ? "<p>" + esc(r.slip) + "</p>" : "";
+    ? '<div class="block"><h3>Scope</h3><p><b>Call.</b> ' + esc(drift.call) + "</p><p><b>SOW.</b> " + esc(drift.written) + "</p><p>" + esc(drift.wont) + "</p></div>"
+    : "";
+  const done = r.status === "Shipped" ? (r.evidence || "Shipped.") : (r.unblock || "");
   const diff = r.boardSays
     ? "<p><b>Ticket says.</b> " + esc(r.boardSays) + "</p><p><b>Reality.</b> " + esc(r.reality || r.realityShort || "") + "</p>"
     : "";
   const ex = step
-    ? "<p><b>What actually happens.</b> " + esc(step.actual) + "</p><p><b>Rule.</b> " + esc(step.rule) + "</p><p><b>Human.</b> " + esc(step.human) + " " + esc(step.sla) + "</p>"
-    : "<p>No exception rule is linked yet. The card still needs an owner and a next action.</p>";
+    ? '<div class="block"><h3>Rule</h3><p>' + esc(step.actual) + "</p><p><b>Rule.</b> " + esc(step.rule) + "</p><p><b>Owner.</b> " + esc(step.human) + " " + esc(step.sla) + "</p></div>"
+    : "";
   const ping = r.ping || (r.owner + " — " + (r.unblock || r.name) + "\n— Ops Lead");
   const copy = r.ping || columnOf(r) === "slip"
     ? '<button type="button" class="cp" data-act="copyping" data-id="' + esc(r.id) + '" data-label="Copy client note">Copy client note</button>'
     : "";
   return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="Card"><button type="button" class="x" data-act="close" aria-label="Close">×</button>' +
-    '<p class="kicker">' + esc(phaseTag(r)) + " · " + esc(r.owner) + "</p><h2>" + esc(r.name) + "</h2>" +
-    '<div class="block"><h3>Done when</h3><p>' + esc(done) + "</p>" + slip + diff + "</div>" +
-    '<div class="block"><h3>Exception rule</h3>' + ex + "</div>" +
-    '<div class="block"><h3>Scope guardrail</h3>' + sow + "</div>" +
+    '<p class="kicker">' + esc(r.owner) + "</p><h2>" + esc(r.name) + "</h2>" +
+    (done || diff ? '<div class="block">' + (done ? "<p>" + esc(done) + "</p>" : "") + diff + "</div>" : "") +
+    ex + sow +
     '<div class="rowbtns">' + copy + '<button type="button" class="cp" data-act="close">Close</button></div>' +
     '<textarea id="ping" class="sr">' + esc(ping) + "</textarea></div>";
 }
 function mapSheet() {
   const steps = state.steps.map(s =>
     '<article class="step"><p class="kicker">' + esc(s.code) + "</p><h3>" + esc(s.name) + "</h3>" +
-    "<p><b>What the client says.</b> " + esc(s.claim) + "</p>" +
-    "<p><b>What actually happens.</b> " + esc(s.actual) + "</p>" +
+    "<p><b>Stated.</b> " + esc(s.claim) + "</p>" +
+    "<p><b>Observed.</b> " + esc(s.actual) + "</p>" +
     "<p><b>Rule.</b> " + esc(s.rule) + "</p>" +
-    "<p><b>Human fallback.</b> " + esc(s.human) + " " + esc(s.sla) + "</p></article>"
+    "<p><b>Owner.</b> " + esc(s.human) + " · " + esc(s.sla) + "</p></article>"
   ).join("");
-  return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="Workflow map"><button type="button" class="x" data-act="close" aria-label="Close">×</button><p class="kicker">Discovery</p><h2>Workflow map</h2><p class="lead">The happy path, then the mess the sprint actually has to catch.</p>' + steps + "</div>";
+  return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="Workflow map"><button type="button" class="x" data-act="close" aria-label="Close">×</button><h2>Workflow map</h2>' + steps + "</div>";
 }
 function roiSheet() {
   const ready = readiness();
@@ -1246,7 +1236,7 @@ function roiSheet() {
   const checks = state.handoff.map(h =>
     '<article class="check"><div><h3>' + esc(h.name) + "</h3><p>" + esc(h.owner) + " · " + esc(h.detail) + '</p></div><button type="button" class="tag' + (h.status === "SIGNED" ? "" : "") + '" data-act="handoff" data-id="' + esc(h.id) + '">' + esc(h.status === "SIGNED" ? "Signed" : h.status === "IN PROGRESS" ? "In progress" : "Open") + "</button></article>"
   ).join("");
-  return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="Day 30 handoff"><button type="button" class="x" data-act="close" aria-label="Close">×</button><p class="kicker">Day 30</p><h2>Handoff & time saved</h2><p class="lead">' + ready.n + " of " + ready.total + " signed. The hours below are coordinator time, from the sliders.</p>" +
+  return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="Day 30 handoff"><button type="button" class="x" data-act="close" aria-label="Close">×</button><h2>Handoff</h2><p class="lead">' + ready.n + " of " + ready.total + " signed</p>" +
     '<p class="big"><span id="roi-hours">' + hours(res.touchWeek) + '</span> hrs/wk</p><p class="lead" id="roi-delta">' + Math.round(num(state.roi.before)) + "m → " + Math.round(num(state.roi.after)) + "m per " + esc(current().noun) + "</p>" +
     checks +
     '<div class="sliders">' +
@@ -1260,11 +1250,11 @@ function slider(key, label, value, min, max, step) {
     '<input type="range" data-roi="' + key + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + esc(value) + '" aria-label="' + esc(label) + '"></label>';
 }
 function decisionsHTML(items) {
-  if (!items.length) return "<p>Nothing has been sitting 48 hours.</p>";
+  if (!items.length) return "<p>None over 48h.</p>";
   return items.map(item => '<p class="hit"><b>' + esc(item.owner) + ".</b> " + esc(item.action) + "</p>").join("");
 }
 function driftBlock(drift) {
-  if (drift.state === "unchecked") return "<p>Call transcripts were off, so drift was not checked.</p>";
+  if (drift.state === "unchecked") return "<p>Call transcripts off. Drift not checked.</p>";
   if (drift.state === "closed") return "<p>" + esc(drift.text) + "</p>";
   return "<p><b>On the call.</b> “" + esc(drift.call) + "”</p><p><b>In the scope.</b> " + esc(drift.written) + "</p><p>" + esc(drift.wont) + "</p>";
 }
@@ -1272,18 +1262,18 @@ function pulseSheet() {
   const on = id => state.sources[id] ? " on" : "";
   const mark = id => state.sources[id] ? "✓ " : "";
   const p = state.pulse;
-  let body = '<p class="lead">No brief yet.</p>';
-  if (p && p.phase === "running") body = '<p class="lead">Scanning call transcripts, client Slack, and the signed SOW.</p>';
+  let body = "";
+  if (p && p.phase === "running") body = '<p class="lead">Scanning transcripts, Slack, and SOW.</p>';
   else if (p && p.result) {
     const b = p.result;
-    body = (p.stale ? '<p class="lead">The board changed after this run.</p>' : "") +
-      '<section class="out"><h3>Stuck &gt;48h</h3><p>Auto-flagged on the board.</p>' + decisionsHTML(b.decisions) + "</section>" +
+    body = (p.stale ? '<p class="lead">Board changed after this run.</p>' : "") +
+      '<section class="out"><h3>Stuck &gt;48h</h3>' + decisionsHTML(b.decisions) + "</section>" +
       '<section class="out"><h3>Scope drift caught on calls</h3>' + driftBlock(b.drift) + "</section>" +
       '<section class="out"><h3>Shipped since last pulse</h3>' + (b.shipped.length ? "<ul>" + b.shipped.map(r => "<li>" + esc(r.name) + "</li>").join("") + "</ul>" : "<p>Nothing marked shipped.</p>") + "</section>" +
       '<section class="out"><h3>Ready-to-send client note</h3><pre class="note-box" id="client-note">' + esc(b.note) + '</pre><div class="rowbtns"><button type="button" class="cp" data-act="copy" data-id="note" data-label="Copy note">Copy note</button><button type="button" class="cp" data-act="flag">Flag on board</button></div></section>';
   }
   return '<div class="backdrop" data-act="close"></div><aside class="sheet drawer" id="pulse" role="dialog" aria-label="sprint pulse"><button type="button" class="x" data-act="close" aria-label="Close">×</button>' +
-    '<p class="kicker">Wed & Fri</p><h2>/sprint-pulse</h2><p class="lead">Adapted from the Wed/Fri Slack, Linear, and transcript bot at Sophon Labs. About 3 hours a week, pointed at a 30-day sprint.</p>' +
+    '<h2>/sprint-pulse</h2><p class="lead">Diffs Call Transcripts, Client Slack, and SOW against the board.</p>' +
     '<div class="checks">' +
     '<button type="button" class="' + on("call") + '" data-act="source" data-id="call">' + mark("call") + "Call transcripts</button>" +
     '<button type="button" class="' + on("slack") + '" data-act="source" data-id="slack">' + mark("slack") + "Client Slack</button>" +
@@ -1299,9 +1289,6 @@ function overlay() {
   if (state.sheet === "pulse") return pulseSheet();
   return "";
 }
-function whyLine() {
-  return '<p class="why"><b>Why not just Linear or Trello?</b> Linear only knows what someone remembers to type into a ticket. This board diffs your live Task Board against Call Transcripts, Client Slack, and the signed SOW, auto-flagging silent client stalls (&gt;48h), unlogged call scope creep, and shadow-run eval failures before they blow up Day 30.</p>';
-}
 function toastHTML() {
   if (!state.toast) return "";
   const id = current().catch ? current().catch.id : "";
@@ -1311,7 +1298,7 @@ function toastHTML() {
     '<button type="button" data-act="hidetoast" data-label="Dismiss">Dismiss</button></div></div>';
 }
 function shell() {
-  return '<div class="wrap">' + topbar() + whyLine() + strip() + board() + "</div>" + overlay() + toastHTML();
+  return '<div class="wrap">' + topbar() + strip() + board() + "</div>" + overlay() + toastHTML();
 }
 function render() {
   if (!state.filter) state.filter = "all";
@@ -1320,7 +1307,7 @@ function render() {
   const live = document.getElementById("live");
   if (live) {
     const g = gatePhrase();
-    live.textContent = "Day " + current().day + ". " + g.head + ". " + state.rows.filter(isStall).length + " where the board does not match reality.";
+    live.textContent = "Day " + current().day + ". " + g.head + ". " + state.rows.filter(isStall).length + " slipping.";
   }
 }
 function paintRoi() {
@@ -1370,7 +1357,7 @@ function onClick(e) {
       r.status = "Upcoming";
       r.days = 0;
       clearDriftFields(r);
-      r.wait = "Phase-2 backlog · out of this SOW";
+      r.wait = "Phase 2 · outside signed SOW";
       r.phase = PHASES[1];
       markStale();
       render();
