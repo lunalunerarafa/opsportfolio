@@ -39,19 +39,19 @@ button{cursor:pointer}
 .skip{position:absolute;left:-999px;background:var(--ink);color:var(--paper);padding:8px 12px;z-index:50;text-decoration:none}
 .skip:focus{left:12px;top:12px}
 
-.wrap{max-width:1440px;margin:0 auto;padding:32px 32px 64px}
+.wrap{max-width:1440px;margin:0 auto;padding:16px 24px 24px}
 
-.top{display:flex;align-items:flex-start;justify-content:space-between;gap:28px;margin-bottom:16px}
-.brand{display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-width:0}
-.brand .pick summary{max-width:520px;text-align:left;line-height:1.35}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px;flex-wrap:nowrap}
+.brand{display:flex;flex-direction:row;align-items:center;gap:10px;min-width:0;white-space:nowrap}
+.brand .pick summary{max-width:none;white-space:nowrap;text-align:left;line-height:1.2}
 .logo{font-family:var(--font-display);font-weight:500;font-size:26px;letter-spacing:-.03em;line-height:1}
 .by{font-size:13px;color:var(--muted);background:var(--white);border-radius:999px;padding:5px 12px;box-shadow:0 1px 2px rgba(18,18,18,.04)}
-.controls{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.controls{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:nowrap;flex:0 0 auto}
 
 .pick{position:relative}
 .pick summary,.ghost,.run{
   list-style:none;border:0;border-radius:999px;background:var(--white);
-  box-shadow:0 1px 2px rgba(18,18,18,.05);padding:8px 14px;font-size:13.5px;color:var(--ink)
+  box-shadow:0 1px 2px rgba(18,18,18,.05);padding:7px 12px;font-size:13px;color:var(--ink);white-space:nowrap
 }
 .pick summary{cursor:pointer}
 .pick summary::-webkit-details-marker{display:none}
@@ -64,50 +64,57 @@ button{cursor:pointer}
 .menu button{display:block;width:100%;text-align:left;border:0;background:transparent;border-radius:10px;padding:10px 12px;font-size:13.5px}
 .menu button:hover,.menu button.on{background:var(--bone)}
 
-.filters{display:flex;gap:4px;align-items:center}
-.filters button{border:0;background:transparent;border-radius:999px;padding:8px 12px;font-size:13.5px;color:var(--muted)}
+.filters{display:flex;gap:2px;align-items:center}
+.filters button{border:0;background:transparent;border-radius:999px;padding:6px 10px;font-size:13px;color:var(--muted);white-space:nowrap}
 .filters button.on{background:var(--white);color:var(--ink);box-shadow:0 1px 2px rgba(18,18,18,.05)}
 .filters .n{color:var(--ember)}
-.run{background:var(--ink);color:var(--paper);padding:9px 16px;box-shadow:none}
+.run{background:var(--ink);color:var(--paper);padding:8px 12px;box-shadow:none}
 .run:hover{background:#2a2a2a}
 .run:disabled{opacity:.72;cursor:default}
 .run:disabled:hover{background:var(--ink)}
 
-.strip{display:flex;flex-wrap:wrap;align-items:center;gap:14px 32px;margin:0 0 28px;font-size:14.5px;color:var(--ink)}
+.strip{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 12px;white-space:nowrap;font-size:14px;color:var(--ink)}
+.strip-day{display:flex;align-items:center;gap:0;min-width:0}
 .strip .muted{color:var(--muted)}
-.meter{display:inline-block;width:128px;height:3px;background:rgba(18,18,18,.12);border-radius:99px;margin-left:12px;vertical-align:middle;overflow:hidden}
+.strip-pills{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.pill{
+  display:inline-flex;align-items:center;border:1px solid rgba(18,18,18,.16);border-radius:999px;
+  padding:5px 11px;background:#fff;font-size:13px;line-height:1.2;color:var(--ink);white-space:nowrap
+}
+.pill:hover{background:var(--bone);border-color:rgba(18,18,18,.32)}
+.pill:after{content:"↗";margin-left:6px;font-size:11px;color:var(--faint)}
+.pill.hot{border-color:rgba(255,59,24,.5);color:var(--ember)}
+.pill.hot:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ember);margin-right:7px;flex:0 0 auto}
+.pill.hot:after{color:var(--ember)}
+.meter{display:inline-block;width:96px;height:3px;background:rgba(18,18,18,.12);border-radius:99px;margin-left:12px;vertical-align:middle;overflow:hidden}
 .meter span{display:block;height:100%;background:var(--ink)}
-.texty{border:0;background:none;padding:0;font-size:14.5px;color:var(--ink);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;text-decoration-color:rgba(18,18,18,.3)}
-.texty.hot{color:var(--ember);text-decoration-color:rgba(255,59,24,.4)}
-.texty.quiet{color:var(--muted);text-decoration:none}
-.texty.quiet:hover{color:var(--ink)}
 
 .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;align-items:stretch}
-.col{background:var(--bone);border-radius:18px;padding:16px 12px 20px;min-height:520px}
+.col{background:var(--bone);border-radius:18px;padding:12px 10px 14px;min-height:0}
 .col.over{background:#E7E0D0}
-.col-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:2px 8px 14px}
+.col-h{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:0 6px 8px}
 .col h2{margin:0;font-family:var(--font-display);font-weight:500;font-size:15px;letter-spacing:-.02em;line-height:1.25}
 .col.slip{box-shadow:inset 0 3px 0 var(--ember)}
 .col.slip h2{color:var(--ember)}
 .cnt{font-family:var(--font-mono);font-size:12px;color:var(--faint)}
-.cards{display:flex;flex-direction:column;gap:12px;min-height:48px}
+.cards{display:flex;flex-direction:column;gap:10px;min-height:48px}
 .empty{margin:8px;color:var(--faint);font-size:13px}
 
 .card{
-  background:var(--white);border-radius:14px;padding:16px 16px 14px;
+  background:var(--white);border-radius:14px;padding:12px 14px;
   box-shadow:0 1px 2px rgba(18,18,18,.04),0 10px 28px rgba(18,18,18,.04);
   cursor:grab
 }
 .card:active{cursor:grabbing}
 .card.dragging{opacity:.45}
 .card.flagged{background:#FFF8F6}
-.micro{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.micro{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
 .phase{font-family:var(--font-label);font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--faint)}
 .age{font-family:var(--font-label);font-size:11px;letter-spacing:.03em;text-transform:uppercase;color:var(--faint)}
 .age.bad{color:var(--ember);background:rgba(255,59,24,.1);border-radius:999px;padding:3px 8px;white-space:normal;line-height:1.35}
 .card h3{margin:0;font-size:15.5px;font-weight:500;letter-spacing:-.01em;line-height:1.35}
 .callout{margin:12px 0 0;background:#FFF1EC;border-radius:10px;padding:10px 12px;font-size:13.5px;line-height:1.4}
-.card-f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
+.card-f{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
 .owner{font-size:12px;color:var(--muted);background:var(--bone);border-radius:999px;padding:4px 8px}
 .move{position:relative}
 .move summary{list-style:none;font-size:12px;color:var(--faint);cursor:pointer;padding:4px 2px}
@@ -168,13 +175,13 @@ button{cursor:pointer}
 .step b{color:var(--ink);font-weight:500}
 
 
-.diff{margin:12px 0 0;background:var(--paper);border-radius:10px;padding:8px 10px;font-family:var(--font-mono);font-size:11px;line-height:1.45}
+.diff{margin:8px 0 0;background:var(--paper);border-radius:10px;padding:6px 8px;font-family:var(--font-mono);font-size:11px;line-height:1.4}
 .diff .real{color:var(--ember);margin-top:3px}
 .eval{margin:12px 0 0}
 .eval .lab{font-size:12.5px;line-height:1.4;color:var(--muted)}
 .card .meter{display:block;width:100%;margin:8px 0 0}
 .impact{margin:12px 0 0;font-family:var(--font-mono);font-size:11.5px;line-height:1.4}
-.card-actions{display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:10px}
+.card-actions{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:6px}
 .card-actions button{border:0;background:none;padding:0;font-size:12.5px;line-height:1.35;color:var(--ink);text-align:left;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(18,18,18,.28)}
 .card-actions button:hover{text-decoration-color:var(--ink)}
 .reset{border:0;background:var(--white);border-radius:999px;padding:9px 14px;font-size:13.5px;box-shadow:0 1px 2px rgba(18,18,18,.05)}
@@ -190,8 +197,10 @@ button{cursor:pointer}
 .toast .card-actions button{color:var(--paper);text-decoration-color:rgba(250,246,236,.4)}
 @media(max-width:1100px){
   .board{grid-template-columns:1fr 1fr}
-  .top{align-items:flex-start;flex-direction:column}
-  .controls{justify-content:flex-start}
+  .top{align-items:flex-start;flex-direction:column;flex-wrap:wrap}
+  .brand,.brand .pick summary,.strip{white-space:normal}
+  .strip{flex-wrap:wrap;row-gap:8px}
+  .controls{justify-content:flex-start;flex-wrap:wrap}
 }
 @media(max-width:720px){
   .wrap{padding:20px 16px 40px}
@@ -1021,19 +1030,26 @@ function topbar() {
     reset +
     '<button type="button" class="run" data-act="sync"' + (syncing || synced ? " disabled" : "") + ">" + esc(syncLabel) + "</button></div></header>";
 }
+function gatePill() {
+  const blocked = state.gates.filter(g => g.status === "BLOCKED");
+  const pass = state.gates.filter(g => g.status === "PASS").length;
+  const total = state.gates.length;
+  const base = pass + "/" + total + " Gates";
+  if (!blocked.length) return { text: base, hot: false };
+  const word = blocked.length === 1 ? "1 Blocked" : blocked.length + " Blocked";
+  let detail = "";
+  if (blocked.some(g => g.id === "g3")) detail = state.scenarioId === "support" ? "22/30 tickets" : "18/30 KYB packs";
+  return { text: detail ? base + " · " + word + " (" + detail + ")" : base + " · " + word, hot: true };
+}
 function strip() {
   const sc = current();
-  const g = gatePhrase();
-  const slips = state.rows.filter(isStall).length;
+  const g = gatePill();
   const pct = Math.round(sc.day / 30 * 100);
-  const gateBtn = g.hot
-    ? '<button type="button" class="texty hot" data-act="gates">' + esc(g.head) + " · " + esc(g.hot) + "</button>"
-    : '<button type="button" class="texty" data-act="gates">' + esc(g.head) + "</button>";
-  return '<div class="strip"><div><b>Day ' + sc.day + " of 30</b> <span class=\"muted\">· " + esc(phaseNow(sc.day)) + '</span><span class="meter" aria-hidden="true"><span style="width:' + pct + '%"></span></span></div>' +
-    gateBtn +
-    '<button type="button" class="texty' + (slips ? " hot" : "") + '" data-act="watch">' + slips + " slipping</button>" +
-    '<button type="button" class="texty quiet" data-act="roi">Day-30 handoff</button>' +
-    '<button type="button" class="texty quiet" data-act="map">Workflow map</button></div>';
+  return '<div class="strip"><div class="strip-day"><b>Day ' + sc.day + " of 30</b> <span class=\"muted\">· " + esc(phaseNow(sc.day)) + '</span><span class="meter" aria-hidden="true"><span style="width:' + pct + '%"></span></span></div>' +
+    '<div class="strip-pills">' +
+    '<button type="button" class="pill' + (g.hot ? " hot" : "") + '" data-act="gates">' + esc(g.text) + "</button>" +
+    '<button type="button" class="pill" data-act="map">Workflow & Exception Map</button>' +
+    '<button type="button" class="pill" data-act="roi">Day-30 Handoff & ROI</button></div></div>';
 }
 function evidenceHTML(r) {
   const col = columnOf(r);
