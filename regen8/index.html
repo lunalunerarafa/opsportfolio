@@ -218,6 +218,17 @@
     background: currentColor;
   }
 
+  .kpi-chip {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    padding-left: 10px;
+    border-left: 1px solid var(--border-strong);
+  }
+  .kpi-chip strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
   .pace-right {
     display: flex;
     align-items: center;
@@ -306,6 +317,8 @@
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     color: var(--ink-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .col-pace-tag.done {
@@ -369,6 +382,10 @@
     font-size: 10px;
     color: var(--ink-muted);
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 
   .card-id-owner strong {
@@ -379,8 +396,10 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 9.5px;
     font-weight: 600;
-    padding: 1.5px 6px;
+    padding: 2px 6px;
     border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .badge-ok {
@@ -691,16 +710,16 @@
     </div>
   </header>
 
-  <!-- Row 2: Single-Glance Pace, Buffer & Reference Links -->
+  <!-- Row 2: Overall Sprint Health, Buffer & Live Parallel-Run KPIs -->
   <section class="pace-bar">
     <div class="pace-left">
       <span class="pace-status" id="pace-badge">
         <span class="pace-dot"></span>
-        <span id="pace-badge-text">Pace: 1.5d Buffer Left · Clear 3 Stage-03 blockers by Oct 25 to hold Oct 31 Cutover</span>
+        <span id="pace-badge-text">AT RISK · 1.5d Buffer Left (3 Blockers in Stage 03)</span>
       </span>
-      <span style="font-size:11.5px;color:var(--ink-secondary);">
-        <strong>Parallel Run:</strong> Prep time <strong>48m → 11.5m</strong> (18/30 packets) · Next Sync: <strong>Tue Oct 27</strong>
-      </span>
+      <span class="kpi-chip" id="kpi-progress"><strong>Progress:</strong> 6/12 Done · 1 Active · 3 Blocked</span>
+      <span class="kpi-chip"><strong>Cutover:</strong> Oct 31 (Day 24) · <strong>Close:</strong> Nov 6</span>
+      <span class="kpi-chip"><strong>Parallel Run KPI:</strong> Prep 48m → <strong>11.5m</strong> · Rejections 24% → <strong>4.2%</strong></span>
     </div>
 
     <div class="pace-right">
@@ -708,6 +727,8 @@
       <button class="link-pill" onclick="openHandoffModal()">Day-30 ROI &amp; Handover ↗</button>
     </div>
   </section>
+
+
 
   <!-- Main Workspace -->
   <main class="board-container">
@@ -1038,7 +1059,7 @@ const DEFAULT_CARDS = [
   }
 ];
 
-const STORAGE_KEY = "regen8_sprint_cards_v15";
+const STORAGE_KEY = "regen8_sprint_cards_v16";
 let cards = [];
 try {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -1098,17 +1119,26 @@ function renderBoard() {
   ];
 
   const activeBlockers = cards.filter(c => c.blocker).length;
+  const doneCount = cards.filter(c => c.status === 'done').length;
+  const activeCount = cards.filter(c => c.status === 'on_pace').length;
 
   const paceBadge = document.getElementById('pace-badge');
   const paceBadgeText = document.getElementById('pace-badge-text');
+  const kpiProgress = document.getElementById('kpi-progress');
+
+  if (kpiProgress) {
+    kpiProgress.innerHTML = `<strong>Progress:</strong> ${doneCount}/${cards.length} Done · ${activeCount} On Pace · ${activeBlockers} Blocked`;
+  }
 
   if (activeBlockers > 0) {
     paceBadge.className = 'pace-status';
-    paceBadgeText.textContent = `Pace: 1.5d Buffer Left · Clear ${activeBlockers} Stage-03 blockers by Oct 25 to hold Oct 31 Cutover`;
+    paceBadgeText.textContent = `AT RISK · 1.5d Buffer Left (${activeBlockers} Stage-03 Blockers)`;
   } else {
     paceBadge.className = 'pace-status on-track';
-    paceBadgeText.textContent = `Pace: On Schedule (+3d Buffer) · Oct 31 Cutover & Nov 6 Handover Clear`;
+    paceBadgeText.textContent = `ON TRACK · +3d Schedule Buffer · Oct 31 Cutover Clear`;
   }
+
+
 
   const grid = document.getElementById('board-grid');
   grid.innerHTML = '';
@@ -1156,11 +1186,20 @@ function renderBoard() {
 
       const btnClass = card.sent ? 'card-btn sent-state' : 'card-btn';
       const btnText = card.sent ? '✓ Sent · Follow Up' : (card.actionLabel || 'Send Follow-Up ↗');
-      const shortOwner = card.owner.replace(' · Client', '').replace(' (Client)', '').replace(' (Regen8)', '');
+      const shortOwner = card.owner.split(' (')[0];
+      const shortSource = (card.source || 'Sync')
+        .replace('GitHub ', 'gh')
+        .replace(' merged', '')
+        .replace(' (Day 2)', '')
+        .replace(' (40 Packets)', '')
+        .replace('Discovery ', '')
+        .replace('Oct 22 ', '')
+        .replace(' #meridian-ext', '')
+        .replace(' (49h)', '');
 
       el.innerHTML = `
         <div class="card-top">
-          <span class="card-id-owner"><strong>${card.id}</strong> · ${shortOwner} · <span style="color:var(--ink-secondary);">${card.source || 'Sprint Sync'}</span></span>
+          <span class="card-id-owner"><strong>${card.id}</strong> · ${shortOwner} · <span style="color:var(--ink-secondary);">${shortSource}</span></span>
           <span class="badge ${bClass}">${card.badge}</span>
         </div>
         <div class="card-title">${card.title}</div>
