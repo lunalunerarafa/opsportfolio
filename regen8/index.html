@@ -723,9 +723,11 @@
             <th>Stage</th>
             <th>Milestone / Deliverable</th>
             <th>Owner</th>
-            <th>Date / Status</th>
+            <th>Target Date</th>
+            <th>Status</th>
+            <th>Signal Source</th>
             <th>Dependency</th>
-            <th>Channel Action</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -742,6 +744,77 @@
   <div class="toast" id="toast">Action completed</div>
 
 <script>
+const OWNER_OPTIONS = [
+  "Sarah (Lead CSA · Client)",
+  "Mark (CCO · Client)",
+  "David (Sponsor · Client)",
+  "Head of Wealth Ops (Client)",
+  "Lead Eng (Regen8)",
+  "Architect (Regen8)",
+  "Regen8 Ops Lead",
+  "Lead CSA + Ops Lead"
+];
+
+const SOURCE_OPTIONS = [
+  "GitHub #14 merged",
+  "GitHub #29 merged",
+  "GitHub #41 merged",
+  "GitHub #58 CI eval",
+  "Slack #meridian-ext",
+  "Slack Thread (49h)",
+  "Oct 22 Call Transcript",
+  "Inbound Client Email",
+  "Signed SOW (Day 2)",
+  "Discovery Call Transcript",
+  "Ops Audit (40 Packets)",
+  "Cutover Runbook"
+];
+
+const DEP_OPTIONS = [
+  "Blocks Oct 31 Cutover",
+  "Blocks Trust Router",
+  "Would Slip Nov 6 (+6d)",
+  "Feeds M-11 Cutover",
+  "Needs M-08, M-09",
+  "Needs M-11",
+  "Unlocks M-02",
+  "Unlocks M-04",
+  "Unlocks M-06",
+  "Unlocks M-07",
+  "Unlocks M-09",
+  "Unlocks Stage 03",
+  "On Track"
+];
+
+const STATUS_META = {
+  done:        { label: "Verified / Closed", badgeType: "ok",      blocker: false },
+  on_pace:     { label: "On Pace",           badgeType: "ok",      blocker: false },
+  overdue:     { label: "Blocked · Overdue", badgeType: "danger",  blocker: true  },
+  at_risk:     { label: "At Risk · Waiting", badgeType: "danger",  blocker: true  },
+  scope_guard: { label: "Scope Creep Guard", badgeType: "danger",  blocker: true  },
+  scheduled:   { label: "Scheduled",         badgeType: "neutral", blocker: false }
+};
+
+function formatShortDate(isoDate) {
+  if (!isoDate) return "Oct 25";
+  const parts = isoDate.split("-");
+  if (parts.length !== 3) return isoDate;
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const m = months[parseInt(parts[1], 10) - 1] || "Oct";
+  const d = parseInt(parts[2], 10);
+  return `${m} ${d}`;
+}
+
+function computeBadge(targetDate, status, customSuffix) {
+  const shortD = formatShortDate(targetDate);
+  if (status === "done") return `Closed ${shortD}`;
+  if (status === "on_pace") return `On Pace · Due ${shortD}`;
+  if (status === "overdue") return `Due ${shortD} · Overdue`;
+  if (status === "at_risk") return `Due ${shortD} · At Risk`;
+  if (status === "scope_guard") return `Scope Guard · +6d Risk`;
+  return `Target ${shortD}`;
+}
+
 const DEFAULT_CARDS = [
   // Stage 01: Oct 8 – Oct 12 (Days 1–5)
   {
@@ -749,7 +822,10 @@ const DEFAULT_CARDS = [
     col: "stage1",
     stageLabel: "01 Align",
     title: "30-day workflow scope & baseline locked",
-    owner: "David (Sponsor)",
+    owner: "David (Sponsor · Client)",
+    targetDate: "2026-10-09",
+    status: "done",
+    source: "Signed SOW (Day 2)",
     badge: "Signed Oct 9",
     badgeType: "ok",
     dep: "Unlocks M-02",
@@ -762,7 +838,10 @@ const DEFAULT_CARDS = [
     col: "stage1",
     stageLabel: "01 Align",
     title: "Salesforce FSC & Schwab sandbox connected",
-    owner: "Head of Wealth Ops · gh#14 merged",
+    owner: "Head of Wealth Ops (Client)",
+    targetDate: "2026-10-11",
+    status: "done",
+    source: "GitHub #14 merged",
     badge: "Verified Oct 11",
     badgeType: "ok",
     dep: "Unlocks M-04",
@@ -776,6 +855,9 @@ const DEFAULT_CARDS = [
     stageLabel: "01 Align",
     title: "Failure-mode audit on 40 prior households",
     owner: "Regen8 Ops Lead",
+    targetDate: "2026-10-11",
+    status: "done",
+    source: "Ops Audit (40 Packets)",
     badge: "Closed Oct 11 (+1d)",
     badgeType: "ok",
     dep: "Unlocks M-06",
@@ -790,7 +872,10 @@ const DEFAULT_CARDS = [
     col: "stage2",
     stageLabel: "02 Redesign",
     title: "End-to-end onboarding architecture signed",
-    owner: "Architect · gh#29 merged",
+    owner: "Architect (Regen8)",
+    targetDate: "2026-10-15",
+    status: "done",
+    source: "GitHub #29 merged",
     badge: "Signed Oct 15",
     badgeType: "ok",
     dep: "Unlocks M-07",
@@ -803,7 +888,10 @@ const DEFAULT_CARDS = [
     col: "stage2",
     stageLabel: "02 Redesign",
     title: "Human approval boundaries locked with Compliance",
-    owner: "Lead CSA + CCO",
+    owner: "Mark (CCO · Client)",
+    targetDate: "2026-10-17",
+    status: "done",
+    source: "Discovery Call Transcript",
     badge: "Signed Oct 17",
     badgeType: "ok",
     dep: "Unlocks M-09",
@@ -816,7 +904,10 @@ const DEFAULT_CARDS = [
     col: "stage2",
     stageLabel: "02 Redesign",
     title: "42 Schwab & Fidelity form-check rules codified",
-    owner: "Lead Eng · gh#41 merged",
+    owner: "Lead Eng (Regen8)",
+    targetDate: "2026-10-19",
+    status: "done",
+    source: "GitHub #41 merged",
     badge: "Locked Oct 19",
     badgeType: "ok",
     dep: "Unlocks Stage 03",
@@ -831,10 +922,13 @@ const DEFAULT_CARDS = [
     col: "stage3",
     stageLabel: "03 Parallel Run",
     title: "Parallel shadow run on standard households (18/30)",
-    owner: "Lead Eng · gh#58 CI eval",
+    owner: "Lead Eng (Regen8)",
+    targetDate: "2026-10-26",
+    status: "on_pace",
+    source: "GitHub #58 CI eval",
     badge: "On Pace · Due Oct 26",
     badgeType: "ok",
-    dep: "Feeds M-11",
+    dep: "Feeds M-11 Cutover",
     blocker: false,
     note: "Running beside live team: 18 standard households processed at 11.5m prep time with 95.8% form accuracy.",
     details: "Standard individual, joint, and IRA households are already beating the ≤12m target in parallel testing."
@@ -844,7 +938,10 @@ const DEFAULT_CARDS = [
     col: "stage3",
     stageLabel: "03 Parallel Run",
     title: "Missing 12 complex-trust test packets from client",
-    owner: "Sarah (Lead CSA)",
+    owner: "Sarah (Lead CSA · Client)",
+    targetDate: "2026-10-21",
+    status: "overdue",
+    source: "Slack #meridian-ext",
     badge: "Due Oct 21 · Overdue 2d",
     badgeType: "danger",
     dep: "Blocks Oct 31 Cutover",
@@ -864,7 +961,10 @@ const DEFAULT_CARDS = [
     col: "stage3",
     stageLabel: "03 Parallel Run",
     title: "CCO sign-off on co-trustee routing rule",
-    owner: "Mark (CCO)",
+    owner: "Mark (CCO · Client)",
+    targetDate: "2026-10-24",
+    status: "at_risk",
+    source: "Slack Thread (49h)",
     badge: "Due Oct 24 · Wait 49h",
     badgeType: "danger",
     dep: "Blocks Trust Router",
@@ -884,16 +984,19 @@ const DEFAULT_CARDS = [
     col: "stage3",
     stageLabel: "03 Parallel Run",
     title: "Mid-sprint client ask: add quarterly fee-billing audit",
-    owner: "David (Sponsor)",
+    owner: "David (Sponsor · Client)",
+    targetDate: "2026-10-22",
+    status: "scope_guard",
+    source: "Oct 22 Call Transcript",
     badge: "Scope Guard · +6d Risk",
     badgeType: "danger",
-    dep: "Would Slip Nov 6",
+    dep: "Would Slip Nov 6 (+6d)",
     blocker: true,
     sent: false,
     channelType: "email",
     channelTarget: "david@meridianwealth.example",
     recipientEmail: "david@meridianwealth.example",
-    reason: "Asked on Oct 22 call to add fee-billing checks (+6 eng days — would push go-live past Nov 6).",
+    reason: "Flagged from Oct 22 call transcript: ask adds +6 eng days and would push go-live past Nov 6.",
     actionLabel: "Send Scope-Guard Email ↗",
     details: "Protects the Nov 6 Day-30 deadline by logging fee-billing as the #1 expansion workflow for Sprint #2 instead of derailing Household Onboarding.",
     draftSubject: "Protecting our Nov 6 Household Onboarding go-live + queueing Fee-Billing for Sprint #2",
@@ -907,6 +1010,9 @@ const DEFAULT_CARDS = [
     stageLabel: "04 Handover",
     title: "CSA live cutover & manual-override drill",
     owner: "Lead CSA + Ops Lead",
+    targetDate: "2026-10-31",
+    status: "scheduled",
+    source: "Cutover Runbook",
     badge: "Target Oct 31",
     badgeType: "neutral",
     dep: "Needs M-08, M-09",
@@ -920,6 +1026,9 @@ const DEFAULT_CARDS = [
     stageLabel: "04 Handover",
     title: "Day-30 ownership transfer & Sprint #2 expansion brief",
     owner: "Regen8 Ops Lead",
+    targetDate: "2026-11-05",
+    status: "scheduled",
+    source: "Cutover Runbook",
     badge: "Target Nov 5",
     badgeType: "neutral",
     dep: "Needs M-11",
@@ -929,7 +1038,7 @@ const DEFAULT_CARDS = [
   }
 ];
 
-const STORAGE_KEY = "regen8_sprint_cards_v12";
+const STORAGE_KEY = "regen8_sprint_cards_v14";
 let cards = [];
 try {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -1047,10 +1156,11 @@ function renderBoard() {
 
       const btnClass = card.sent ? 'card-btn sent-state' : 'card-btn';
       const btnText = card.sent ? '✓ Sent · Follow Up' : (card.actionLabel || 'Send Follow-Up ↗');
+      const shortOwner = card.owner.replace(' · Client', '').replace(' (Client)', '').replace(' (Regen8)', '');
 
       el.innerHTML = `
         <div class="card-top">
-          <span class="card-id-owner"><strong>${card.id}</strong> · ${card.owner}</span>
+          <span class="card-id-owner"><strong>${card.id}</strong> · ${shortOwner} · <span style="color:var(--ink-secondary);">${card.source || 'Sprint Sync'}</span></span>
           <span class="badge ${bClass}">${card.badge}</span>
         </div>
         <div class="card-title">${card.title}</div>
@@ -1072,13 +1182,17 @@ function renderBoard() {
 
   // Render Schedule & RAID Table View
   const tbody = document.getElementById('table-body');
-  tbody.innerHTML = cards.map(c => `
+  tbody.innerHTML = cards.map(c => {
+    const statusLabel = (STATUS_META[c.status] && STATUS_META[c.status].label) || c.badge;
+    return `
     <tr class="${c.blocker ? 'row-blocker' : ''}" style="cursor:pointer;" onclick="if(!event.target.closest('button'))openCardModal('${c.id}')">
       <td style="font-family:'JetBrains Mono',monospace;font-weight:600;">${c.id}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:10.5px;">${c.stageLabel}</td>
       <td style="font-weight:600;">${c.title}</td>
       <td>${c.owner}</td>
-      <td><span class="badge ${c.badgeType === 'ok' ? 'badge-ok' : c.badgeType === 'danger' ? 'badge-danger' : 'badge-neutral'}">${c.badge}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:11px;">${formatShortDate(c.targetDate)}, 2026</td>
+      <td><span class="badge ${c.badgeType === 'ok' ? 'badge-ok' : c.badgeType === 'danger' ? 'badge-danger' : 'badge-neutral'}">${statusLabel}</span></td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-secondary);">${c.source || '—'}</td>
       <td style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:${c.blocker ? 'var(--danger)' : 'var(--ink-secondary)'};">${c.dep || '—'}</td>
       <td>
         ${c.blocker
@@ -1087,7 +1201,7 @@ function renderBoard() {
         }
       </td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 function openDispatchModal(id) {
@@ -1098,7 +1212,7 @@ function openDispatchModal(id) {
   sheet.innerHTML = `
     <div class="modal-header">
       <div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">DISPATCH UNBLOCK MESSAGE · ${c.id} (${c.dep})</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">DISPATCH UNBLOCK MESSAGE · ${c.id} · FLAGGED VIA ${(c.source || 'SPRINT SYNC').toUpperCase()}</div>
         <h2 class="modal-title">${c.title}</h2>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1166,12 +1280,22 @@ function resolveCard(id) {
   const c = cards.find(x => x.id === id);
   if (!c) return;
   c.blocker = false;
+  c.status = "done";
+  c.targetDate = "2026-10-23";
   c.badge = "Cleared Oct 23";
   c.badgeType = "ok";
   c.note = "Unblocked on Oct 23 and verified in Stage 03 parallel run.";
   saveCards();
   renderBoard();
   showToast(`Cleared ${c.id}: ${c.title}`);
+}
+
+function buildSelectOptions(list, currentVal) {
+  const set = new Set(list);
+  if (currentVal) set.add(currentVal);
+  return Array.from(set).map(item =>
+    `<option value="${item.replace(/"/g, '&quot;')}" ${item === currentVal ? 'selected' : ''}>${item}</option>`
+  ).join('');
 }
 
 function openCardModal(id) {
@@ -1181,23 +1305,57 @@ function openCardModal(id) {
   sheet.innerHTML = `
     <div class="modal-header">
       <div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">${c.id} · ${c.stageLabel.toUpperCase()} · DEPENDENCY: ${(c.dep || 'NONE').toUpperCase()}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">${c.id} · ${c.stageLabel.toUpperCase()} · SIGNAL SOURCE: ${(c.source || 'SPRINT SYNC').toUpperCase()}</div>
         <h2 class="modal-title">${c.title}</h2>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="form-grid">
       <div class="form-field">
-        <label>Owner</label>
-        <input type="text" id="edit-owner" value="${c.owner.replace(/"/g, '&quot;')}" />
+        <label>Stage</label>
+        <select id="edit-stage">
+          <option value="stage1" ${c.col === 'stage1' ? 'selected' : ''}>01 · Align & Discover (Oct 8–12)</option>
+          <option value="stage2" ${c.col === 'stage2' ? 'selected' : ''}>02 · Decompose & Redesign (Oct 13–19)</option>
+          <option value="stage3" ${c.col === 'stage3' ? 'selected' : ''}>03 · Build & Parallel Run (Oct 20–30)</option>
+          <option value="stage4" ${c.col === 'stage4' ? 'selected' : ''}>04 · Improve & Expand (Oct 31–Nov 6)</option>
+        </select>
       </div>
       <div class="form-field">
-        <label>Date / Status Badge</label>
-        <input type="text" id="edit-badge" value="${c.badge.replace(/"/g, '&quot;')}" />
+        <label>Status</label>
+        <select id="edit-status">
+          <option value="done" ${c.status === 'done' ? 'selected' : ''}>Verified / Closed</option>
+          <option value="on_pace" ${c.status === 'on_pace' ? 'selected' : ''}>On Pace</option>
+          <option value="overdue" ${c.status === 'overdue' ? 'selected' : ''}>Blocked · Overdue</option>
+          <option value="at_risk" ${c.status === 'at_risk' ? 'selected' : ''}>At Risk · Waiting on Client</option>
+          <option value="scope_guard" ${c.status === 'scope_guard' ? 'selected' : ''}>Scope Creep Guard (+6d Risk)</option>
+          <option value="scheduled" ${c.status === 'scheduled' ? 'selected' : ''}>Scheduled (Upcoming)</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Target / Close Date</label>
+        <input type="date" id="edit-date" value="${c.targetDate || '2026-10-25'}" min="2026-10-08" max="2026-11-06" />
+      </div>
+      <div class="form-field">
+        <label>Owner</label>
+        <select id="edit-owner">
+          ${buildSelectOptions(OWNER_OPTIONS, c.owner)}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Signal Source (Auto-Sync)</label>
+        <select id="edit-source">
+          ${buildSelectOptions(SOURCE_OPTIONS, c.source || 'Slack #meridian-ext')}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Critical Path Dependency</label>
+        <select id="edit-dep">
+          ${buildSelectOptions(DEP_OPTIONS, c.dep || 'On Track')}
+        </select>
       </div>
     </div>
     <div class="form-field">
-      <label>Notes / Blocker Summary</label>
+      <label>Operational Summary / Blocker Context</label>
       <textarea id="edit-note" rows="2">${c.blocker ? c.reason : c.note}</textarea>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:4px;">
@@ -1214,41 +1372,66 @@ function openCardModal(id) {
 function saveCardEdits(id) {
   const c = cards.find(x => x.id === id);
   if (!c) return;
-  c.owner = document.getElementById('edit-owner').value.trim() || c.owner;
-  c.badge = document.getElementById('edit-badge').value.trim() || c.badge;
+  const stageMap = {
+    stage1: "01 Align",
+    stage2: "02 Redesign",
+    stage3: "03 Parallel Run",
+    stage4: "04 Handover"
+  };
+  const newCol = document.getElementById('edit-stage').value;
+  const newStatus = document.getElementById('edit-status').value;
+  const newDate = document.getElementById('edit-date').value || c.targetDate;
+  const meta = STATUS_META[newStatus] || STATUS_META.on_pace;
+
+  c.col = newCol;
+  c.stageLabel = stageMap[newCol] || c.stageLabel;
+  c.status = newStatus;
+  c.targetDate = newDate;
+  c.owner = document.getElementById('edit-owner').value;
+  c.source = document.getElementById('edit-source').value;
+  c.dep = document.getElementById('edit-dep').value;
+  c.badgeType = meta.badgeType;
+  c.blocker = meta.blocker;
+  c.badge = computeBadge(newDate, newStatus);
+
   const noteVal = document.getElementById('edit-note').value.trim();
-  if (c.blocker) c.reason = noteVal;
-  else c.note = noteVal;
+  if (c.blocker) {
+    c.reason = noteVal || c.reason || c.note;
+    if (!c.actionLabel) c.actionLabel = "Slack #meridian-ext ↗";
+  } else {
+    c.note = noteVal || c.note || c.reason;
+  }
+
   saveCards();
   renderBoard();
   closeModal();
-  showToast(`Saved updates to ${c.id}`);
+  showToast(`Saved ${c.id} (${c.badge})`);
 }
 
-/* Realistic Day-1 Intake Modal: Shows exactly how this board gets populated on Day 0 / Day 1 */
+/* Realistic Day-1 Intake Modal: Shows how the board initializes and auto-updates from GitHub, Call Transcripts, Slack & Email */
 function openDay1SetupModal() {
   const sheet = document.getElementById('modal-sheet');
   sheet.innerHTML = `
     <div class="modal-header">
       <div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">DAY-0 / DAY-1 SPRINT INITIALIZATION</div>
-        <h2 class="modal-title">How a New 30-Day Sprint Board Gets Populated</h2>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-muted);margin-bottom:4px;">ZERO-BUSYWORK SPRINT INTAKE & LIVE SIGNAL SYNC</div>
+        <h2 class="modal-title">How This 30-Day Tracker Initializes & Updates</h2>
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
 
     <div class="row-list">
       <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">STEP 1 · STANDARD 12-MILESTONE R8 TEMPLATE (PRE-LOADED DAY 0)</strong>
-        <div style="font-size:12px;color:var(--ink-secondary);">Every 30-day sprint starts from the same 4-stage skeleton (Days 1–5 Align, Days 6–12 Redesign, Days 13–23 Parallel Run, Days 24–30 Handover) so we never invent project structure from scratch.</div>
+        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">1 · DAY-0 TEMPLATE + SOW & DISCOVERY TRANSCRIPT INTAKE</strong>
+        <div style="font-size:12px;color:var(--ink-secondary);">Every engagement starts from our standard 12-milestone 4-stage skeleton. From the signed SOW and Day-1 kickoff call transcript, we lock the 5 sprint variables: priority workflow, system of record, human sign-off owners, baseline metric, and 30-sample eval dataset owner.</div>
       </div>
       <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">STEP 2 · SOW + DISCOVERY CALL INTAKE (POPULATES DAYS 1–2)</strong>
-        <div style="font-size:12px;color:var(--ink-secondary);">From the signed SOW and Day-1 kickoff call transcript, we lock the 5 variables: (1) Single Priority Workflow, (2) System of Record, (3) Human Sign-Off Owner, (4) Baseline Metric, and (5) 30-Sample Eval Dataset Owner.</div>
+        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">2 · GITHUB WEBHOOK AUTO-SYNC (DEVS NEVER DO PM BUSYWORK)</strong>
+        <div style="font-size:12px;color:var(--ink-secondary);">Engineers never manually move cards—PR merges (<code>gh#14</code>, <code>gh#29</code>, <code>gh#41</code>) and CI shadow-eval runs (<code>gh#58</code>) automatically update engineering milestones and accuracy metrics.</div>
       </div>
       <div class="row-item" style="flex-direction:column;align-items:flex-start;gap:4px;">
-        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">STEP 3 · ZERO-TOUCH GITHUB + EVAL SYNC FOR ENGINEERS (NO PM BUSYWORK)</strong>
-        <div style="font-size:12px;color:var(--ink-secondary);">Devs never manually update cards here—engineering milestones (like <code>gh#41</code> ruleset merge or <code>gh#58</code> shadow eval accuracy) auto-update via GitHub webhook, while Ops owns client chases, compliance sign-offs, and scope protection.</div>
+        <strong style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);">3 · CALL TRANSCRIPTS, SLACK & EMAIL BLOCKER RADAR</strong>
+        <div style="font-size:12px;color:var(--ink-secondary);">Client blockers, compliance threads waiting &gt;24h, and mid-sprint scope creep are flagged directly from call transcripts (<code>M-10</code>), client Slack channels (<code>M-08</code>, <code>M-09</code>), and email—staging one-click unblock messages before they slip Day-30 cutover.</div>
       </div>
     </div>
 
@@ -1283,19 +1466,37 @@ function openAddModal() {
         </select>
       </div>
       <div class="form-field">
-        <label>Item Type</label>
-        <select id="new-type">
-          <option value="blocker" selected>Blocker / At Risk</option>
-          <option value="milestone">On-Pace Milestone</option>
+        <label>Status</label>
+        <select id="new-status">
+          <option value="overdue" selected>Blocked · Overdue</option>
+          <option value="at_risk">At Risk · Waiting on Client</option>
+          <option value="scope_guard">Scope Creep Guard</option>
+          <option value="on_pace">On Pace</option>
+          <option value="scheduled">Scheduled (Upcoming)</option>
+          <option value="done">Verified / Closed</option>
         </select>
       </div>
       <div class="form-field">
-        <label>Owner</label>
-        <input type="text" id="new-owner" placeholder="e.g. Sarah (Lead CSA)" />
+        <label>Target / Due Date</label>
+        <input type="date" id="new-date" value="2026-10-25" min="2026-10-08" max="2026-11-06" />
       </div>
       <div class="form-field">
-        <label>Due Date / Status Badge</label>
-        <input type="text" id="new-badge" placeholder="e.g. Due Oct 25 · At Risk" />
+        <label>Owner</label>
+        <select id="new-owner">
+          ${buildSelectOptions(OWNER_OPTIONS, "Sarah (Lead CSA · Client)")}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Signal Source</label>
+        <select id="new-source">
+          ${buildSelectOptions(SOURCE_OPTIONS, "Slack #meridian-ext")}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Critical Path Dependency</label>
+        <select id="new-dep">
+          ${buildSelectOptions(DEP_OPTIONS, "Blocks Oct 31 Cutover")}
+        </select>
       </div>
     </div>
     <div class="form-field">
@@ -1316,11 +1517,16 @@ function openAddModal() {
 
 function submitNewCard(nextId) {
   const col = document.getElementById('new-stage').value;
-  const isBlocker = document.getElementById('new-type').value === 'blocker';
-  const owner = document.getElementById('new-owner').value.trim() || "Ops Lead";
-  const badge = document.getElementById('new-badge').value.trim() || (isBlocker ? "Due Oct 25 · At Risk" : "Target Oct 28");
+  const status = document.getElementById('new-status').value;
+  const targetDate = document.getElementById('new-date').value || "2026-10-25";
+  const owner = document.getElementById('new-owner').value;
+  const source = document.getElementById('new-source').value;
+  const dep = document.getElementById('new-dep').value;
   const title = document.getElementById('new-title').value.trim() || "New sprint milestone";
-  const note = document.getElementById('new-note').value.trim() || "Logged during sprint sync.";
+  const note = document.getElementById('new-note').value.trim() || "Logged from sprint signal.";
+
+  const meta = STATUS_META[status] || STATUS_META.on_pace;
+  const badge = computeBadge(targetDate, status);
 
   const stageMap = {
     stage1: "01 Align",
@@ -1335,16 +1541,19 @@ function submitNewCard(nextId) {
     stageLabel: stageMap[col],
     title,
     owner,
+    targetDate,
+    status,
+    source,
     badge,
-    badgeType: isBlocker ? "danger" : "neutral",
-    dep: isBlocker ? "Blocks Cutover" : "On Track",
-    blocker: isBlocker,
+    badgeType: meta.badgeType,
+    dep,
+    blocker: meta.blocker,
     sent: false,
     channelType: "slack",
     channelTarget: "#meridian-onboarding-ext",
     recipientEmail: "client@meridianwealth.example",
-    reason: isBlocker ? note : "",
-    note: isBlocker ? "" : note,
+    reason: meta.blocker ? note : "",
+    note: meta.blocker ? "" : note,
     actionLabel: "Slack #meridian-ext ↗",
     details: note,
     draftSubject: `Follow-up: ${title}`,
@@ -1354,7 +1563,7 @@ function submitNewCard(nextId) {
   saveCards();
   renderBoard();
   closeModal();
-  showToast(`Added ${nextId} to ${stageMap[col]}`);
+  showToast(`Added ${nextId} (${badge})`);
 }
 
 function resetDefaultSprint() {
@@ -1429,7 +1638,7 @@ function openHandoffModal() {
 function openDigestModal() {
   const activeBlockers = cards.filter(c => c.blocker);
   const blockerLines = activeBlockers.length > 0
-    ? activeBlockers.map(b => `• [${b.id} · Owner: ${b.owner} · ${b.badge}] ${b.title} — ${b.reason}`).join('\n')
+    ? activeBlockers.map(b => `• [${b.id} · Owner: ${b.owner} · ${b.badge} · via ${b.source}] ${b.title} — ${b.reason}`).join('\n')
     : `• All Stage 03 blockers cleared — on schedule for Oct 31 live cutover.`;
 
   const subject = "Meridian Wealth × Regen8 — Week 3 Sprint Pulse (Fri Oct 23 · Day 16 of 30)";
@@ -1437,12 +1646,10 @@ function openDigestModal() {
 
 1. SCHEDULE & PACE SUMMARY
 • Stage 01 (Oct 8–12) & Stage 02 (Oct 13–19) closed on schedule.
-• Stage 03 Parallel Run (Oct 20–30) is beating baseline on the first 18 households (prep time cut from 48m → 11.5m).
+• Stage 03 Parallel Run (Oct 20–30) is beating baseline on the first 18 households (prep time cut from 48m → 11.5m via GitHub #58 CI eval).
 
 2. ACTION ITEMS & CRITICAL PATH BLOCKERS (${activeBlockers.length} OPEN)
 ${blockerLines}`;
-
-  const mailtoHref = `mailto:david@meridianwealth.example?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
 
   const sheet = document.getElementById('modal-sheet');
   sheet.innerHTML = `
@@ -1453,14 +1660,30 @@ ${blockerLines}`;
       </div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
-    <div class="draft-box">${text}</div>
+    <div class="channel-bar">
+      <div>
+        <strong>To:</strong> <span style="font-family:'JetBrains Mono',monospace;">david@meridianwealth.example</span>
+        <span style="color:var(--ink-muted);margin-left:8px;">· CC: #meridian-onboarding-ext</span>
+      </div>
+      <span class="badge badge-neutral">Day 16 of 30</span>
+    </div>
+    <div class="form-field">
+      <label>Editable Sponsor Pulse Body</label>
+      <textarea id="pulse-body" rows="7" style="font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.45;">${text}</textarea>
+    </div>
     <div style="display:flex;justify-content:flex-end;gap:8px;">
-      <a class="btn" href="${mailtoHref}" onclick="showToast('Opening Sponsor Pulse in Email App...')">Open in Email App ↗</a>
+      <button class="btn" onclick="openPulseEmail('${subject.replace(/'/g, "\'")}')">Open in Email App ↗</button>
       <button class="btn" onclick="window.open('slack://open','_blank');showToast('Opening Slack #meridian-onboarding-ext...')">Post to #meridian-ext ↗</button>
       <button class="btn btn-primary" onclick="closeModal();showToast('Sponsor Pulse dispatched to David & #meridian-ext');">Send Pulse Now</button>
     </div>
   `;
   document.getElementById('modal-backdrop').classList.add('open');
+}
+
+function openPulseEmail(subject) {
+  const body = document.getElementById('pulse-body')?.value || '';
+  window.location.href = `mailto:david@meridianwealth.example?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  showToast('Opening Sponsor Pulse in Email App...');
 }
 
 function closeModal() {
