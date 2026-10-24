@@ -70,6 +70,8 @@ button{cursor:pointer}
 .filters .n{color:var(--ember)}
 .run{background:var(--ink);color:var(--paper);padding:9px 16px;box-shadow:none}
 .run:hover{background:#2a2a2a}
+.run:disabled{opacity:.72;cursor:default}
+.run:disabled:hover{background:var(--ink)}
 
 .strip{display:flex;flex-wrap:wrap;align-items:center;gap:14px 32px;margin:0 0 28px;font-size:14.5px;color:var(--ink)}
 .strip .muted{color:var(--muted)}
@@ -176,7 +178,12 @@ button{cursor:pointer}
 .card-actions button{border:0;background:none;padding:0;font-size:12.5px;line-height:1.35;color:var(--ink);text-align:left;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(18,18,18,.28)}
 .card-actions button:hover{text-decoration-color:var(--ink)}
 .reset{border:0;background:var(--white);border-radius:999px;padding:9px 14px;font-size:13.5px;box-shadow:0 1px 2px rgba(18,18,18,.05)}
-.col.slip.scanning{box-shadow:inset 0 3px 0 var(--ember),0 0 0 2px rgba(255,59,24,.28)}
+.col.slip.scanning{animation:slip-pulse .6s ease}
+@keyframes slip-pulse{
+  0%,100%{box-shadow:inset 0 3px 0 var(--ember),0 0 0 0 rgba(255,59,24,0)}
+  50%{box-shadow:inset 0 3px 0 var(--ember),0 0 0 3px rgba(255,59,24,.35)}
+}
+.quote{margin:8px 0 0;font-family:var(--font-mono);font-size:13px;line-height:1.5;color:var(--ink);background:var(--paper);border-radius:10px;padding:10px 12px}
 .toast{position:fixed;z-index:40;left:50%;bottom:24px;transform:translateX(-50%);width:min(520px,calc(100vw - 32px));background:var(--ink);color:var(--paper);border-radius:14px;padding:14px 16px 16px;box-shadow:0 16px 40px rgba(18,18,18,.22)}
 .toast p{margin:0 0 8px;font-size:13.5px;line-height:1.4}
 .toast .card-actions{margin-top:4px}
@@ -192,7 +199,10 @@ button{cursor:pointer}
   .col{min-height:0}
   .filters{flex-wrap:wrap}
 }
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .col.slip.scanning{animation:none;box-shadow:inset 0 3px 0 var(--ember),0 0 0 2px rgba(255,59,24,.28)}
+}
 </style>
 </head>
 <body>
@@ -205,7 +215,6 @@ const TABS = [
   ["gate", "01 / 72h Intake Gate"],
   ["map", "02 / Exception & Handoff Map"],
   ["tracker", "03 / 30-Day Sprint Tracker & Drift Log"],
-  ["pulse", "04 / Claude Code /sprint-pulse"],
   ["handoff", "05 / Day-30 Handoff & ROI Sign-Off"]
 ];
 const PHASES = [
@@ -238,7 +247,7 @@ const SCENARIOS = {
       closed: "The Thursday call asked for legacy sanctions re-screening. That card is no longer an open drift, so this item is closed.",
       noteLine: "Thursday's sync asked for automated sanctions re-screening on legacy accounts. That is outside the Day-30 SOW, so it goes to phase 2."
     },
-    call: "Client Ops Lead: while we are in there, can we add automated sanctions re-screening for the legacy accounts too.\nOps Lead: that is outside the day-30 SOW. About six engineering days. Logging it to phase 2.\nClient Sponsor: sending the 30 historical KYB files this afternoon.\nClient Compliance: I have not signed the auto-approval confidence threshold. Nothing under the $25k volume cap goes out until I do.\nOps Lead: need a yes or no today.",
+    call: "Client Sponsor: can we add a custom webhook retry UI before cutover.\nOps Lead: that retry UI is not in the signed SOW. Logging it.\nClient Ops Lead: while we are in there, can we add automated sanctions re-screening for the legacy accounts too.\nOps Lead: that is outside the day-30 SOW. About six engineering days. Logging it to phase 2.\nClient Sponsor: sending the 30 historical KYB files this afternoon.\nClient Compliance: I have not signed the auto-approval confidence threshold. Nothing under the $25k volume cap goes out until I do.\nOps Lead: need a yes or no today.",
     slack: "Client Sponsor [Tue 10:14]: sending the 30 historical KYB files this afternoon.\nOps Lead [Thu 16:02]: folder has 18 packs. 12 non-US multi-UBO packs still missing.\nClient Compliance [Wed 11:40]: holding sign-off on the auto-approval confidence threshold. The volume cap under $25k is not agreed.\nLead Engineer [Thu 9:05]: exception router is 26 of 30 clean in shadow. Four multi-UBO edge cases still fail.",
     board: "KYB-30  Historical packs            In Progress\nSANC    Legacy re-screening         Not on the board\nTHRESH  Auto-approval threshold     On Track\nROUTE   Exception router            In Progress  26/30",
     slackPull: "Slack: 18/30 KYB packs in the folder. 12 non-US multi-UBO packs missing.",
@@ -246,9 +255,11 @@ const SCENARIOS = {
     catch: {
       id: "k-catch", code: "K-12", phase: PHASES[1], order: 0, injected: true,
       name: "Custom webhook retry UI", owner: "Client Sponsor", status: "Blocked >48h", days: 2,
-      badge: "Call scope drift · just caught",
+      badge: "Just caught",
       boardSays: "Not Logged", realitySrc: "TODAY'S CALL",
       realityShort: "Webhook retry UI asked for on today's call",
+      quoteFrom: "Call transcript",
+      quote: "can we add a custom webhook retry UI before cutover.",
       reality: "Caught on today's call transcript: the client asked for a custom webhook retry UI. It is not in the signed SOW.",
       unblock: "Send the scope-guardrail note. Leave the retry UI out of this sprint.",
       slip: "Outside signed SOW.",
@@ -327,12 +338,14 @@ const SCENARIOS = {
       { id: "k1", code: "K-01", phase: PHASES[3], name: "Production keys for the three jurisdictions", owner: "Client Sponsor", status: "Upcoming", days: 0, wait: "Awaiting vendor production keys (3 jurisdictions)", unblock: "Issue production keys for 3 jurisdictions.", slip: "Cutover blocked on keys.", evidence: "" },
       { id: "k2", code: "K-02", phase: PHASES[3], name: "Client-operated kill-switch drill", owner: "Client Compliance", status: "Upcoming", days: 0, wait: "Scheduled for Day 21 · Client Compliance", unblock: "Client Compliance pulls the kill switch and files one pack.", slip: "Production drill open.", evidence: "" },
       { id: "k3", code: "K-03", phase: PHASES[3], name: "Sandbox-to-production cutover checklist", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Blocked by G3 (12 missing multi-UBO packs)", unblock: "Checklist opens when G3 is 30/30.", slip: "Checklist blocked on G3.", evidence: "" },
-      { id: "k4", code: "K-04", phase: PHASES[1], name: "Exception router for multi-UBO misses", owner: "Lead Engineer", status: "In Progress", days: 0, evalPct: 87, evalText: "Shadow Eval: 26/30 clean (4 multi-UBO misses)", unblock: "4 multi-UBO misses open.", evidence: "" },
+      { id: "k4", code: "K-04", phase: PHASES[1], name: "Exception router for multi-UBO misses", owner: "Lead Engineer", status: "In Progress", days: 0, evalPct: 87, evalText: "Shadow Eval: 26/30 clean (4 multi-UBO misses)", quoteFrom: "#sprint-kyb · Thu 9:05", quote: "exception router is 26 of 30 clean in shadow. Four multi-UBO edge cases still fail.", unblock: "4 multi-UBO misses open.", evidence: "" },
       { id: "k5", code: "K-05", phase: PHASES[1], name: "KYB pack assembler", owner: "Ops Lead", status: "In Progress", days: 1, evalPct: 87, evalText: "Shadow Eval: 87% reviewer match (cutover target: 95%)", unblock: "Reviewer match 87%. Target 95%.", evidence: "" },
       { id: "k6", code: "K-06", gateId: "g3", phase: PHASES[0], order: 1, name: "30 historical KYB packs", owner: "Client Sponsor", status: "In Progress", days: 3,
         badge: "Silent client stall · 54h", boardSays: "In Progress", realitySrc: "SLACK / CALL",
         realityShort: "18/30 uploaded · 12 non-US multi-UBO packs overdue 54h",
         reality: "Tue 10:14: Client Sponsor committed 30 historical KYB packs. 18 uploaded. 12 non-US multi-UBO packs missing. 54h.",
+        quoteFrom: "#sprint-kyb · Tue 10:14",
+        quote: "sending the 30 historical KYB files this afternoon.",
         unblock: "Upload the 12 non-US multi-UBO packs.",
         slip: "12 packs overdue 54h.",
         ping: "Client Sponsor — you said Tuesday at 10:14 that the 30 historical KYB packs would be in the folder that afternoon. We have 18. The 12 missing are the non-US multi-UBO cases. Can you upload those today?\n— Ops Lead",
@@ -345,6 +358,8 @@ const SCENARIOS = {
         badge: "Call scope drift vs. SOW", boardSays: "Not Logged", realitySrc: "THU SYNC",
         realityShort: "Asked on Thu call (+6 eng days) · outside signed SOW",
         reality: "Thu 18:40: Client Ops Lead requested automated sanctions re-screening for legacy accounts. +6 eng days. Outside the signed SOW.",
+        quoteFrom: "Call transcript",
+        quote: "while we are in there, can we add automated sanctions re-screening for the legacy accounts too.",
         unblock: "Log to phase 2. Not in this sprint.",
         slip: "+6 eng days. Outside signed SOW.",
         ping: "Client Ops Lead — on Thursday's sync you asked for automated sanctions re-screening on legacy accounts. That is not in the Day-30 SOW and is about six engineering days. We are logging it to the phase-2 backlog and will not build it this sprint.\n— Ops Lead",
@@ -357,6 +372,8 @@ const SCENARIOS = {
         badge: "Unannounced blocker · 49h", boardSays: "On Track", realitySrc: "CLIENT SLACK",
         realityShort: "Auto-approval cap (<$25k) unsigned by Compliance · 49h",
         reality: "#sprint-kyb: Compliance has not signed the auto-approval confidence threshold. Volume cap under $25k unsigned. 49h.",
+        quoteFrom: "#sprint-kyb · Wed 11:40",
+        quote: "holding sign-off on the auto-approval confidence threshold. The volume cap under $25k is not agreed.",
         unblock: "Yes/no on auto-approval under $25k.",
         slip: "Threshold unsigned 49h.",
         ping: "Client Compliance — yes or no today: auto-approval under the $25k volume cap, at the confidence threshold we walked through. Without that sign-off, nothing auto-approves.\n— Ops Lead",
@@ -401,9 +418,11 @@ const SCENARIOS = {
     catch: {
       id: "u-catch", code: "U-12", phase: PHASES[2], order: 0, injected: true,
       name: "Public help-center rewrite", owner: "Client Sponsor", status: "Blocked >48h", days: 2,
-      badge: "Call scope drift · just caught",
+      badge: "Just caught",
       boardSays: "Not Logged", realitySrc: "TODAY'S CALL",
       realityShort: "Help-center rewrite asked for on today's call",
+      quoteFrom: "Call transcript",
+      quote: "can we rewrite the help center and add saved-reply macros while the bot is in there.",
       reality: "Caught on today's call transcript: the client asked for a public help-center rewrite and saved-reply macros. Neither is in the signed SOW.",
       unblock: "Send the scope-guardrail note. Leave the rewrite out of this sprint.",
       slip: "Outside signed SOW.",
@@ -482,12 +501,14 @@ const SCENARIOS = {
       { id: "u1", code: "U-01", phase: PHASES[3], name: "Production helpdesk token (send off)", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Awaiting production token · send rights off", unblock: "Issue a production token with send rights off.", slip: "Cutover blocked on token.", evidence: "" },
       { id: "u2", code: "U-02", phase: PHASES[3], name: "Client-operated kill-switch drill", owner: "Client Support Lead", status: "Upcoming", days: 0, wait: "Scheduled for Day 21 · Client Support Lead", unblock: "Client Support Lead pulls the kill switch and answers one ticket.", slip: "Production drill open.", evidence: "" },
       { id: "u3", code: "U-03", phase: PHASES[3], name: "Cutover checklist for the six-moderator queue", owner: "Ops Lead", status: "Upcoming", days: 0, wait: "Blocked until auto-send threshold is signed", unblock: "Checklist opens after the threshold is signed.", slip: "Checklist blocked on unsigned threshold.", evidence: "" },
-      { id: "u4", code: "U-04", phase: PHASES[2], name: "Tier-1 draft resolver", owner: "Lead Engineer", status: "In Progress", days: 1, evalPct: 80, evalText: "Shadow Eval: 24/30 clean (6 late handoffs)", unblock: "6 late handoffs open.", evidence: "" },
+      { id: "u4", code: "U-04", phase: PHASES[2], name: "Tier-1 draft resolver", owner: "Lead Engineer", status: "In Progress", days: 1, evalPct: 80, evalText: "Shadow Eval: 24/30 clean (6 late handoffs)", quoteFrom: "Client Slack · Fri 8:44", quote: "tier-1 drafts are 24 of 30 clean in shadow. Six edge cases still hand off late.", unblock: "6 late handoffs open.", evidence: "" },
       { id: "u5", code: "U-05", phase: PHASES[2], name: "QA rubric matcher", owner: "Ops Lead", status: "In Progress", days: 0, evalPct: 91, evalText: "Shadow Eval: 91% reviewer match (cutover target: 95%)", unblock: "Reviewer match 91%. Target 95%.", evidence: "" },
       { id: "u6", code: "U-06", gateId: "g3", phase: PHASES[2], order: 1, name: "30 hard tickets for the rubric", owner: "Client Support Lead", status: "In Progress", days: 3,
         badge: "Silent client stall · 51h", boardSays: "In Progress", realitySrc: "SLACK / CALL",
         realityShort: "22/30 uploaded · 8 multi-thread tickets overdue 51h",
         reality: "Mon 09:40: Client Support Lead committed 30 hard tickets. 22 in folder. 8 multi-thread tickets missing. 51h.",
+        quoteFrom: "Client Slack · Mon 9:40",
+        quote: "sending the 30 hard tickets today, including the angry ones.",
         unblock: "Send the 8 multi-thread tickets.",
         slip: "8 tickets overdue 51h.",
         ping: "Client Support Lead — you said Monday the 30 hard tickets would be in the folder, including the angry ones. We have 22. The 8 missing are the multi-thread complaints. Can you send those today?\n— Ops Lead",
@@ -500,6 +521,8 @@ const SCENARIOS = {
         badge: "Call scope drift vs. SOW", boardSays: "Not Logged", realitySrc: "THU SYNC",
         realityShort: "Asked on Thu call · help-center rewrite outside signed SOW",
         reality: "Thu 18:40: Client Ops Lead requested a help-center rewrite and saved-reply macros. Outside the signed SOW.",
+        quoteFrom: "Call transcript",
+        quote: "can we rewrite the help center and add saved-reply macros while the bot is in there.",
         unblock: "Log to phase 2. Not in this sprint.",
         slip: "Outside signed SOW.",
         ping: "Client Ops Lead — on Thursday's sync you asked for a help-center rewrite and saved-reply macros. That is not in the Day-30 SOW. We are logging it to the phase-2 backlog and will not build it this sprint.\n— Ops Lead",
@@ -512,6 +535,8 @@ const SCENARIOS = {
         badge: "Unannounced blocker · 49h", boardSays: "On Track", realitySrc: "CLIENT SLACK",
         realityShort: "Auto-send threshold unsigned by QA · 49h",
         reality: "Client Slack: QA has not signed the auto-send confidence threshold. 49h. Ticket status: On Track.",
+        quoteFrom: "Client Slack · Thu 11:02",
+        quote: "QA has not signed the auto-send confidence threshold.",
         unblock: "Yes/no on the auto-send threshold.",
         slip: "Threshold unsigned 49h.",
         ping: "Client Support Lead — yes or no today on the auto-send confidence threshold. Without that sign-off, every tier-1 draft stays a draft.\n— Ops Lead",
@@ -534,7 +559,6 @@ const SCENARIOS = {
   }
 };
 let state;
-let runToken = 0;
 let scrollTab = false;
 
 function clone(v) { return JSON.parse(JSON.stringify(v)); }
@@ -655,108 +679,6 @@ function buildClientNote(src) {
   }
   return options.find(t => countWords(t) <= 120) || assemble(1, false, false);
 }
-function buildPrompt() {
-  const sc = current();
-  const src = state.sources;
-  const block = (on, text) => on ? String(text).trim() : "[not included in this run]";
-  const tracker = state.rows.map(r => [r.code, r.status, r.days + "d", r.owner, r.name].join(" | ")).join("\n");
-  const gates = state.gates.map(g => [g.code, g.status, g.name].join(" | ")).join("\n");
-  return [
-    "/sprint-pulse",
-    "",
-    "Day " + sc.day + ", " + sc.when + ". 30-day client sprint. You are the operator, not a status reporter.",
-    "",
-    "Read only the sources under SOURCES. If a source says it was not included, skip it. Do not invent a tool, a person, or a status.",
-    "",
-    "Severity: 48 hours with no movement on a client sprint equals about 7 days of drift on a normal project. Flag it.",
-    "",
-    "A sentence on a call is not a decision. A decision has an owner and a date.",
-    "",
-    "If the call and the written scope disagree, that is scope drift. Quote both.",
-    "",
-    "Do not produce a round-robin update. Produce the unblock.",
-    "",
-    "Write four sections and stop.",
-    "",
-    "1. Needs a decision in the next 24h",
-    "   For each item: owner, what is stuck, the single next action, what slips if it waits another day.",
-    "2. Scope drift caught on calls vs the written scope",
-    "   Quote the call. Quote the scope. State what we will not build or send until it is resolved.",
-    "   If there is no drift, write: No drift in the sources.",
-    "3. Shipped since the last pulse",
-    "   Only items the sources support. Do not dress in-progress up as shipped.",
-    "4. Client note, ready to send",
-    "   Under 120 words. Plain. The asks, the owners, the timing. No intro warmup.",
-    "",
-    "SOURCES",
-    "",
-    "--- call transcript ---",
-    block(src.call, sc.call),
-    "",
-    "--- client slack ---",
-    block(src.slack, sc.slack),
-    "",
-    "--- task board ---",
-    block(src.board, sc.board),
-    "",
-    "--- live tracker ---",
-    tracker,
-    "",
-    "--- intake gates ---",
-    gates
-  ].join("\n");
-}
-function buildBrief(sources) {
-  const sc = current();
-  const src = sources || state.sources;
-  const used = ["Live tracker", "Intake gates", "Signed SOW"];
-  if (src.call) used.push("Call Transcripts");
-  if (src.slack) used.push("Client Slack");
-  if (src.board) used.push("Task Board");
-  const decisions = decisionItems();
-  const row = state.rows.find(r => r.id === sc.drift.rowId);
-  let drift;
-  if (!src.call) drift = { state: "unchecked" };
-  else if (row && row.status === "Shipped") drift = { state: "closed", text: sc.drift.closed };
-  else drift = { state: "open", call: sc.drift.call, written: sc.drift.written, wont: sc.drift.wont };
-  const shipped = state.rows.filter(r => r.status === "Shipped").map(r => ({
-    code: r.code, name: r.name, evidence: r.evidence || "Marked shipped on the live tracker."
-  }));
-  return {
-    used,
-    src,
-    decisions,
-    drift,
-    shipped,
-    note: buildClientNote(src),
-    warnings: gateWarnings(),
-    slackPull: src.slack ? sc.slackPull : ""
-  };
-}
-function makeLog(sources) {
-  const sc = current();
-  const src = sources || state.sources;
-  const mark = on => on ? "included" : "skipped";
-  const pass = state.gates.filter(g => g.status === "PASS").length;
-  const risk = state.gates.filter(g => g.status === "AT RISK").length;
-  const blocked = state.gates.filter(g => g.status === "BLOCKED").length;
-  return [
-    "$ /sprint-pulse  day " + sc.day + "  " + sc.when.toLowerCase(),
-    "scanning call transcripts ...... " + mark(src.call),
-    "scanning client slack ......... " + mark(src.slack),
-    "scanning signed sow ........... included",
-    "task board ..................... " + mark(src.board),
-    "live tracker ................... " + state.rows.length + " rows, " + stalledRows().length + " over 48h",
-    "intake gates ................... " + pass + " pass, " + risk + " at risk, " + blocked + " blocked",
-    "cross-surface diff ............ " + (state.justCaught ? "1 new card in Caught Slipping" : "no new drift"),
-    "writing the " + sc.when.toLowerCase() + " brief ........ done"
-  ];
-}
-function termText() {
-  if (!state.pulse) return "";
-  const n = state.pulse.phase === "done" ? state.pulse.lines.length : state.pulse.shown;
-  return state.pulse.lines.slice(0, n).join("\n");
-}
 function num(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
@@ -786,7 +708,6 @@ function money(n) {
 }
 function loadScenario(id) {
   const sc = SCENARIOS[id];
-  runToken += 1;
   state = {
     scenarioId: id,
     gates: clone(sc.gates),
@@ -800,7 +721,6 @@ function loadScenario(id) {
     search: "",
     open: { s1: true },
     sources: { call: true, slack: true, board: true, prompt: false },
-    pulse: null,
     view: "tracker",
     form: { title: "", phase: sc.formPhase, owner: "Ops Lead", action: "" },
     formError: "",
@@ -811,7 +731,9 @@ function loadScenario(id) {
     toast: "",
     injected: false,
     justCaught: false,
-    scanning: false
+    scanning: false,
+    syncing: false,
+    syncToken: 0
   };
 }
 function markStale() {
@@ -923,7 +845,6 @@ function catchDrift() {
   state.rows.unshift(clone(sc.catch));
   state.injected = true;
   state.justCaught = true;
-  state.scanning = true;
   state.toast = sc.catchToast;
   if (!state.flagged) state.flagged = {};
   state.flagged[sc.catch.id] = true;
@@ -942,41 +863,11 @@ function revealTab() {
   const panel = document.getElementById("panel");
   if (panel) panel.scrollIntoView({ block: "start" });
 }
-function scheduleScan() {
-  if (!state.scanning) return;
-  setTimeout(() => {
-    state.scanning = false;
-    const col = document.querySelector('[data-col="slip"]');
-    if (col) col.classList.remove("scanning");
-  }, 1500);
-}
-function runPulse() {
-  const token = ++runToken;
-  const sources = clone(state.sources);
-  const lines = makeLog(sources);
-  state.pulse = { token, phase: "running", lines, shown: 0, sources, result: null, stale: false };
-  render();
-  const term = document.getElementById("term");
-  if (term) term.scrollIntoView({ block: "nearest" });
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const step = () => {
-    if (!state.pulse || state.pulse.token !== token) return;
-    state.pulse.shown += 1;
-    const pre = document.getElementById("term");
-    if (pre) pre.textContent = state.pulse.lines.slice(0, state.pulse.shown).join("\n");
-    if (state.pulse.shown < state.pulse.lines.length) setTimeout(step, reduce ? 0 : 160);
-    else {
-      state.pulse.phase = "done";
-      state.pulse.result = buildBrief(state.pulse.sources);
-      render();
-    }
-  };
-  setTimeout(step, reduce ? 0 : 60);
-}
 function copyText(text, btn) {
   const label = btn.dataset.label || btn.textContent;
+  const doneLabel = btn.dataset.done || "Copied";
   const done = () => {
-    btn.textContent = "Copied";
+    btn.textContent = doneLabel;
     setTimeout(() => { if (btn.isConnected) btn.textContent = label; }, 1400);
   };
   const fallback = () => {
@@ -1087,8 +978,7 @@ function moveTo(id, col) {
 }
 function syncSheetFromHash() {
   const h = location.hash.replace("#", "");
-  if (h === "pulse") state.sheet = "pulse";
-  else if (h === "gate") state.sheet = "gates";
+  if (h === "gate") state.sheet = "gates";
   else if (h === "handoff") state.sheet = "roi";
   else if (h === "map") state.sheet = "map";
   else if (state.sheet !== "card") state.sheet = null;
@@ -1117,14 +1007,19 @@ function topbar() {
     return '<button type="button" class="' + on + '" data-act="filter" data-id="' + id + '">' + label + (hot ? ' <span class="n">' + hot + "</span>" : "") + "</button>";
   }
   const reset = state.injected ? '<button type="button" class="reset" data-act="reset">Reset Demo</button>' : "";
+  const syncing = !!state.syncing;
+  const synced = !!state.injected;
+  const syncLabel = syncing ? "Scanning Call Transcripts + Slack…" : synced ? "✓ Calls + Slack Synced" : "⚡ Sync Calls + Slack";
   return '<header class="top"><div class="brand"><div class="logo">REGEN8</div>' +
     '<details class="pick"><summary>' + esc(sprintLabel(state.scenarioId)) + '</summary><div class="menu">' + opts + "</div></details></div>" +
     '<div class="controls"><div class="filters">' +
     filt("all", "All (" + state.rows.length + ")") +
     filt("slip", "Caught slipping ", "(" + slips + ")") +
     filt("client", "Waiting on client ", "(" + clients + ")") +
-    "</div>" + reset +
-    '<button type="button" class="run" data-act="pulse">⚡ Sync Calls + Slack (/sprint-pulse)</button></div></header>';
+    "</div>" +
+    '<button type="button" class="ghost" data-act="digest" data-label="Copy Client Digest" data-done="Copied Client Digest ✓">Copy Client Digest</button>' +
+    reset +
+    '<button type="button" class="run" data-act="sync"' + (syncing || synced ? " disabled" : "") + ">" + esc(syncLabel) + "</button></div></header>";
 }
 function strip() {
   const sc = current();
@@ -1205,6 +1100,9 @@ function cardSheet() {
   const diff = r.boardSays
     ? "<p><b>Ticket says.</b> " + esc(r.boardSays) + "</p><p><b>Reality.</b> " + esc(r.reality || r.realityShort || "") + "</p>"
     : "";
+  const quote = r.quote
+    ? '<div class="block"><h3>' + esc(r.quoteFrom || "Source") + '</h3><p class="quote">“' + esc(r.quote) + '”</p></div>'
+    : "";
   const ex = step
     ? '<div class="block"><h3>Rule</h3><p>' + esc(step.actual) + "</p><p><b>Rule.</b> " + esc(step.rule) + "</p><p><b>Owner.</b> " + esc(step.human) + " " + esc(step.sla) + "</p></div>"
     : "";
@@ -1215,7 +1113,7 @@ function cardSheet() {
   return '<div class="backdrop" data-act="close"></div><div class="sheet modal" role="dialog" aria-label="Card"><button type="button" class="x" data-act="close" aria-label="Close">×</button>' +
     '<p class="kicker">' + esc(r.owner) + "</p><h2>" + esc(r.name) + "</h2>" +
     (done || diff ? '<div class="block">' + (done ? "<p>" + esc(done) + "</p>" : "") + diff + "</div>" : "") +
-    ex + sow +
+    quote + ex + sow +
     '<div class="rowbtns">' + copy + '<button type="button" class="cp" data-act="close">Close</button></div>' +
     '<textarea id="ping" class="sr">' + esc(ping) + "</textarea></div>";
 }
@@ -1249,44 +1147,11 @@ function slider(key, label, value, min, max, step) {
   return "<label>" + esc(label) + ' <span data-roi-out="' + key + '">' + esc(value) + "</span>" +
     '<input type="range" data-roi="' + key + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + esc(value) + '" aria-label="' + esc(label) + '"></label>';
 }
-function decisionsHTML(items) {
-  if (!items.length) return "<p>None over 48h.</p>";
-  return items.map(item => '<p class="hit"><b>' + esc(item.owner) + ".</b> " + esc(item.action) + "</p>").join("");
-}
-function driftBlock(drift) {
-  if (drift.state === "unchecked") return "<p>Call transcripts off. Drift not checked.</p>";
-  if (drift.state === "closed") return "<p>" + esc(drift.text) + "</p>";
-  return "<p><b>On the call.</b> “" + esc(drift.call) + "”</p><p><b>In the scope.</b> " + esc(drift.written) + "</p><p>" + esc(drift.wont) + "</p>";
-}
-function pulseSheet() {
-  const on = id => state.sources[id] ? " on" : "";
-  const mark = id => state.sources[id] ? "✓ " : "";
-  const p = state.pulse;
-  let body = "";
-  if (p && p.phase === "running") body = '<p class="lead">Scanning transcripts, Slack, and SOW.</p>';
-  else if (p && p.result) {
-    const b = p.result;
-    body = (p.stale ? '<p class="lead">Board changed after this run.</p>' : "") +
-      '<section class="out"><h3>Stuck &gt;48h</h3>' + decisionsHTML(b.decisions) + "</section>" +
-      '<section class="out"><h3>Scope drift caught on calls</h3>' + driftBlock(b.drift) + "</section>" +
-      '<section class="out"><h3>Shipped since last pulse</h3>' + (b.shipped.length ? "<ul>" + b.shipped.map(r => "<li>" + esc(r.name) + "</li>").join("") + "</ul>" : "<p>Nothing marked shipped.</p>") + "</section>" +
-      '<section class="out"><h3>Ready-to-send client note</h3><pre class="note-box" id="client-note">' + esc(b.note) + '</pre><div class="rowbtns"><button type="button" class="cp" data-act="copy" data-id="note" data-label="Copy note">Copy note</button><button type="button" class="cp" data-act="flag">Flag on board</button></div></section>';
-  }
-  return '<div class="backdrop" data-act="close"></div><aside class="sheet drawer" id="pulse" role="dialog" aria-label="sprint pulse"><button type="button" class="x" data-act="close" aria-label="Close">×</button>' +
-    '<h2>/sprint-pulse</h2><p class="lead">Diffs Call Transcripts, Client Slack, and SOW against the board.</p>' +
-    '<div class="checks">' +
-    '<button type="button" class="' + on("call") + '" data-act="source" data-id="call">' + mark("call") + "Call transcripts</button>" +
-    '<button type="button" class="' + on("slack") + '" data-act="source" data-id="slack">' + mark("slack") + "Client Slack</button>" +
-    '<button type="button" class="' + on("board") + '" data-act="source" data-id="board">' + mark("board") + "Task board</button></div>" +
-    '<button type="button" class="cta" data-act="pulse">Run /sprint-pulse</button>' +
-    '<pre class="term" id="term">' + esc(termText()) + "</pre>" + body + "</aside>";
-}
 function overlay() {
   if (state.sheet === "gates") return gateSheet();
   if (state.sheet === "card") return cardSheet();
   if (state.sheet === "map") return mapSheet();
   if (state.sheet === "roi") return roiSheet();
-  if (state.sheet === "pulse") return pulseSheet();
   return "";
 }
 function toastHTML() {
@@ -1330,13 +1195,25 @@ function onClick(e) {
     if (act === "gates") { openHash("#gate"); return; }
     if (act === "roi") { openHash("#handoff"); return; }
     if (act === "map") { openHash("#map"); return; }
-    if (act === "pulse") {
-      if (location.hash !== "#pulse") location.hash = "#pulse";
-      else {
+    if (act === "sync") {
+      if (state.syncing || state.injected) return;
+      const token = Date.now();
+      state.syncToken = token;
+      state.syncing = true;
+      state.scanning = true;
+      render();
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      setTimeout(() => {
+        if (state.syncToken !== token) return;
         catchDrift();
-        runPulse();
-        scheduleScan();
-      }
+        state.syncing = false;
+        state.scanning = false;
+        render();
+      }, reduce ? 0 : 600);
+      return;
+    }
+    if (act === "digest") {
+      copyText(buildClientNote(state.sources), t);
       return;
     }
     if (act === "reset") { resetScenario(); return; }
@@ -1366,22 +1243,6 @@ function onClick(e) {
     if (act === "gate") { cycleGate(id); return; }
     if (act === "handoff") { cycleHandoff(id); return; }
     if (act === "moveto") { moveTo(id, t.dataset.to); return; }
-    if (act === "source") { state.sources[id] = !state.sources[id]; markStale(); render(); return; }
-    if (act === "flag") {
-      state.flagged = {};
-      decisionItems().forEach(item => {
-        const row = state.rows.find(r => r.code === item.code);
-        if (row) state.flagged[row.id] = true;
-      });
-      state.filter = "slip";
-      closeSheet();
-      return;
-    }
-    if (act === "copy") {
-      const text = state.pulse && state.pulse.result ? state.pulse.result.note : buildClientNote(state.sources);
-      copyText(text, t);
-      return;
-    }
     if (act === "copyping") {
       const row = id && state.rows.find(x => x.id === id);
       const area = document.getElementById("ping");
@@ -1439,11 +1300,7 @@ document.addEventListener("drop", e => {
 });
 window.addEventListener("hashchange", () => {
   syncSheetFromHash();
-  if (location.hash === "#pulse") {
-    catchDrift();
-    runPulse();
-    scheduleScan();
-  } else render();
+  render();
 });
 function init() {
   const params = new URLSearchParams(location.search);
@@ -1454,11 +1311,7 @@ function init() {
   state.sheet = null;
   state.cardId = null;
   syncSheetFromHash();
-  if (location.hash === "#pulse") {
-    catchDrift();
-    runPulse();
-    scheduleScan();
-  } else render();
+  render();
 }
 init();
 </script>
