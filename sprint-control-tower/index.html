@@ -1,0 +1,1245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>30-Day Client Sprint Control Tower · Naffy Quehen</title>
+<meta name="description" content="Interactive 30-day sprint ops control tower and /sprint-pulse drift detector. Field-service dispatch and a fintech KYB cutover.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23111'/%3E%3Crect x='6' y='6' width='8' height='20' fill='%231440ff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#fff;color:#111;font:15px/1.45 "IBM Plex Mono",ui-monospace,monospace}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid #111;outline-offset:2px}
+[hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.skip{position:absolute;left:-999px;background:#fff;color:#111;padding:8px 12px;z-index:3}
+.skip:focus{left:8px;top:8px}
+.w{max-width:1120px;margin:0 auto;padding:28px 22px 72px}
+h1{font-family:Archivo,Impact,sans-serif;font-stretch:62%;font-weight:900;font-size:clamp(40px,6vw,72px);line-height:.88;letter-spacing:-.02em;margin:8px 0 0}
+h1 span{color:#1440ff}
+h2{font-family:Archivo,Impact,sans-serif;font-stretch:62%;font-weight:900;font-size:clamp(28px,4vw,42px);line-height:.95;margin:18px 0 8px}
+h3{font:600 16px/1.35 "IBM Plex Mono",ui-monospace,monospace;margin:0}
+h4{font:600 14px/1.35 "IBM Plex Mono",ui-monospace,monospace;margin:2px 0 6px}
+.kicker{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#1440ff;font-weight:600;margin:0}
+.sub{margin:14px 0 0;font-size:15px;line-height:1.5;max-width:70ch}
+.sub a{color:#1440ff}
+.scenarios{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px;align-items:stretch}
+.scenarios button{font:600 13px/1.35 "IBM Plex Mono",ui-monospace,monospace;text-align:left;background:#fff;color:#1440ff;border:2px solid #1440ff;padding:8px 12px;max-width:460px}
+.scenarios button[aria-pressed="true"]{background:#1440ff;color:#fff}
+.texty{background:#fff;border:2px solid #111;padding:8px 12px;font-weight:600}
+.texty:hover,.texty:focus-visible{background:#111;color:#fff}
+.blurb{margin:14px 0 0;font-size:15px;line-height:1.5;max-width:82ch}
+.blurb b{font-weight:600}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid #111;margin-top:18px}
+.kpi{display:block;width:100%;text-align:left;background:#fff;border:0;border-right:1px solid #111;padding:12px 14px}
+.kpi:last-child{border-right:0}
+.kpi:hover,.kpi:focus-visible{background:#f4f6ff}
+.k{display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#333}
+.v{display:block;margin-top:6px;font-size:15px;font-weight:600;line-height:1.35}
+.s{display:block;margin-top:4px;font-size:12px;color:#333;font-weight:400}
+.banner{margin-top:12px;padding:12px 14px;font-weight:600}
+.banner.lock{background:#111;color:#fff;box-shadow:inset 6px 0 #c4362c}
+.banner.go{background:#1440ff;color:#fff}
+.banner.risk{background:#fff;color:#111;border:2px solid #111;box-shadow:inset 6px 0 #c4841d}
+.bar{display:flex;flex-direction:column;align-items:stretch;gap:0;border-bottom:3px solid #111;margin-top:18px;position:sticky;top:0;background:#fff;z-index:2}
+.tabs{display:flex;flex-wrap:wrap;gap:0;overflow:visible}
+.tabs button{flex:0 1 auto;white-space:nowrap;background:#fff;border:0;font:600 13px/1.3 "IBM Plex Mono",ui-monospace,monospace;padding:12px 14px;min-height:44px;box-shadow:inset 0 -3px 0 transparent}
+.tabs button[aria-selected="true"]{color:#1440ff;box-shadow:inset 0 -3px 0 #1440ff}
+.tabs button:hover{color:#1440ff}
+#q{max-width:280px;margin:8px 0 8px auto}
+.lede,.hint{font-size:15px;line-height:1.5;max-width:78ch}
+.hint{color:#222;margin:0 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.chip{font:600 13px/1.3 "IBM Plex Mono",ui-monospace,monospace;background:#fff;color:#1440ff;border:2px solid #1440ff;padding:6px 10px;min-height:36px}
+.chip.on{background:#1440ff;color:#fff}
+.chip:hover,.chip:focus-visible{background:#1440ff;color:#fff}
+.card,.trow,.check,h2,.hit{scroll-margin-top:150px}
+.card{border-bottom:1px solid #111;padding:14px 0}
+.card-top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between}
+.code{font-size:12px;color:#444;margin:0 0 4px}
+.st{font:600 12px/1 "IBM Plex Mono",ui-monospace,monospace;padding:8px 10px;border:2px solid #111;background:#fff;white-space:nowrap;flex:0 0 auto}
+.st.pass,.st.signed,.st.shipped{color:#0d5c32;border-color:#0d5c32;background:#eef8f2}
+.st.at-risk,.st.in-progress{color:#8a4b08;border-color:#c4841d;background:#fff6e5}
+.st.blocked,.st.blocked-48h{color:#8f1d1d;border-color:#c4362c;background:#fdecec}
+.st.open,.st.upcoming{color:#111;border-color:#111;background:#fff}
+.st:hover,.st:focus-visible{background:#111;color:#fff;border-color:#111}
+.kv{margin:8px 0 0}
+.kv div{margin-top:8px}
+.kv dt{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#444}
+.kv dd{margin:2px 0 0;font-size:14px;line-height:1.45}
+.why{margin:12px 0 0;border-left:4px solid #1440ff;padding:2px 0 2px 10px;font-size:14px;line-height:1.45}
+.line{margin:8px 0 0;font-size:14px;line-height:1.45}
+.expand{margin-top:8px;background:#fff;border:0;padding:0;color:#1440ff;font-weight:600}
+.expand:hover,.expand:focus-visible{text-decoration:underline}
+.phases{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;list-style:none;padding:0;margin:0 0 14px}
+.phases li{border:1px solid #111;padding:6px 8px;font-size:12px}
+.phases li.done{background:#111;color:#fff}
+.phases li.now{background:#1440ff;color:#fff;border-color:#1440ff}
+.warn{border:2px solid #c4841d;background:#fff6e5;padding:8px 10px;margin:0 0 12px;font-size:14px}
+.warn li{margin:4px 0 0}
+.trow{display:grid;grid-template-columns:132px minmax(0,1.6fr) minmax(110px,.8fr) 124px 96px minmax(160px,1.1fr);gap:8px 12px;align-items:start;padding:12px 8px;border-top:1px solid #111;min-width:0}
+.trow.head{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#444}
+.trow.hot{background:#fdecec;box-shadow:inset 4px 0 #c4362c}
+.trow.warm{background:#fff6e5;box-shadow:inset 4px 0 #c4841d}
+.lbl{display:none;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:#444}
+.days{display:inline-flex;align-items:center;gap:6px}
+.days button{width:32px;height:32px;border:2px solid #111;background:#fff;font-weight:600}
+.days button:hover,.days:focus-visible{background:#111;color:#fff}
+.add{display:grid;grid-template-columns:1.4fr .9fr .8fr 1.3fr auto;gap:8px;margin:8px 0 16px}
+input[type="text"],input[type="search"],input[type="number"],select{background:#fff;border:2px solid #111;padding:8px 10px;width:100%;border-radius:0}
+.err{color:#8f1d1d;font-weight:600;margin:0 0 8px}
+.x{background:#fff;border:2px solid #111;padding:4px 8px;font-weight:600;margin-top:6px}
+.x:hover,.x:focus-visible{background:#111;color:#fff}
+.pulse{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.src{border-top:1px solid #111;padding:12px 0}
+.snippet,.note{background:#f1f3ff;border:1px solid #111;padding:12px;white-space:pre-wrap;font:13px/1.5 "IBM Plex Mono",ui-monospace,monospace;margin:8px 0;overflow-wrap:anywhere}
+.cta{display:inline-block;background:#1440ff;color:#fff;border:0;padding:14px 18px;font-weight:600;width:100%;text-align:left}
+.cta:hover,.cta:focus-visible{background:#0c2fbf}
+.cta:disabled{opacity:.55;cursor:wait}
+.term{background:#111;color:#f2f2f2;min-height:9.5em;padding:14px 16px;margin:12px 0;font:13px/1.55 "IBM Plex Mono",ui-monospace,monospace;white-space:pre-wrap}
+.term:empty::before{content:"$ /sprint-pulse";color:#8d8d8d}
+.cp{background:#fff;border:2px solid #1440ff;color:#1440ff;font:600 13px "IBM Plex Mono",ui-monospace,monospace;padding:6px 10px;cursor:pointer}
+.cp:hover,.cp:focus-visible{background:#1440ff;color:#fff}
+.brief h3{margin-top:16px;font-size:14px}
+.hit{border-top:1px solid #111;padding:10px 0}
+.meta,.muted,.idle{color:#333;font-size:13px}
+.stale{border:2px solid #c4841d;background:#fff6e5;padding:8px 10px}
+.check{border-bottom:1px solid #111;padding:12px 0}
+.calc{margin-top:22px;border-top:3px solid #111;padding-top:8px}
+.sliders{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px;margin:12px 0}
+.sliders label,.assumptions label{display:block;font-size:13px;font-weight:600}
+input[type="range"]{width:100%;accent-color:#1440ff;margin-top:8px}
+.assumptions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
+.roi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid #111}
+.roi div{padding:12px;border-right:1px solid #111}
+.roi div:last-child{border-right:0}
+.roi b{display:block;font-size:18px;margin-top:4px}
+.formula{font-size:12px;line-height:1.5;color:#333;margin-top:10px}
+.foot{margin-top:28px;border-top:3px solid #111;padding-top:16px;font-size:14px;line-height:1.5}
+.foot a{color:#1440ff}
+.empty{margin:8px 0 16px}
+@media(max-width:980px){
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpi{border-bottom:1px solid #111}
+  .kpi:nth-child(2n){border-right:0}
+  .kpi:nth-last-child(-n+2){border-bottom:0}
+  .trow{grid-template-columns:1fr}
+  .trow.head{display:none}
+  .lbl{display:block}
+  .pulse,.sliders,.assumptions,.roi{grid-template-columns:1fr}
+  .desk-label{display:none}
+  .roi div{border-right:0;border-bottom:1px solid #111}
+  .roi div:last-child{border-bottom:0}
+  .add{grid-template-columns:1fr}
+  .phases{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .w{padding:20px 14px 56px}
+  .kpis{grid-template-columns:1fr}
+  .kpi{border-right:0!important;border-bottom:1px solid #111}
+  .kpi:last-child{border-bottom:0}
+  #q{max-width:none;margin-left:0}
+  .card-top{flex-direction:column}
+  h1{font-size:clamp(36px,12vw,56px)}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#panel">Skip to the active tab</a>
+<div id="live" class="sr" aria-live="polite"></div>
+<div id="root"></div>
+<noscript><p class="w">This control tower is one HTML file and needs JavaScript.</p></noscript>
+<script>
+const TABS = [
+  ["gate", "01 / 72h Intake Gate"],
+  ["map", "02 / Exception & Handoff Map"],
+  ["tracker", "03 / 30-Day Sprint Tracker & Drift Log"],
+  ["pulse", "04 / Claude Code /sprint-pulse"],
+  ["handoff", "05 / Day-30 Handoff & ROI Sign-Off"]
+];
+const PHASES = [
+  "Days 1–5 Discovery",
+  "Days 6–12 Architecture & Prototype",
+  "Days 13–22 Build & Shadow Run",
+  "Days 23–30 Cutover & Handoff"
+];
+const PHASE_SHORT = ["Days 1–5", "Days 6–12", "Days 13–22", "Days 23–30"];
+const LANES = [
+  ["all", "All Steps"],
+  ["ai", "AI Agent Owned"],
+  ["human", "Human-in-the-Loop Gate"],
+  ["unblock", "Needs Client Unblock"]
+];
+const PULSE_NOTE = "At Sophon Labs (~15-person remote team), I built a Claude Code bot that read Slack, Linear, and call transcripts every Wednesday and Friday, flagged anything stuck 7+ days, and killed round-robin status updates from Monday all-hands (~3 hrs/week saved). Here is that same workflow adapted for a 30-day client sprint (where 48 hours of silence = 2 weeks of normal project drift).";
+const GATE_NOTE = "Why this gate exists: At Sophon Labs, I inherited a BaaS vendor signed before my time that couldn't actually support our target markets. Verifying vendor coverage and sandbox credentials in the first 72 hours prevents week-3 rewrites.";
+
+const SCENARIOS = {
+  field: {
+    id: "field",
+    button: "A · Field-Service WhatsApp Dispatch & Quoting Sprint (35-person A/C & Appliance Repair Co.)",
+    kicker: "Sprint #04 — Informal A/C & Appliance Field-Service Dispatch & Quoting Automation",
+    blurb: "A 35-person repair company. Customer requests arrive as messy WhatsApp messages, 40-second Spanish/English voice notes, and blurry unit model-plate photos with no address. Pricing lives in the lead technician's head while he's on a roof. Technicians leave job sites without logging parts used.",
+    day: 9,
+    when: "Wednesday",
+    phase: "Phase 02: Workflow Decomposition & Build",
+    noun: "request",
+    formPhase: PHASES[1],
+    slotLine: "Thursday's 15-min slot works if a reply is harder.",
+    roi: { volume: 110, before: 18, after: 4, error: 15, reworkMin: 20, rate: 32, cost: 18000 },
+    drift: {
+      rowId: "r5",
+      call: "if it's a normal diagnostic, don't wait on me. just send it.",
+      written: "No customer-facing quote goes out until the approval cap is a written line the sponsor has agreed to. Auto-send is out of scope until then.",
+      wont: "We will not wire auto-send. The agent can draft. A human still clicks.",
+      closed: "The Thursday call asked for auto-send on a normal diagnostic. The cap is marked shipped, so this drift is closed. Auto-send only inside the written cap.",
+      noteLine: "On Thursday's call the sponsor said a normal diagnostic can just be sent. Written scope still says no auto-send until the cap is signed, so we will draft and not send."
+    },
+    call: `Client Sponsor: if it's a normal diagnostic, don't wait on me. just send it.
+Ops Lead: we still don't have a written cap. "normal" is whatever the lead tech remembers.
+Client Dispatcher: this week half the requests were voice notes. i don't get an address until i call them back. and yesterday the tech swapped a dual capacitor and didn't tell anyone.
+Field Tech Lead: i can't type prices on a roof. i'll do it this weekend.
+Ops Lead: weekend misses the Friday pulse. i need the ranges tomorrow or the quote step stays a draft.`,
+    slack: `Client Dispatcher [Mon 8:12]: still no WhatsApp Business admin. the number is a personal phone. IT said next week.
+Client Dispatcher [Tue 18:41]: job closed. tech left. no part logged. pretty sure it was a dual capacitor.
+Ops Lead [Tue 18:44]: don't guess it onto the invoice. i'm holding that job out of the ground-truth set until someone confirms the part.
+Lead Engineer [Wed 9:02]: staging can transcribe the 18 notes we have. i am not wiring auto-send until the cap is written down.`,
+    board: `GATE-03  Ground-truth 30          Blocked      18/30   sitting 3d   Ops Lead
+QUOTE    Written approval cap      Blocked      —       sitting 2d   Client Sponsor
+STEP-02  Price ranges              In progress  —       sitting 1d   Field Tech Lead
+ENG-14   Staging transcription     In progress  18 notes            Lead Engineer`,
+    slackPull: "Slack: a job closed with no part logged. Held out of the ground-truth set on purpose. Do not invoice a guessed capacitor.",
+    gates: [
+      { id: "g1", code: "GATE-01", name: "Executive Sponsor & Weekly 15-min Decision Slot", status: "PASS", owner: "Client Sponsor", sla: "Day 1 · 24h",
+        need: "One named sponsor who can say yes or no, and a recurring 15-minute slot. Not a committee.",
+        have: "Thursday 15-min is booked. The sponsor is the only person who can change quote policy.",
+        miss: "Do not freeze scope from a group chat. If the slot slips, book the dispatcher before day 4 and keep the sponsor for decisions only.",
+        action: "Put the 15-min slot back on the calendar today. Name the one person who can approve a quote rule.",
+        slip: "Open questions wait a week and the build sits on policy." },
+      { id: "g2", code: "GATE-02", name: "API/Admin/Sandbox Credentials & Market Coverage Check", status: "PASS", owner: "Ops Lead + Lead Engineer", sla: "Day 3 · 72h",
+        need: "Sandbox credentials that actually receive a message, and a written check that we can reach customers on a business account. A personal SIM does not count.",
+        have: "Sandbox webhook accepted a test voice note on day 2. Moving the real business number is a day-23 cutover, not a reason to skip the check.",
+        miss: "If credentials are still with IT at 72 hours, the day-30 date moves one for one. A screenshot of a settings page is not a credential.",
+        action: "Get a working sandbox key today, or a dated commit from IT. Confirm the customer-facing number is a business account.",
+        slip: "Week 3 becomes a rewrite when the number cannot send templates.",
+        note: GATE_NOTE },
+      { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "BLOCKED", owner: "Ops Lead + Client Dispatcher", sla: "Day 3 · 72h",
+        need: "30 real jobs, including voice-note only, a blurry model plate, no address, and a part that was never logged.",
+        have: "18 jobs are in the sheet. The other 12 were closed in a voice note nobody transcribed, or the tech left without writing the part down.",
+        miss: "Hard stop on the production build. Staging may transcribe the 18. Quote ranges do not ship off the clean 18 alone.",
+        action: "Pull the 12 jobs with no closeout today, including any part that was swapped and never written down.",
+        slip: "The quote model learns the tidy jobs and misses the first real blurry plate." },
+      { id: "g4", code: "GATE-04", name: "Exception & Human-in-the-Loop Escalation Owner", status: "PASS", owner: "Client Dispatcher", sla: "Day 3 · 72h",
+        need: "A named person for warranty, commercial multi-unit, and any quote off the table. Plus a backup if that person is on a route.",
+        have: "Client Dispatcher is named. Field Tech Lead is the backup. Grey areas default to draft-and-hold.",
+        miss: "If this is still 'the team' at 48 hours, every grey-area action stays a draft. Do not invent an approver.",
+        action: "Name the person who clicks approve, and the backup. One line on the tracker.",
+        slip: "The office will not adopt a tool that might text a customer or invoice a guessed part." },
+      { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "PASS", owner: "Ops Lead + Client Sponsor", sla: "Day 3 · 72h",
+        need: "Three numbers the sponsor has agreed: touch time per request, time-to-quote, and how often a quote gets reworked.",
+        have: "Signed day 3. Median first WhatsApp to a sent quote is 3.4 hours. Coordinator touch time is about 18 minutes. About 1 in 4 quotes is reworked because the model number was guessed.",
+        miss: "Write the numbers down and get a one-line yes before build. Otherwise day 30 is a debate about whether it feels faster.",
+        action: "Send the three baseline numbers and get a one-line yes from the Client Sponsor today.",
+        slip: "Day-30 ROI has no starting line." }
+    ],
+    steps: [
+      { id: "s1", code: "STEP-01", name: "Intake", lane: "ai",
+        line: "40-second Spanish/English voice notes, blurry model plates, often no address.",
+        claim: "The customer fills in a booking form with the address, the unit, and the problem.",
+        actual: "They send a 40-second voice note in Spanish over a compressor, a photo of a model plate with the last digits blown out, or “¿puedes venir hoy?” and nothing else. Sometimes all three, out of order.",
+        rule: "Transcribe Spanish and English. OCR the plate. Match the phone number to old jobs. If address or model confidence is under 0.8, leave it blank and ask. Never invent a model number.",
+        human: "Client Dispatcher steps in for warranty, a commercial multi-unit, or a thread that has turned.",
+        sla: "Draft the reply in under 5 minutes. If the webhook is quiet for 15 minutes, ping the dispatch channel.",
+        fallback: "Coordinator uses the pinned two-question list. Unread threads older than 15 minutes get a loud ping.",
+        source: "WhatsApp thread → intake sheet" },
+      { id: "s2", code: "STEP-02", name: "Triage & quote", lane: "unblock",
+        line: "The price list is the lead tech's memory, and he is usually on a roof.",
+        claim: "The coordinator checks the price list and sends a quote.",
+        actual: "There is no price list. The coordinator messages the Field Tech Lead and waits about three hours. A normal diagnostic goes cold while a capacitor price sits in someone's head.",
+        rule: "Match unit family and symptom to the historical job table. Propose the diagnostic fee and a repair range. If the pair is not in the table, draft the quote and hold it. Do not send a number that is not written down.",
+        human: "Client Dispatcher clicks send when the job is over the cap, off the table, or commercial. Under the cap, auto-send stays off until the sponsor writes the cap down.",
+        sla: "Standard draft in 10 minutes. Human click the same day, before 4pm. No answer by then and the quote does not go out.",
+        fallback: "A one-page diagnostic matrix pinned in the dispatch channel, so a standard job never waits on a roof.",
+        source: "Historical job and pricing table" },
+      { id: "s3", code: "STEP-03", name: "Dispatch", lane: "ai",
+        line: "Routes change in the group chat. The missing part shows up in the driveway.",
+        claim: "The job goes on the calendar and a tech is assigned.",
+        actual: "The route changes in the group chat. Nobody checks parts until the tech is on site and needs a dual capacitor that is on another truck.",
+        rule: "Build the job card before it leaves: pin, voice-note summary, plate photo, and the likely parts from the quote table. Prefer a route that already carries those parts.",
+        human: "Client Dispatcher confirms the morning route before cards go out. After 7:30am, swaps are a human call.",
+        sla: "Cards out by 7:30am. Same-day add-ons wait for the dispatcher.",
+        fallback: "A static 7:30am text of the day's route to each tech.",
+        source: "Dispatch board" },
+      { id: "s4", code: "STEP-04", name: "Closeout", lane: "human",
+        line: "Techs leave. The part they swapped never hits the invoice.",
+        claim: "The tech marks the job complete and the office sends the invoice.",
+        actual: "The tech leaves. The part is not logged. The office spends Friday reconstructing the week. A dual capacitor that was swapped never reaches the invoice, so nobody should guess it in.",
+        rule: "When the tech leaves the site, ask for a 15-second voice note or a photo of the old part. Extract the part, the symptom, and the labor. Stage the invoice. Do not mark it paid. If the part was not on the card, flag it.",
+        human: "Client Dispatcher checks the amount and releases the payment link. Field Tech Lead reviews any part that was not on the job card.",
+        sla: "Prompt goes out as they leave. No note by 6pm and the job gets an end-of-day check-in. No human click, no invoice.",
+        fallback: "A 6pm sweep of anything still marked on site.",
+        source: "Job history and billing log" },
+      { id: "s5", code: "STEP-05", name: "Learning loop", lane: "human",
+        line: "Corrections die in the chat, so the same wrong price comes back tomorrow.",
+        claim: "If the system is wrong, someone complains and it gets fixed.",
+        actual: "The dispatcher edits a drafted quote inside the thread. The correction dies there. Tomorrow the same unit family is priced off a guess.",
+        rule: "Every edit and every rejected quote writes one row: what the agent proposed, what the human sent, the part, the unit family. No row, no learning.",
+        human: "Ops Lead and the Client Dispatcher spend 15 minutes on Friday moving repeated corrections into the plain-text rules file.",
+        sla: "The row is written the same day. The rules file is updated Friday, or the correction does not count as learned.",
+        fallback: "processes/dispatch-rules.md stays a plain file the company owns. It is not trapped in a prompt.",
+        source: "processes/dispatch-rules.md" }
+    ],
+    rows: [
+      { id: "r1", code: "R-01", gateId: "g1", phase: PHASES[0], name: "Executive sponsor and Thursday 15-min slot locked", source: "Kickoff transcript", owner: "Client Sponsor", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Recurring Thursday hold is on the calendar. One sponsor, not a thread." },
+      { id: "r2", code: "R-02", gateId: "g5", phase: PHASES[0], name: "Baseline locked: 3.4h to quote, 18 min touch, ~25% rework", source: "Kickoff + dispatcher count", owner: "Ops Lead", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Sponsor replied yes to the three numbers on day 3." },
+      { id: "r3", code: "R-03", gateId: "g2", phase: PHASES[0], name: "Sandbox webhook receives a test voice note", source: "Task Board", owner: "Lead Engineer", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Day 2. A real voice note hit the sandbox. Production number is still later." },
+      { id: "r4", code: "R-04", gateId: "g3", phase: PHASES[1], name: "30 historical jobs in the ground-truth set, including no-address and blurry plates", source: "Discovery transcript", owner: "Ops Lead + Client Dispatcher", status: "Blocked >48h", days: 3, unblock: "Pull the 12 jobs with no closeout today, including any part that was swapped and never written down.", slip: "Quote ranges get trained on 18 tidy jobs.", evidence: "" },
+      { id: "r5", code: "R-05", phase: PHASES[1], name: "Written quote cap: what can auto-send vs what waits for a human", source: "Thursday sync", owner: "Client Sponsor", status: "Blocked >48h", days: 2, unblock: "Yes or no today: under the diagnostic cap a standard quote can auto-send. Over the cap, the dispatcher clicks.", slip: "Auto-send stays unwired and week 3 slips a day.", evidence: "" },
+      { id: "r6", code: "R-06", phase: PHASES[1], name: "Field Tech Lead writes capacitor, contactor, and compressor ranges", source: "Shadow notes", owner: "Field Tech Lead", status: "In Progress", days: 1, unblock: "25 minutes off a roof, not a form. Three unit families is enough to start.", slip: "STEP-02 keeps drafting and holding.", evidence: "" },
+      { id: "r7", code: "R-07", phase: PHASES[1], name: "Exception map reviewed with the dispatcher", source: "Task Board", owner: "Ops Lead", status: "In Progress", days: 0, unblock: "Walk STEP-01 through STEP-04 once with the Client Dispatcher. Mark anything we still have wrong.", slip: "Engineering builds the happy path.", evidence: "" },
+      { id: "r8", code: "R-08", phase: PHASES[2], name: "Staging intake on the jobs we actually have", source: "Engineering board", owner: "Lead Engineer", status: "Upcoming", days: 0, unblock: "Starts when the ground-truth gate is pass. Not before.", slip: "", evidence: "" },
+      { id: "r9", code: "R-09", phase: PHASES[2], name: "Shadow run beside the live dispatcher for 3 days", source: "Written scope", owner: "Ops Lead + Client Dispatcher", status: "Upcoming", days: 0, unblock: "Three real days. Not a demo hour.", slip: "", evidence: "" },
+      { id: "r10", code: "R-10", phase: PHASES[3], name: "Kill-switch drill run by the dispatcher, plus the 2-page runbook", source: "Handoff checklist", owner: "Client Dispatcher", status: "Upcoming", days: 0, unblock: "Client staff turns it off. We don't.", slip: "", evidence: "" }
+    ],
+    handoff: [
+      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "OPEN", owner: "Client Dispatcher", detail: "The agent runs beside the live dispatcher on the messy set. Misses are marked needs-human, not guessed. A named person signs the accuracy number." },
+      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Dispatcher", detail: "Client staff, not the sprint team, turns it off and runs the manual path once. The drill has a date." },
+      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "OPEN", owner: "Ops Lead", detail: "A short Loom and two pages: what the agent does, what the human clicks, what to do when the webhook is quiet." },
+      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "A failed staging run already posts to the client channel in plain language. Weekly cap is 200k tokens, warn at 70%, stop at 100%." },
+      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Ops Lead + Client Sponsor", detail: "The day-3 baseline is locked. The comparison waits on the shadow week. Hours, time-to-quote, rework. The sponsor signs the delta, not a vibe." },
+      { id: "h6", name: "30-Day Post-Launch Check-In", status: "SIGNED", owner: "Client Sponsor", detail: "The hold is on the calendar with the sponsor, 30 days after the go-live date. Agenda is the correction log." }
+    ]
+  },
+  fintech: {
+    id: "fintech",
+    button: "B · Fintech BaaS & Multi-Market KYB Cutover Sprint (Consumer Payments App)",
+    kicker: "Fintech BaaS & Multi-Market KYB Cutover Sprint",
+    blurb: "A consumer payments app. The BaaS vendor was signed before the Ops Lead joined and could not support the target markets. Day 2 caught it. The pivot partner is Rain. A reusable KYB pack is why the second filing is a 3-week cutover, not a from-scratch rebuild. Same lesson as Sophon Labs, run here as a sprint.",
+    day: 16,
+    when: "Friday",
+    phase: "Phase 03: Build & Shadow Run",
+    noun: "KYB file",
+    formPhase: PHASES[2],
+    slotLine: "The next 15-min sponsor slot works if a reply is harder.",
+    roi: { volume: 40, before: 90, after: 25, error: 22, reworkMin: 45, rate: 55, cost: 18000 },
+    drift: {
+      rowId: "f8",
+      call: "if we submit all three markets together the launch date still holds.",
+      written: "A market goes live only with a coverage row, a complete KYB pack, and a written sponsor sign-off for that market. Market 3 was not in the inherited contract.",
+      wont: "No production submission for market 3 this sprint. Markets 1 and 2 can shadow on Rain.",
+      closed: "The call asked to submit all three markets together. The market 3 decision is marked shipped, so this drift is closed.",
+      noteLine: "On the last call the sponsor wanted all three markets submitted together. Written scope says market 3 stays out until there is a written decision, so we will not send it."
+    },
+    call: `Client Sponsor: if we submit all three markets together the launch date still holds. let's not split it.
+Ops Lead: market 3 was never in the inherited contract. Rain can cover it on the matrix. We don't have the legal opinion, and 8 of the KYB files are missing the UBO page.
+Client Compliance: i can send those 8 a specific list today. i can't sign a pack with a cropped passport photo.
+Lead Engineer: Rain sandbox is live. i won't point production at market 3 off a verbal go.
+Ops Lead: then the written line is markets 1 and 2 in shadow. market 3 is out until the sponsor says otherwise, in writing.`,
+    slack: `Client Compliance [Mon 11:04]: 22 of 30 files are in the folder. the other 8 are phone photos. two passports cut off the MRZ. one proof of address is expired.
+Ops Lead [Mon 11:22]: don't fill the gaps. mark them needs-human. i'm not putting a guessed UBO in a partner pack.
+Lead Engineer [Wed 9:16]: Rain sandbox accepted a test entity. coverage matrix shows all three markets. production keys wait until the sponsor signs the baseline.
+Client Sponsor [Thu 16:02]: can we do the baseline numbers next week? slammed.`,
+    board: `GATE-05  Baseline 11 days / 40% bounce   Blocked      sitting 4d   Client Sponsor
+KYB-30   Historical files                 22/30        sitting 2d   Client Compliance
+MKT-3    Legal opinion or explicit cut    Blocked      sitting 3d   Client Sponsor
+RAIN-1   Sandbox + coverage matrix        Shipped                   Lead Engineer
+PACK-1   Reusable KYB pack v1             Shipped                   Ops Lead`,
+    slackPull: "Slack: 8 files are phone photos, two passports cut the MRZ, one proof of address is expired. Do not fill a UBO from memory.",
+    gates: [
+      { id: "g1", code: "GATE-01", name: "Executive Sponsor & Weekly 15-min Decision Slot", status: "PASS", owner: "Client Sponsor", sla: "Day 1 · 24h",
+        need: "One sponsor who can pick a partner or drop a market, and a 15-minute slot that actually happens.",
+        have: "The slot is recurring. The day-2 pivot to Rain was decided there, not in a side thread.",
+        miss: "Do not take a vendor decision from a group chat.",
+        action: "Put the 15-min slot back on the calendar today. Market calls do not get made anywhere else.",
+        slip: "The launch date becomes the decision-maker." },
+      { id: "g2", code: "GATE-02", name: "API/Admin/Sandbox Credentials & Market Coverage Check", status: "PASS", owner: "Ops Lead + Lead Engineer", sla: "Day 3 · 72h",
+        need: "A written coverage matrix for every target market, and a sandbox key that accepts a test entity. The contract logo is not coverage.",
+        have: "Day 2: the inherited vendor does not cover markets 2 or 3. Rain's sandbox does, and the key accepted a test entity. Production keys wait on the baseline sign-off.",
+        miss: "If this is still unchecked at 72 hours, stop build. Finding out in week 3 is a rewrite.",
+        action: "Confirm the sandbox key today and match each target market to a row in the matrix. No row, no build.",
+        slip: "We design the product around a market the partner cannot serve.",
+        note: GATE_NOTE },
+      { id: "g3", code: "GATE-03", name: "Ground-Truth Data Sample of 30 Historical Runs", status: "AT RISK", owner: "Client Compliance", sla: "Day 3 · 72h",
+        need: "30 real KYB files, including bounces and incomplete ones. Phone photos count only if the pages are actually readable.",
+        have: "22 of 30 are in the folder. 8 are phone photos: two passports crop the MRZ, one proof of address is expired, UBO pages are missing.",
+        miss: "Do not let the pack look done because 22 files were clean. The 8 are the test.",
+        action: "Send the 8 applicants a specific missing-doc list today. No cropped passport photos in the pack.",
+        slip: "Rain bounces the first real submission for a page we already knew was missing." },
+      { id: "g4", code: "GATE-04", name: "Exception & Human-in-the-Loop Escalation Owner", status: "PASS", owner: "Client Compliance", sla: "Day 3 · 72h",
+        need: "A named person for PEP hits, sanctions questions, and any file the agent cannot classify. Ops Lead does not approve KYB.",
+        have: "Client Compliance is named. Anything ugly defaults to needs-human and does not get submitted.",
+        miss: "If the owner is 'the team', the pack will ship with a gap someone was hoping not to notice.",
+        action: "Name the person who can refuse a file. Write the backup.",
+        slip: "A bad pack goes to the partner because nobody wanted to be the one who stopped it." },
+      { id: "g5", code: "GATE-05", name: "Baseline Time/Cost Metric", status: "BLOCKED", owner: "Client Sponsor", sla: "Day 3 · 72h",
+        need: "Two signed numbers: first-pass cycle time, and the share of files that bounce on documents.",
+        have: "The numbers are known and not signed. First pass on the old vendor was 11 days. About 40% bounced for documents. Unsigned numbers do not count.",
+        miss: "Hard stop on calling this sprint done. Build of the pack can continue. Day-30 ROI cannot.",
+        action: "Sign the two baseline numbers today: 11-day first pass, 40% document bounce.",
+        slip: "Day 30 turns into whether it feels faster." }
+    ],
+    steps: [
+      { id: "s1", code: "STEP-01", name: "Document intake", lane: "ai",
+        line: "Phone photos of passports, expired proofs of address, articles in Spanish.",
+        claim: "The applicant uploads a complete KYB package.",
+        actual: "Files arrive as WhatsApp PDFs, a passport photo with the MRZ cropped, an expired utility bill, and articles of incorporation in Spanish. Names do not match across the pages.",
+        rule: "Classify the document, check the expiry, check the name against the entity. If the UBO page or a valid proof of address is missing, mark needs-human. Do not fill the gap.",
+        human: "Client Compliance reviews any failed match or any PEP hit. Ops Lead does not approve a KYB file.",
+        sla: "Completeness check the same day the file lands.",
+        fallback: "The file sits in a needs-human queue. Nobody submits a partial pack.",
+        source: "Applicant document folder" },
+      { id: "s2", code: "STEP-02", name: "Market coverage check", lane: "ai",
+        line: "The vendor was signed earlier. Two target markets were never in the contract.",
+        claim: "The signed BaaS vendor supports the markets on the slide.",
+        actual: "It does not. Markets 2 and 3 were not in the contract. The product was already drawn around them. A logo on a slide is not coverage.",
+        rule: "A country and a product must exist as a row in the partner matrix, or the workflow stops. Do not discover this from a production API error.",
+        human: "The Client Sponsor decides whether to pivot partners or drop the market. Ops Lead does not pick a vendor alone.",
+        sla: "The matrix is checked inside the first 72 hours, before build tickets.",
+        fallback: "If the matrix is missing, build stops.",
+        source: "Partner coverage matrix, country by product",
+        note: "Resolved on this sprint: the inherited vendor failed on day 2. Rain covers all three markets in sandbox. Market 3 still needs a written go before any live submission." },
+      { id: "s3", code: "STEP-03", name: "KYB pack assembly", lane: "ai",
+        line: "The pack that cleared the first partner is the pack the new partner gets.",
+        claim: "Each partner gets a fresh KYB build.",
+        actual: "The second filing is only fast if the first pack was saved as files: entity, directors, UBO, source of funds, address. Gaps stay labeled. Nothing is retyped from memory.",
+        rule: "Assemble the pack from the saved files plus the new partner's checklist. Where this partner asks for something new, add a labeled gap. Do not rewrite the pack.",
+        human: "Client Compliance signs the pack before it is sent. Ops Lead never hits submit.",
+        sla: "Draft pack in one business day once the documents are complete.",
+        fallback: "The previous pack remains the source. A bounce sends us back to that file, not to a blank folder.",
+        source: "Versioned KYB pack" },
+      { id: "s4", code: "STEP-04", name: "Partner submission & exceptions", lane: "human",
+        line: "A bounce is a missing document, not a reason to resubmit the whole company.",
+        claim: "If the partner bounces the file, the applicant starts over.",
+        actual: "Most bounces are one missing page. A full resubmission burns the week and introduces new mismatches.",
+        rule: "Map the bounce to a document type. Ask once, with that list. Log the bounce. Do not open a second full pack.",
+        human: "Client Compliance reads the bounce and approves the reply. A PEP hit or a sanctions question stops the line.",
+        sla: "Bounce triaged within 4 business hours.",
+        fallback: "The bounce log is a plain sheet. If the partner portal is down, the ask still goes out the same day.",
+        source: "Partner bounce log" },
+      { id: "s5", code: "STEP-05", name: "Cutover by market", lane: "unblock",
+        line: "Sandbox coverage is not a production go for every market.",
+        claim: "All target markets go live the same day.",
+        actual: "Market 3 still needs a legal opinion the sponsor has not booked. Shipping all three together repeats the original mistake under a new logo.",
+        rule: "A market goes live only when three things are true: coverage row, complete KYB pack, written sponsor sign-off for that market. Otherwise it stays out.",
+        human: "Client Sponsor signs each market. Client Compliance owns the pack after handoff.",
+        sla: "One market in shadow before the second is enabled. Market 3 does not ride along.",
+        fallback: "Markets 1 and 2 can run on the manual pack if the API is down. Market 3 stays off.",
+        source: "Market go-live checklist" }
+    ],
+    rows: [
+      { id: "f1", code: "R-01", gateId: "g2", phase: PHASES[0], name: "Coverage check on the inherited BaaS vendor", source: "Day-2 working note", owner: "Ops Lead", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Markets 2 and 3 are not in the contract. Caught on day 2, before build." },
+      { id: "f2", code: "R-02", gateId: "g1", phase: PHASES[0], name: "Sponsor decision: pivot partner, do not build on the inherited vendor", source: "Decision slot", owner: "Client Sponsor", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Written in the slot notes. Rain is the pivot. The old vendor is not the build target." },
+      { id: "f3", code: "R-03", phase: PHASES[0], name: "Rain sandbox key and a coverage row for each target market", source: "Task Board", owner: "Lead Engineer", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "Sandbox accepted a test entity. Three markets are on the matrix. Production keys are not requested yet." },
+      { id: "f4", code: "R-04", phase: PHASES[1], name: "Reusable KYB pack carried over: entity, directors, UBO, source of funds, address", source: "Pack folder", owner: "Ops Lead", status: "Shipped", days: 0, unblock: "", slip: "", evidence: "v1 of the pack is the file Rain will get. Gaps are labeled, not rewritten." },
+      { id: "f5", code: "R-05", gateId: "g3", phase: PHASES[1], name: "30 historical KYB files, including bounced and unreadable ones", source: "Compliance folder", owner: "Client Compliance", status: "In Progress", days: 2, unblock: "Send the 8 incomplete files a specific missing-doc list today. No cropped passport photos.", slip: "The pack gets signed on 22 clean files.", evidence: "" },
+      { id: "f6", code: "R-06", gateId: "g5", phase: PHASES[1], name: "Sponsor signs the baseline: 11-day first pass, 40% document bounce", source: "Decision slot", owner: "Client Sponsor", status: "Blocked >48h", days: 4, unblock: "Sign the two baseline numbers today: 11-day first pass, 40% document bounce.", slip: "Day-30 ROI has nothing to stand next to.", evidence: "" },
+      { id: "f7", code: "R-07", phase: PHASES[2], name: "Shadow-submit 10 complete packs to Rain", source: "Engineering board", owner: "Lead Engineer + Ops Lead", status: "In Progress", days: 0, unblock: "Only files Client Compliance has already signed. No partials in the batch.", slip: "", evidence: "" },
+      { id: "f8", code: "R-08", phase: PHASES[2], name: "Market 3: legal opinion, or a written decision that it is out of this sprint", source: "Thursday call", owner: "Client Sponsor", status: "Blocked >48h", days: 3, unblock: "Market 3 is in this sprint or it is out. One written line today. We will not submit it on a verbal go.", slip: "Someone submits market 3 to protect a launch date.", evidence: "" },
+      { id: "f9", code: "R-09", phase: PHASES[3], name: "Kill-switch drill run by client staff", source: "Handoff checklist", owner: "Client Compliance", status: "Upcoming", days: 0, unblock: "Client Compliance turns it off and files one pack by hand.", slip: "", evidence: "" },
+      { id: "f10", code: "R-10", phase: PHASES[3], name: "Handoff: client compliance owns the pack and the Friday correction pass", source: "Handoff checklist", owner: "Client Compliance", status: "Upcoming", days: 0, unblock: "They update the pack file. We don't keep the keys.", slip: "", evidence: "" }
+    ],
+    handoff: [
+      { id: "h1", name: "Shadow-Mode Accuracy Sign-Off", status: "IN PROGRESS", owner: "Client Compliance", detail: "10 complete packs are in shadow with Rain. The sign-off waits until the 8 unreadable files are either fixed or explicitly excluded." },
+      { id: "h2", name: "Kill-Switch Drill Tested Live by Client Staff", status: "OPEN", owner: "Client Compliance", detail: "Not run yet. The person who drills it has to be client staff. A drill we run ourselves does not count." },
+      { id: "h3", name: "2-Page Loom & Exception Runbook", status: "IN PROGRESS", owner: "Ops Lead", detail: "The KYB pack is the seed of the runbook. The Loom is not recorded. Two pages still have to name who submits and who refuses." },
+      { id: "h4", name: "Alerting & Token Budget Caps", status: "SIGNED", owner: "Lead Engineer", detail: "A failed sandbox call posts to the client channel. Weekly cap is 150k tokens, warn at 70%, hard stop at 100%." },
+      { id: "h5", name: "Baseline vs. Day-30 ROI Audit", status: "OPEN", owner: "Client Sponsor", detail: "Blocked upstream. The 11-day / 40% numbers are not signed, so there is nothing to compare on day 30 yet." },
+      { id: "h6", name: "30-Day Post-Launch Check-In", status: "OPEN", owner: "Client Sponsor", detail: "Not booked. It gets booked when a market actually has a go-live date. Agenda will be the bounce log." }
+    ]
+  }
+};
+
+let state;
+let runToken = 0;
+let scrollTab = false;
+
+function clone(v) { return JSON.parse(JSON.stringify(v)); }
+function current() { return SCENARIOS[state.scenarioId]; }
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function hay() {
+  return esc(Array.from(arguments).filter(Boolean).join(" ").toLowerCase());
+}
+function cssAttr(value) {
+  if (window.CSS && CSS.escape) return CSS.escape(String(value));
+  return String(value).replace(/["\\]/g, "\\$&");
+}
+function statusClass(s) {
+  return ({
+    "PASS": "pass", "AT RISK": "at-risk", "BLOCKED": "blocked",
+    "Shipped": "shipped", "In Progress": "in-progress", "Blocked >48h": "blocked-48h", "Upcoming": "upcoming",
+    "OPEN": "open", "IN PROGRESS": "in-progress", "SIGNED": "signed"
+  })[s] || "open";
+}
+function tabFromHash() {
+  const h = location.hash.replace("#", "");
+  return TABS.some(t => t[0] === h) ? h : "gate";
+}
+function isStall(r) {
+  return r.status === "Blocked >48h" || (r.status === "In Progress" && r.days >= 2);
+}
+function stalledRows() {
+  return state.rows.filter(isStall).slice().sort((a, b) => b.days - a.days);
+}
+function banner() {
+  const blocked = state.gates.filter(g => g.status === "BLOCKED").length;
+  const risk = state.gates.filter(g => g.status === "AT RISK").length;
+  if (blocked) return { kind: "lock", text: "PRODUCTION BUILD LOCKED: " + blocked + " Gate" + (blocked === 1 ? "" : "s") + " Blocked" };
+  if (risk) return { kind: "risk", text: "BUILD OPEN WITH WATCH ITEMS: " + risk + " Gate" + (risk === 1 ? "" : "s") + " At Risk" };
+  return { kind: "go", text: "ALL GATES CLEARED: Ready for Engineering Build" };
+}
+function gateSummary() {
+  const total = state.gates.length;
+  const pass = state.gates.filter(g => g.status === "PASS").length;
+  const blocked = state.gates.filter(g => g.status === "BLOCKED").length;
+  const risk = state.gates.filter(g => g.status === "AT RISK").length;
+  let tail = "All Clear";
+  if (blocked && risk) tail = blocked + " Blocked · " + risk + " At Risk — Hard Stop on Prod Build";
+  else if (blocked) tail = blocked + " Blocked — Hard Stop on Prod Build";
+  else if (risk) tail = risk + " At Risk — Build Open, Watch the Gap";
+  return pass + " / " + total + " Passed · " + tail;
+}
+function driftText() {
+  const n = stalledRows().length;
+  if (!n) return "0 — No 48h Stalls";
+  if (n === 1) return "1 Escalation Flagged";
+  return n + " Escalations Flagged";
+}
+function readiness() {
+  const total = state.handoff.length || 1;
+  const n = state.handoff.filter(h => h.status === "SIGNED").length;
+  return { n, total: state.handoff.length, pct: Math.round(n / total * 100) };
+}
+function decisionItems() {
+  const stalled = stalledRows();
+  const covered = new Set(stalled.map(r => r.gateId).filter(Boolean));
+  const items = [];
+  state.gates.forEach(g => {
+    if (g.status !== "BLOCKED" && g.status !== "AT RISK") return;
+    if (covered.has(g.id)) return;
+    items.push({ code: g.code, title: g.name, owner: g.owner, days: null, action: g.action, slip: g.slip, level: g.status });
+  });
+  stalled.forEach(r => {
+    items.push({ code: r.code, title: r.name, owner: r.owner, days: r.days, action: r.unblock, slip: r.slip, level: r.status });
+  });
+  return items;
+}
+function gateWarnings() {
+  const out = [];
+  state.rows.forEach(r => {
+    if (!r.gateId) return;
+    const g = state.gates.find(x => x.id === r.gateId);
+    if (!g) return;
+    const rowBad = isStall(r);
+    const gateBad = g.status === "BLOCKED" || g.status === "AT RISK";
+    if (rowBad === gateBad) return;
+    out.push(g.code + " is " + g.status + " on the intake gate. " + r.code + " is " + r.status + ", " + r.days + "d on the tracker.");
+  });
+  return out;
+}
+function countWords(text) {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+function buildClientNote(src) {
+  const sc = current();
+  const items = decisionItems();
+  if (!items.length) {
+    return "No unblock today. Nothing has been sitting 48 hours, and no intake gate is blocked or at risk.\n— Ops Lead";
+  }
+  const drift = sc.drift;
+  const row = state.rows.find(r => r.id === drift.rowId);
+  const driftLine = src.call && row && row.status !== "Shipped" ? drift.noteLine : "";
+  function assemble(n, withDrift, withSlot) {
+    const lines = ["Need these moved today so the sprint doesn't lose another day.", ""];
+    items.slice(0, n).forEach((item, i) => {
+      lines.push((i + 1) + ". " + item.owner + " — " + item.action);
+    });
+    if (items.length > n) lines.push("Plus " + (items.length - n) + " more on the tracker.");
+    if (withDrift && driftLine) lines.push("", driftLine);
+    if (withSlot) lines.push("", sc.slotLine);
+    lines.push("— Ops Lead");
+    return lines.join("\n").trim();
+  }
+  const options = [];
+  const maxN = Math.min(4, items.length);
+  for (let n = maxN; n >= 1; n--) {
+    options.push(assemble(n, true, true));
+    options.push(assemble(n, true, false));
+    options.push(assemble(n, false, true));
+    options.push(assemble(n, false, false));
+  }
+  return options.find(t => countWords(t) <= 120) || assemble(1, false, false);
+}
+function buildPrompt() {
+  const sc = current();
+  const src = state.sources;
+  const block = (on, text) => on ? String(text).trim() : "[not included in this run]";
+  const tracker = state.rows.map(r => [r.code, r.status, r.days + "d", r.owner, r.name].join(" | ")).join("\n");
+  const gates = state.gates.map(g => [g.code, g.status, g.name].join(" | ")).join("\n");
+  return [
+    "/sprint-pulse",
+    "",
+    "Day " + sc.day + ", " + sc.when + ". 30-day client sprint. You are the operator, not a status reporter.",
+    "",
+    "Read only the sources under SOURCES. If a source says it was not included, skip it. Do not invent a tool, a person, or a status.",
+    "",
+    "Severity: 48 hours with no movement on a client sprint equals about 7 days of drift on a normal project. Flag it.",
+    "",
+    "A sentence on a call is not a decision. A decision has an owner and a date.",
+    "",
+    "If the call and the written scope disagree, that is scope drift. Quote both.",
+    "",
+    "Do not produce a round-robin update. Produce the unblock.",
+    "",
+    "Write four sections and stop.",
+    "",
+    "1. Needs a decision in the next 24h",
+    "   For each item: owner, what is stuck, the single next action, what slips if it waits another day.",
+    "2. Scope drift caught on calls vs the written scope",
+    "   Quote the call. Quote the scope. State what we will not build or send until it is resolved.",
+    "   If there is no drift, write: No drift in the sources.",
+    "3. Shipped since the last pulse",
+    "   Only items the sources support. Do not dress in-progress up as shipped.",
+    "4. Client note, ready to send",
+    "   Under 120 words. Plain. The asks, the owners, the timing. No intro warmup.",
+    "",
+    "SOURCES",
+    "",
+    "--- call transcript ---",
+    block(src.call, sc.call),
+    "",
+    "--- client slack ---",
+    block(src.slack, sc.slack),
+    "",
+    "--- task board ---",
+    block(src.board, sc.board),
+    "",
+    "--- live tracker ---",
+    tracker,
+    "",
+    "--- intake gates ---",
+    gates
+  ].join("\n");
+}
+function buildBrief(sources) {
+  const sc = current();
+  const src = sources || state.sources;
+  const used = ["Live tracker", "Intake gates"];
+  if (src.call) used.push("Call Transcripts");
+  if (src.slack) used.push("Client Slack");
+  if (src.board) used.push("Task Board");
+  const decisions = decisionItems();
+  const row = state.rows.find(r => r.id === sc.drift.rowId);
+  let drift;
+  if (!src.call) drift = { state: "unchecked" };
+  else if (row && row.status === "Shipped") drift = { state: "closed", text: sc.drift.closed };
+  else drift = { state: "open", call: sc.drift.call, written: sc.drift.written, wont: sc.drift.wont };
+  const shipped = state.rows.filter(r => r.status === "Shipped").map(r => ({
+    code: r.code, name: r.name, evidence: r.evidence || "Marked shipped on the live tracker."
+  }));
+  return {
+    used,
+    src,
+    decisions,
+    drift,
+    shipped,
+    note: buildClientNote(src),
+    warnings: gateWarnings(),
+    slackPull: src.slack ? sc.slackPull : ""
+  };
+}
+function makeLog(sources) {
+  const sc = current();
+  const src = sources || state.sources;
+  const mark = on => on ? "included" : "skipped";
+  const pass = state.gates.filter(g => g.status === "PASS").length;
+  const risk = state.gates.filter(g => g.status === "AT RISK").length;
+  const blocked = state.gates.filter(g => g.status === "BLOCKED").length;
+  return [
+    "$ /sprint-pulse  day " + sc.day + "  " + sc.when.toLowerCase(),
+    "call transcript ................ " + mark(src.call),
+    "client slack ................... " + mark(src.slack),
+    "task board ..................... " + mark(src.board),
+    "live tracker ................... " + state.rows.length + " rows, " + stalledRows().length + " over 48h",
+    "intake gates ................... " + pass + " pass, " + risk + " at risk, " + blocked + " blocked",
+    "rule ........................... 48h of silence = flag",
+    "writing the " + sc.when.toLowerCase() + " brief ........ done"
+  ];
+}
+function termText() {
+  if (!state.pulse) return "";
+  const n = state.pulse.phase === "done" ? state.pulse.lines.length : state.pulse.shown;
+  return state.pulse.lines.slice(0, n).join("\n");
+}
+function num(v) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+}
+function roiResult() {
+  const r = state.roi;
+  const volume = num(r.volume), before = num(r.before), after = num(r.after);
+  const error = num(r.error), reworkMin = num(r.reworkMin), rate = num(r.rate), cost = num(r.cost);
+  const weeks = 4.33;
+  const touchWeek = volume * Math.max(0, before - after) / 60;
+  const reworkWeek = volume * (error / 100) * reworkMin / 60;
+  const touchMonth = touchWeek * weeks;
+  const reworkMonth = reworkWeek * weeks;
+  const totalMonth = touchMonth + reworkMonth;
+  const dollars = totalMonth * rate;
+  return {
+    touchWeek, reworkWeek, touchMonth, reworkMonth, totalMonth, dollars,
+    payback: dollars > 0 ? cost / dollars : null,
+    inverted: after > before, rate, cost
+  };
+}
+function hours(n) {
+  return (Math.round(n * 10) / 10).toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+function money(n) {
+  return "$" + Math.round(n).toLocaleString("en-US");
+}
+function loadScenario(id) {
+  const sc = SCENARIOS[id];
+  runToken += 1;
+  state = {
+    scenarioId: id,
+    gates: clone(sc.gates),
+    steps: clone(sc.steps),
+    rows: clone(sc.rows),
+    handoff: clone(sc.handoff),
+    roi: clone(sc.roi),
+    filterLane: "all",
+    filterPhase: "all",
+    filterStatus: "all",
+    search: "",
+    open: { s1: true },
+    sources: { call: true, slack: true, board: true, prompt: false },
+    pulse: null,
+    tab: "gate",
+    form: { title: "", phase: sc.formPhase, owner: "Ops Lead", action: "" },
+    formError: ""
+  };
+}
+function markStale() {
+  if (state.pulse && state.pulse.phase === "done") state.pulse.stale = true;
+}
+function rowVisible(r) {
+  if (state.filterPhase !== "all" && r.phase !== state.filterPhase) return false;
+  if (state.filterStatus === "all") return true;
+  if (state.filterStatus === "Blocked >48h") return isStall(r);
+  if (state.filterStatus === "In Progress") return r.status === "In Progress" && r.days < 2;
+  return r.status === state.filterStatus;
+}
+function cycleGate(id) {
+  const order = ["PASS", "AT RISK", "BLOCKED"];
+  const g = state.gates.find(x => x.id === id);
+  if (!g) return;
+  g.status = order[(order.indexOf(g.status) + 1) % order.length];
+  markStale();
+  render();
+}
+function cycleStatus(id) {
+  const order = ["Upcoming", "In Progress", "Blocked >48h", "Shipped"];
+  const r = state.rows.find(x => x.id === id);
+  if (!r) return;
+  r.status = order[(order.indexOf(r.status) + 1) % order.length];
+  if (r.status === "Blocked >48h" && r.days < 2) r.days = 2;
+  if (r.status === "Shipped" || r.status === "Upcoming") r.days = 0;
+  markStale();
+  render();
+}
+function bumpDay(id, dir) {
+  const r = state.rows.find(x => x.id === id);
+  if (!r || r.status === "Shipped" || r.status === "Upcoming") return;
+  r.days = Math.max(0, Math.min(40, r.days + dir));
+  if (r.status === "Blocked >48h" && r.days < 2) r.status = "In Progress";
+  markStale();
+  render();
+}
+function cycleHandoff(id) {
+  const order = ["OPEN", "IN PROGRESS", "SIGNED"];
+  const h = state.handoff.find(x => x.id === id);
+  if (!h) return;
+  h.status = order[(order.indexOf(h.status) + 1) % order.length];
+  render();
+}
+function addBlocker() {
+  const title = state.form.title.trim();
+  if (!title) {
+    state.formError = "Name the stall first.";
+    render();
+    return;
+  }
+  const n = state.rows.filter(r => r.added).length + 1;
+  state.rows.unshift({
+    id: "add" + Date.now(),
+    added: true,
+    code: "ADD-" + String(n).padStart(2, "0"),
+    phase: state.form.phase,
+    name: title,
+    source: "Added in this session",
+    owner: state.form.owner.trim() || "Ops Lead",
+    status: "Blocked >48h",
+    days: 2,
+    unblock: state.form.action.trim() || "Name the one action that clears this in the next 24 hours, and who does it.",
+    slip: "Another quiet day moves the day-30 date.",
+    evidence: ""
+  });
+  state.form.title = "";
+  state.form.action = "";
+  state.formError = "";
+  state.filterPhase = "all";
+  state.filterStatus = "Blocked >48h";
+  markStale();
+  render();
+}
+function removeRow(id) {
+  state.rows = state.rows.filter(r => r.id !== id);
+  markStale();
+  render();
+}
+function setScenario(id) {
+  if (!SCENARIOS[id] || id === state.scenarioId) return;
+  const tab = state.tab;
+  const search = state.search;
+  loadScenario(id);
+  state.tab = tab;
+  state.search = search;
+  const url = new URL(location.href);
+  if (id === "field") url.searchParams.delete("scenario");
+  else url.searchParams.set("scenario", "fintech");
+  history.replaceState(null, "", url);
+  render();
+}
+function resetScenario() {
+  const tab = state.tab;
+  loadScenario(state.scenarioId);
+  state.tab = tab;
+  render();
+}
+function revealTab() {
+  if (!scrollTab) return;
+  scrollTab = false;
+  const panel = document.getElementById("panel");
+  if (panel) panel.scrollIntoView({ block: "start" });
+}
+function runPulse() {
+  const token = ++runToken;
+  const sources = clone(state.sources);
+  const lines = makeLog(sources);
+  state.pulse = { token, phase: "running", lines, shown: 0, sources, result: null, stale: false };
+  render();
+  const term = document.getElementById("term");
+  if (term) term.scrollIntoView({ block: "nearest" });
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const step = () => {
+    if (!state.pulse || state.pulse.token !== token) return;
+    state.pulse.shown += 1;
+    const pre = document.getElementById("term");
+    if (pre) pre.textContent = state.pulse.lines.slice(0, state.pulse.shown).join("\n");
+    if (state.pulse.shown < state.pulse.lines.length) setTimeout(step, reduce ? 0 : 80);
+    else {
+      state.pulse.phase = "done";
+      state.pulse.result = buildBrief(state.pulse.sources);
+      render();
+    }
+  };
+  setTimeout(step, reduce ? 0 : 60);
+}
+function copyText(text, btn) {
+  const label = btn.dataset.label || btn.textContent;
+  const done = () => {
+    btn.textContent = "Copied";
+    setTimeout(() => { if (btn.isConnected) btn.textContent = label; }, 1400);
+  };
+  const fallback = () => {
+    const area = document.createElement("textarea");
+    area.value = text;
+    document.body.appendChild(area);
+    area.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    area.remove();
+    done();
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, fallback);
+  else fallback();
+}
+
+function pills(items, currentVal, act) {
+  return '<div class="chips" role="group">' + items.map(item => {
+    const on = currentVal === item[0];
+    const text = item[2] == null ? item[1] : item[1] + " · " + item[2];
+    return '<button type="button" class="chip' + (on ? " on" : "") + '" data-act="' + act + '" data-id="' + esc(item[0]) + '" aria-pressed="' + on + '">' + esc(text) + "</button>";
+  }).join("") + "</div>";
+}
+function gateCard(g) {
+  return '<article class="card" data-hay="' + hay(g.code, g.name, g.status, g.owner, g.need, g.have, g.miss, g.note) + '">' +
+    '<div class="card-top"><div><p class="code">' + esc(g.code) + " · " + esc(g.sla) + "</p><h3>" + esc(g.name) + "</h3></div>" +
+    '<button type="button" class="st ' + statusClass(g.status) + '" data-act="gate" data-id="' + esc(g.id) + '" aria-label="' + esc(g.code + " status " + g.status + ". Activate to cycle.") + '">' + esc(g.status) + "</button></div>" +
+    '<dl class="kv"><div><dt>Owner</dt><dd>' + esc(g.owner) + "</dd></div>" +
+    "<div><dt>What has to be true</dt><dd>" + esc(g.need) + "</dd></div>" +
+    "<div><dt>Where it stands</dt><dd>" + esc(g.have) + "</dd></div>" +
+    "<div><dt>If it misses 48h</dt><dd>" + esc(g.miss) + "</dd></div></dl>" +
+    (g.note ? '<p class="why">' + esc(g.note) + "</p>" : "") + "</article>";
+}
+function stepCard(s) {
+  const open = !!state.open[s.id];
+  const lane = LANES.find(l => l[0] === s.lane);
+  return '<article class="card" data-hay="' + hay(s.code, s.name, lane && lane[1], s.line, s.claim, s.actual, s.rule, s.human, s.sla) + '">' +
+    '<div class="card-top"><div><p class="code">' + esc(s.code) + " · " + esc(lane ? lane[1] : "") + "</p><h3>" + esc(s.name) + "</h3></div></div>" +
+    '<p class="line">' + esc(s.line) + "</p>" +
+    '<button type="button" class="expand" data-act="step" data-id="' + esc(s.id) + '" aria-expanded="' + open + '">' + (open ? "Hide the breakdown" : "Show the breakdown") + "</button>" +
+    (open ? '<dl class="kv"><div><dt>What the client claims</dt><dd>' + esc(s.claim) + "</dd></div>" +
+      "<div><dt>What actually happens</dt><dd>" + esc(s.actual) + "</dd></div>" +
+      "<div><dt>AI / deterministic rule</dt><dd>" + esc(s.rule) + "</dd></div>" +
+      "<div><dt>Human-in-the-loop fallback</dt><dd>" + esc(s.human) + "</dd></div>" +
+      "<div><dt>SLA</dt><dd>" + esc(s.sla) + "</dd></div>" +
+      "<div><dt>If the automation breaks</dt><dd>" + esc(s.fallback) + "</dd></div>" +
+      "<div><dt>Source of truth</dt><dd>" + esc(s.source) + "</dd></div></dl>" +
+      (s.note ? '<p class="why">' + esc(s.note) + "</p>" : "") : "") + "</article>";
+}
+function trackerRow(r) {
+  const stalled = isStall(r);
+  const klass = r.status === "Blocked >48h" ? " hot" : (r.status === "In Progress" && r.days >= 2 ? " warm" : "");
+  const actionLabel = stalled ? "24-Hour Unblock" : (r.status === "Shipped" ? "Evidence" : "Next");
+  const action = r.status === "Shipped" ? (r.evidence || "Done.") : (r.unblock || "—");
+  const days = (r.status === "Shipped" || r.status === "Upcoming")
+    ? "—"
+    : '<span class="days"><button type="button" data-act="day" data-id="' + esc(r.id) + '" data-dir="-1" aria-label="Decrease days sitting for ' + esc(r.code) + '">−</button><b>' + r.days + 'd</b><button type="button" data-act="day" data-id="' + esc(r.id) + '" data-dir="1" aria-label="Increase days sitting for ' + esc(r.code) + '">+</button></span>';
+  return '<div class="trow' + klass + '" data-hay="' + hay(r.code, r.phase, r.name, r.owner, r.status, r.source, action) + '">' +
+    "<div><span class=\"lbl\">Window</span>" + esc(r.phase) + "</div>" +
+    "<div><span class=\"lbl\">Milestone</span><b>" + esc(r.code) + "</b> " + esc(r.name) + '<div class="muted">' + esc(r.source) + "</div>" +
+    (r.added ? '<button type="button" class="x" data-act="remove" data-id="' + esc(r.id) + '">Remove</button>' : "") + "</div>" +
+    "<div><span class=\"lbl\">Owner</span>" + esc(r.owner) + "</div>" +
+    '<div><span class="lbl">Status</span><button type="button" class="st ' + statusClass(r.status) + '" data-act="status" data-id="' + esc(r.id) + '">' + esc(r.status) + "</button></div>" +
+    '<div><span class="lbl">Days sitting</span>' + days + "</div>" +
+    "<div><span class=\"lbl\">" + esc(actionLabel) + "</span><b class=\"desk-label\">" + esc(actionLabel) + ".</b> " + esc(action) + "</div></div>";
+}
+function sourceBlock(id, label, text) {
+  const on = !!state.sources[id];
+  return '<div class="src" data-hay="' + hay(label, text) + '"><button type="button" class="chip' + (on ? " on" : "") + '" data-act="source" data-id="' + id + '" aria-pressed="' + on + '">' +
+    esc(label) + " · " + (on ? "Included" : "Excluded") + "</button>" +
+    (on ? '<pre class="snippet">' + esc(text) + "</pre>" : '<p class="muted">Excluded from the next run.</p>') + "</div>";
+}
+function decisionsHTML(items) {
+  if (!items.length) return "<p>Nothing needs a decision in the next 24h. No intake gate is blocked or at risk, and nothing on the tracker has been sitting 48 hours.</p>";
+  return items.map(item => '<article class="hit"><p class="code">' + esc(item.code) + " · " + esc(item.owner) + (item.days != null ? " · " + item.days + "d" : "") + " · " + esc(item.level) + "</p><h4>" + esc(item.title) + "</h4><p><b>Next 24h.</b> " + esc(item.action) + "</p><p><b>If it slips.</b> " + esc(item.slip) + "</p></article>").join("");
+}
+function driftHTML(drift) {
+  if (drift.state === "unchecked") return "<p>No call transcript in this run, so scope drift was not checked. Turn Call Transcripts on and run again.</p>";
+  if (drift.state === "closed") return "<p>" + esc(drift.text) + "</p>";
+  return "<p><b>Call.</b> “" + esc(drift.call) + "”</p><p><b>Written scope.</b> " + esc(drift.written) + "</p><p><b>Will not build.</b> " + esc(drift.wont) + "</p>";
+}
+function shippedHTML(rows, src) {
+  const note = src.board
+    ? "Task board snippet was included. If it disagrees with this list, the live tracker is newer."
+    : "Task board snippet was not included. This list is the live tracker only.";
+  const list = rows.length
+    ? "<ul>" + rows.map(r => "<li><b>" + esc(r.code) + "</b> " + esc(r.name) + " — " + esc(r.evidence) + "</li>").join("") + "</ul>"
+    : "<p>Nothing is marked shipped.</p>";
+  return "<p class=\"muted\">" + esc(note) + "</p>" + list;
+}
+function briefHTML() {
+  const p = state.pulse;
+  if (!p) return '<p class="idle">No brief yet. Run the pulse. It reads whatever sources are included, then the live tracker.</p>';
+  if (p.phase !== "done" || !p.result) return '<p class="idle">Reading sources.</p>';
+  const b = p.result;
+  const slack = b.slackPull ? "<p>" + esc(b.slackPull) + "</p>" : "<p class=\"muted\">Client Slack was not in this run. Decisions below are the live tracker and the intake gates.</p>";
+  return '<div class="brief">' +
+    (p.stale ? '<p class="stale">Tracker or sources changed after this run. Run again.</p>' : "") +
+    '<p class="meta">Sources in this run: ' + esc(b.used.join(", ")) + "</p>" +
+    "<section><h3>1. Needs Decision in Next 24h</h3>" + slack + decisionsHTML(b.decisions) + "</section>" +
+    "<section><h3>2. Scope Drift Caught on Calls vs. SOW</h3>" + driftHTML(b.drift) + "</section>" +
+    "<section><h3>3. Shipped Since Last Pulse</h3>" + shippedHTML(b.shipped, b.src) + "</section>" +
+    '<section><h3>4. Ready-to-Send Client Unblock Note</h3><pre class="note" id="client-note">' + esc(b.note) + '</pre><button type="button" class="cp" data-act="copy" data-id="note" data-label="Copy Client Note">Copy Client Note</button></section>' +
+    (b.warnings.length ? "<section><h3>Where the gate and the tracker disagree</h3><ul>" + b.warnings.map(w => "<li>" + esc(w) + "</li>").join("") + "</ul></section>" : "") +
+    "</div>";
+}
+function roiHTML() {
+  const sc = current();
+  const r = state.roi;
+  return '<section class="calc"><h3>ROI & time saved</h3><p class="hint">Coordinator or analyst time. Not wrench time, and not a vendor price. Edit the assumptions. The sprint cost is a placeholder you type.</p>' +
+    '<div class="sliders">' +
+    slider("volume", "Weekly volume (" + sc.noun + "s)", r.volume, 5, 400, 5) +
+    slider("before", "Minutes before (per " + sc.noun + ")", r.before, 1, 180, 1) +
+    slider("after", "Minutes after (per " + sc.noun + ")", r.after, 1, 180, 1) +
+    slider("error", "Error-rate reduction (percentage points)", r.error, 0, 50, 1) +
+    "</div><div class=\"assumptions\">" +
+    numberField("reworkMin", "Minutes of rework per avoided error", r.reworkMin, 0, 180) +
+    numberField("rate", "Loaded hourly cost ($)", r.rate, 0, 400) +
+    numberField("cost", "Assumed sprint cost ($)", r.cost, 0, 250000) +
+    '</div><div id="roi-out">' + roiOutHTML(roiResult()) + "</div></section>";
+}
+function slider(key, label, value, min, max, step) {
+  return "<label>" + esc(label) + ' · <span data-roi-out="' + key + '">' + esc(value) + "</span>" +
+    '<input type="range" data-roi="' + key + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + esc(value) + '" aria-label="' + esc(label) + '"></label>';
+}
+function numberField(key, label, value, min, max) {
+  return "<label>" + esc(label) + '<input type="number" data-roi="' + key + '" min="' + min + '" max="' + max + '" value="' + esc(value) + '" aria-label="' + esc(label) + '"></label>';
+}
+function roiOutHTML(r) {
+  const pay = r.payback == null ? "—" : hours(r.payback) + " months";
+  const note = r.inverted ? " Minutes after are higher than minutes before, so touch-time saved is zero." : "";
+  const payNote = r.payback == null ? " No savings at these inputs, so payback does not compute." : "";
+  return '<div class="roi"><div><span class="k">Touch time saved</span><b>' + hours(r.touchMonth) + ' h/mo</b><span class="s">' + hours(r.touchWeek) + " h/week</span></div>" +
+    '<div><span class="k">Rework avoided</span><b>' + hours(r.reworkMonth) + ' h/mo</b><span class="s">' + hours(r.reworkWeek) + " h/week</span></div>" +
+    '<div><span class="k">At ' + money(r.rate) + '/h</span><b>' + money(r.dollars) + "/mo</b><span class=\"s\">touch + rework</span></div>" +
+    '<div><span class="k">Payback</span><b>' + esc(pay) + '</b><span class="s">against ' + money(r.cost) + " assumed cost</span></div></div>" +
+    '<p class="formula">hours/month = weekly volume × max(0, minutes before − minutes after) / 60 × 4.33<br>rework hours/month = weekly volume × (error-rate reduction / 100) × rework minutes / 60 × 4.33<br>payback months = sprint cost / (hours/month × hourly rate).' + esc(note + payNote) + "</p>";
+}
+function head() {
+  const sc = current();
+  const b = banner();
+  const ready = readiness();
+  const scenarioButtons = ["field", "fintech"].map(id => {
+    const on = state.scenarioId === id;
+    return '<button type="button" data-act="scenario" data-id="' + id + '" aria-pressed="' + on + '">' + esc(SCENARIOS[id].button) + "</button>";
+  }).join("");
+  return '<header><p class="kicker">Interactive prototype</p><h1>30-Day Client Sprint<br><span>Control Tower</span></h1>' +
+    '<p class="sub">Operational execution between Day-1 Discovery and Day-30 Go-Live · Built by Naffy Quehen (<a href="https://x.com/n_andrea_q">@n_andrea_q</a>)</p>' +
+    '<div class="scenarios" role="group" aria-label="Sprint scenario">' + scenarioButtons +
+    '<button type="button" class="texty" data-act="reset">Reset sample</button></div>' +
+    "<p class=\"blurb\"><b>" + esc(sc.kicker) + ".</b> " + esc(sc.blurb) + "</p>" +
+    '<div class="kpis">' +
+    kpi("day", "Current Sprint Day", "Day " + sc.day + " of 30 — " + sc.phase, "tracker", "") +
+    kpi("gate", "72h Intake Gates", gateSummary(), "gate", "") +
+    kpi("tracker", "Active Drift / 48h+ Stalls", driftText(), "tracker", "") +
+    kpi("handoff", "Day-30 Go-Live Readiness", ready.pct + "% Complete", "handoff", ready.n + " / " + ready.total + " signed") +
+    "</div>" +
+    '<div class="banner ' + b.kind + '" id="banner">' + esc(b.text) + "</div>" +
+    '<div class="bar"><div class="tabs" role="tablist" id="tabs">' + TABS.map(t => {
+      const on = state.tab === t[0];
+      return '<button type="button" role="tab" id="tab-' + t[0] + '" aria-selected="' + on + '" aria-controls="panel" data-act="tab" data-id="' + t[0] + '">' + esc(t[1]) + "</button>";
+    }).join("") + '</div><input id="q" type="search" value="' + esc(state.search) + '" placeholder="Filter this tab" autocomplete="off" aria-label="Filter this tab"></div></header>';
+}
+function kpi(id, k, v, tab, sub) {
+  return '<button type="button" class="kpi" data-act="jump" data-id="' + tab + '"><span class="k">' + esc(k) + '</span><span class="v">' + esc(v) + "</span>" +
+    (sub ? '<span class="s">' + esc(sub) + "</span>" : "") + "</button>";
+}
+function panel() {
+  const tab = state.tab;
+  let body = "";
+  if (tab === "gate") body = gatePanel();
+  else if (tab === "map") body = mapPanel();
+  else if (tab === "tracker") body = trackerPanel();
+  else if (tab === "pulse") body = pulsePanel();
+  else body = handoffPanel();
+  const label = (TABS.find(t => t[0] === tab) || TABS[0])[1];
+  return '<main id="panel" role="tabpanel" aria-labelledby="tab-' + tab + '" tabindex="-1">' + body + "</main>";
+}
+function gatePanel() {
+  const b = banner();
+  return "<h2>01 / 72h Intake Gate</h2><p class=\"lede\">Pre-sprint access, data, and sponsor lock. Five gates between day 1 and day 3. One blocked gate stops the production build. Click a status to cycle PASS, AT RISK, and BLOCKED.</p>" +
+    '<p class="hint">' + esc(b.text) + "</p>" +
+    state.gates.map(gateCard).join("") +
+    '<p id="empty" class="empty" hidden>Nothing matches that filter.</p>';
+}
+function mapPanel() {
+  const steps = state.steps.filter(s => state.filterLane === "all" || s.lane === state.filterLane);
+  const counts = {};
+  state.steps.forEach(s => { counts[s.lane] = (counts[s.lane] || 0) + 1; });
+  const items = LANES.map(l => [l[0], l[1], l[0] === "all" ? state.steps.length : (counts[l[0]] || 0)]);
+  return "<h2>02 / Exception & Handoff Map</h2><p class=\"lede\">Happy path vs. the real mess. Open a step for what the client claims, what actually happens, the rule, the human fallback, and the SLA.</p>" +
+    pills(items, state.filterLane, "lane") +
+    (steps.length ? steps.map(stepCard).join("") : '<p class="empty">Nothing in this slice.</p>') +
+    '<p id="empty" class="empty" hidden>Nothing matches that filter.</p>';
+}
+function trackerPanel() {
+  const phaseIndex = current().day <= 5 ? 0 : current().day <= 12 ? 1 : current().day <= 22 ? 2 : 3;
+  const phased = state.rows.filter(r => state.filterPhase === "all" || r.phase === state.filterPhase);
+  const countStatus = id => phased.filter(r => {
+    if (id === "Blocked >48h") return isStall(r);
+    if (id === "In Progress") return r.status === "In Progress" && r.days < 2;
+    return r.status === id;
+  }).length;
+  const phaseItems = [["all", "All Phases", state.rows.length]].concat(PHASES.map(p => [p, p, state.rows.filter(r => r.phase === p).length]));
+  const statusItems = [["all", "All Statuses", phased.length]].concat(["Shipped", "In Progress", "Blocked >48h", "Upcoming"].map(s => [s, s, countStatus(s)]));
+  const rows = state.rows.filter(rowVisible);
+  const warnings = gateWarnings();
+  const timeline = PHASE_SHORT.map((label, i) => '<li class="' + (i < phaseIndex ? "done" : i === phaseIndex ? "now" : "") + '">' + esc(label) + (i === phaseIndex ? " · now" : "") + "</li>").join("");
+  return "<h2>03 / 30-Day Sprint Tracker & Drift Log</h2><p class=\"lede\">Days 1–30. A 48-hour stall here is about two weeks of drift on a normal project. Red rows are blocked. Amber rows are in progress and already past 48h. Both need a 24-hour action.</p>" +
+    '<ol class="phases">' + timeline + "</ol>" +
+    pills(phaseItems, state.filterPhase, "phase") +
+    pills(statusItems, state.filterStatus, "status-filter") +
+    (warnings.length ? '<div class="warn"><b>Gate and tracker disagree.</b><ul>' + warnings.map(w => "<li>" + esc(w) + "</li>").join("") + "</ul></div>" : "") +
+    '<div class="add"><input type="text" data-form="title" value="' + esc(state.form.title) + '" placeholder="New stall, in one line" aria-label="New stall" autocomplete="off">' +
+    '<select data-form="phase" aria-label="Phase">' + PHASES.map(p => '<option' + (p === state.form.phase ? " selected" : "") + ">" + esc(p) + "</option>").join("") + "</select>" +
+    '<input type="text" data-form="owner" list="owners" value="' + esc(state.form.owner) + '" aria-label="Owner" autocomplete="off">' +
+    '<input type="text" data-form="action" value="' + esc(state.form.action) + '" placeholder="24-hour unblock action" aria-label="24-hour unblock action" autocomplete="off">' +
+    '<button type="button" class="texty" data-act="add">Add blocker</button></div>' +
+    '<datalist id="owners"><option value="Ops Lead"><option value="Lead Engineer"><option value="Client Sponsor"><option value="Client Dispatcher"><option value="Field Tech Lead"><option value="Client Compliance"></datalist>' +
+    (state.formError ? '<p class="err" id="form-error">' + esc(state.formError) + "</p>" : "") +
+    '<div class="trow head"><div>Window</div><div>Milestone</div><div>Owner</div><div>Status</div><div>Days sitting</div><div>24-Hour Unblock</div></div>' +
+    (rows.length ? rows.map(trackerRow).join("") : '<p class="empty">Nothing in this slice.</p>') +
+    '<p id="empty" class="empty" hidden>Nothing matches that filter.</p>';
+}
+function pulsePanel() {
+  const sc = current();
+  const running = state.pulse && state.pulse.phase === "running";
+  return "<h2>04 / Claude Code /sprint-pulse</h2><p class=\"lede\">" + esc(PULSE_NOTE) + "</p>" +
+    '<p class="hint">This run is Day ' + sc.day + " " + esc(sc.when) + ". Turn a source off and run again. The brief follows the toggles and the live tracker.</p>" +
+    '<div class="pulse"><div class="sources">' +
+    sourceBlock("call", "Call Transcripts", sc.call) +
+    sourceBlock("slack", "Client Slack Channel", sc.slack) +
+    sourceBlock("board", "Task Board", sc.board) +
+    '<div class="src"><div class="card-top"><button type="button" class="chip' + (state.sources.prompt ? " on" : "") + '" data-act="source" data-id="prompt" aria-pressed="' + state.sources.prompt + '">Slash-command prompt</button>' +
+    '<button type="button" class="cp" data-act="copy" data-id="prompt" data-label="Copy Prompt">Copy Prompt</button></div>' +
+    (state.sources.prompt ? '<pre class="snippet">' + esc(buildPrompt()) + "</pre>" : "") +
+    "</div></div><div class=\"out\">" +
+    '<button type="button" class="cta" data-act="run"' + (running ? " disabled" : "") + ">Run /sprint-pulse (Day " + sc.day + " " + esc(sc.when) + ")</button>" +
+    '<pre class="term" id="term">' + esc(termText()) + "</pre>" +
+    briefHTML() + "</div></div>";
+}
+function handoffPanel() {
+  const ready = readiness();
+  return "<h2>05 / Day-30 Handoff & ROI Sign-Off</h2><p class=\"lede\">Go-live and whether the client can run it without us. Click a status to cycle OPEN, IN PROGRESS, and SIGNED. Readiness counts signed items only. " + ready.n + " / " + ready.total + " signed · " + ready.pct + "%.</p>" +
+    state.handoff.map(h => '<article class="check" data-hay="' + hay(h.name, h.status, h.owner, h.detail) + '"><div class="card-top"><div><h3>' + esc(h.name) + '</h3><p class="code">' + esc(h.owner) + "</p></div>" +
+      '<button type="button" class="st ' + statusClass(h.status) + '" role="checkbox" aria-checked="' + (h.status === "SIGNED" ? "true" : h.status === "IN PROGRESS" ? "mixed" : "false") + '" data-act="handoff" data-id="' + esc(h.id) + '">' + esc(h.status) + "</button></div><p class=\"line\">" + esc(h.detail) + "</p></article>").join("") +
+    '<p id="empty" class="empty" hidden>Nothing matches that filter.</p>' + roiHTML();
+}
+function foot() {
+  return '<footer class="foot"><p>Sample operating picture, built from real work: field-service dispatch, and a BaaS vendor that did not cover the markets. Role titles only.</p><p><a href="../index.html">← ops portfolio</a> · <a href="https://x.com/n_andrea_q" rel="noopener">@n_andrea_q</a></p></footer>';
+}
+function view() {
+  return '<div class="w">' + head() + panel() + foot() + "</div>";
+}
+function applySearch() {
+  const q = state.search.trim().toLowerCase();
+  const nodes = Array.from(document.querySelectorAll("[data-hay]"));
+  let shown = 0;
+  nodes.forEach(el => {
+    const ok = !q || (el.dataset.hay || "").indexOf(q) !== -1;
+    el.hidden = !ok;
+    if (ok) shown += 1;
+  });
+  const empty = document.getElementById("empty");
+  if (!empty || !nodes.length) return;
+  empty.hidden = shown !== 0;
+}
+function render() {
+  const prev = document.activeElement;
+  const keep = prev && prev.dataset && (prev.dataset.act || prev.id === "q");
+  const snap = keep ? { act: prev.dataset.act || "", id: prev.dataset.id || "", dir: prev.dataset.dir || "", htmlId: prev.id || "" } : null;
+  document.getElementById("root").innerHTML = view();
+  applySearch();
+  const live = document.getElementById("live");
+  if (live) {
+    const ready = readiness();
+    live.textContent = banner().text + ". " + driftText() + ". Go-live " + ready.pct + " percent.";
+  }
+  if (!snap) return;
+  let next = null;
+  if (snap.htmlId && snap.htmlId !== "q") next = document.getElementById(snap.htmlId);
+  if (!next && snap.act) {
+    let sel = '[data-act="' + cssAttr(snap.act) + '"]';
+    if (snap.id) sel += '[data-id="' + cssAttr(snap.id) + '"]';
+    if (snap.dir) sel += '[data-dir="' + cssAttr(snap.dir) + '"]';
+    next = document.querySelector(sel);
+  }
+  if (snap.htmlId === "q") next = document.getElementById("q");
+  if (next && typeof next.focus === "function") next.focus({ preventScroll: true });
+}
+function paintRoi() {
+  const box = document.getElementById("roi-out");
+  if (box) box.innerHTML = roiOutHTML(roiResult());
+}
+function onClick(e) {
+  const t = e.target.closest("[data-act]");
+  if (!t) return;
+  const act = t.dataset.act;
+  const id = t.dataset.id;
+  if (act === "tab" || act === "jump") {
+    scrollTab = true;
+    if (location.hash !== "#" + id) location.hash = id;
+    else { state.tab = id; render(); revealTab(); }
+    return;
+  }
+  if (act === "scenario") { setScenario(id); return; }
+  if (act === "reset") { resetScenario(); return; }
+  if (act === "gate") { cycleGate(id); return; }
+  if (act === "lane") { state.filterLane = id; render(); return; }
+  if (act === "phase") { state.filterPhase = id; render(); return; }
+  if (act === "status-filter") { state.filterStatus = id; render(); return; }
+  if (act === "step") { state.open[id] = !state.open[id]; render(); return; }
+  if (act === "status") { cycleStatus(id); return; }
+  if (act === "day") { bumpDay(id, Number(t.dataset.dir)); return; }
+  if (act === "add") { addBlocker(); return; }
+  if (act === "remove") { removeRow(id); return; }
+  if (act === "handoff") { cycleHandoff(id); return; }
+  if (act === "source") {
+    state.sources[id] = !state.sources[id];
+    if (id !== "prompt") markStale();
+    render();
+    return;
+  }
+  if (act === "run") { runPulse(); return; }
+  if (act === "copy") {
+    const text = id === "prompt" ? buildPrompt() : (state.pulse && state.pulse.result ? state.pulse.result.note : buildClientNote(state.sources));
+    copyText(text, t);
+  }
+}
+function onInput(e) {
+  const t = e.target;
+  if (t.id === "q") {
+    state.search = t.value;
+    applySearch();
+    return;
+  }
+  if (t.dataset && t.dataset.roi) {
+    state.roi[t.dataset.roi] = Number(t.value);
+    const out = document.querySelector('[data-roi-out="' + t.dataset.roi + '"]');
+    if (out) out.textContent = String(state.roi[t.dataset.roi]);
+    paintRoi();
+    return;
+  }
+  if (t.dataset && t.dataset.form) {
+    state.form[t.dataset.form] = t.value;
+    if (state.formError) {
+      state.formError = "";
+      const err = document.getElementById("form-error");
+      if (err) err.hidden = true;
+    }
+  }
+}
+function onKey(e) {
+  if (e.key === "Enter" && e.target.dataset && e.target.dataset.form) {
+    e.preventDefault();
+    addBlocker();
+  }
+  if ((e.key === "ArrowRight" || e.key === "ArrowLeft") && e.target.closest("[role=tablist]")) {
+    const ids = TABS.map(t => t[0]);
+    let i = ids.indexOf(state.tab);
+    if (i < 0) i = 0;
+    const n = e.key === "ArrowRight" ? (i + 1) % ids.length : (i - 1 + ids.length) % ids.length;
+    e.preventDefault();
+    location.hash = ids[n];
+  }
+}
+document.addEventListener("click", onClick);
+document.addEventListener("input", onInput);
+document.addEventListener("change", onInput);
+document.addEventListener("keydown", onKey);
+window.addEventListener("hashchange", () => {
+  state.tab = tabFromHash();
+  render();
+  revealTab();
+});
+function init() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get("scenario") === "fintech" ? "fintech" : "field";
+  loadScenario(id);
+  state.tab = tabFromHash();
+  render();
+}
+init();
+</script>
+</body>
+</html>

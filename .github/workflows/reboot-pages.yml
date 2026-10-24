@@ -9,6 +9,7 @@ on:
       - README.md
       - .nojekyll
       - .github/workflows/reboot-pages.yml
+      - "sprint-control-tower/**"
 permissions:
   contents: read
   pages: write
@@ -52,6 +53,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html README.md .nojekyll _site/
+          cp -r sprint-control-tower _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
