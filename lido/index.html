@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lido Labs — GOOSE-4 &amp; Operations Unit Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3ec;
+    --bg-elevated: #ffffff;
+    --bg-subtle: #ede8dd;
+    --ink: #171816;
+    --ink-secondary: #4a4c46;
+    --ink-muted: #767870;
+    --accent: #0088cc;
+    --amber: #9e5a16;
+    --amber-bg: #fdf5ea;
+    --amber-border: #ebcfab;
+    --danger: #a62c22;
+    --danger-bg: #fdf2f1;
+    --danger-border: #edc3be;
+    --ok: #255c3e;
+    --ok-bg: #eef7f1;
+    --ok-border: #bcdcc8;
+    --border: #dcd6c8;
+    --border-strong: #c5beae;
+    --radius-sm: 6px;
+    --radius-md: 9px;
+    --radius-lg: 11px;
+    --shadow-sm: 0 1px 2px rgba(23, 24, 22, 0.04);
+    --shadow-lg: 0 18px 40px rgba(23, 24, 22, 0.16);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--bg);
+    color: var(--ink);
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Row 1: Top Header Bar */
+  .topbar {
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    white-space: nowrap;
+  }
+
+  .brand-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+
+  .brand-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: var(--accent);
+    padding: 4px 9px;
+    border-radius: 4px;
+  }
+
+  .sprint-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  .meta-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink-secondary);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    padding: 3px 9px;
+    border-radius: 4px;
+  }
+
+  .meta-pill strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .view-toggle {
+    display: inline-flex;
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 2px;
+  }
+
+  .view-btn {
+    border: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--ink-secondary);
+    padding: 4.5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+
+  .view-btn.active {
+    background: var(--bg-elevated);
+    color: var(--ink);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 5.5px 11px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    color: var(--ink);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.12s ease;
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    background: var(--bg-subtle);
+  }
+
+  .btn-primary {
+    background: var(--ink);
+    color: var(--bg-elevated);
+    border-color: var(--ink);
+  }
+
+  .btn-primary:hover {
+    background: #2c2e2a;
+  }
+
+  /* Row 2: Single-Glance Pace Bar */
+  .pace-bar {
+    background: var(--bg-subtle);
+    border-bottom: 1px solid var(--border);
+    padding: 7.5px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    white-space: nowrap;
+  }
+
+  .pace-left {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+
+  .pace-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--amber-bg);
+    color: var(--amber);
+    border: 1px solid var(--amber-border);
+  }
+
+  .pace-status.on-track {
+    background: var(--ok-bg);
+    color: var(--ok);
+    border-color: var(--ok-border);
+  }
+
+  .pace-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .kpi-chip {
+    font-size: 11.5px;
+    color: var(--ink-secondary);
+    padding-left: 11px;
+    border-left: 1px solid var(--border-strong);
+  }
+
+  .kpi-chip strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Board Container */
+  .board-container {
+    padding: 12px 22px 16px;
+    flex: 1;
+    overflow-x: auto;
+  }
+
+  .board-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(290px, 1fr));
+    gap: 13px;
+    align-items: start;
+  }
+
+  .board-col {
+    background: rgba(237, 232, 221, 0.55);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 10px 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .board-col.active-col {
+    background: rgba(253, 245, 234, 0.55);
+    border-color: var(--amber-border);
+  }
+
+  .col-header {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 1px 2px 7px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .board-col.active-col .col-header {
+    border-bottom-color: var(--amber-border);
+  }
+
+  .col-header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .col-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .col-pace-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 2px 6.5px;
+    border-radius: 4px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    color: var(--ink-secondary);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .col-pace-tag.done {
+    background: var(--ok-bg);
+    border-color: var(--ok-border);
+    color: var(--ok);
+  }
+
+  .col-pace-tag.warn {
+    background: var(--amber-bg);
+    border-color: var(--amber-border);
+    color: var(--amber);
+  }
+
+  .col-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .col-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  /* Clean 3-Row Card Structure */
+  .task-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 9px 11px;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 4.5px;
+  }
+
+  .task-card:hover {
+    transform: translateY(-1px);
+    border-color: var(--border-strong);
+  }
+
+  .task-card.blocker-card {
+    border-left: 3px solid var(--danger);
+  }
+
+  .task-card.scope-card {
+    border-left: 3px solid var(--amber);
+  }
+
+  .task-card.pace-card {
+    border-left: 3px solid var(--ok);
+  }
+
+  .task-card.done-card {
+    opacity: 0.86;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .card-id-owner {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-muted);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+  }
+
+  .card-id-owner strong {
+    color: var(--ink-secondary);
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .badge-ok {
+    background: var(--ok-bg);
+    color: var(--ok);
+    border: 1px solid var(--ok-border);
+  }
+
+  .badge-danger {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-border);
+  }
+
+  .badge-warn {
+    background: var(--amber-bg);
+    color: var(--amber);
+    border: 1px solid var(--amber-border);
+  }
+
+  .badge-neutral {
+    background: var(--bg-subtle);
+    color: var(--ink-secondary);
+    border: 1px solid var(--border);
+  }
+
+  .card-title {
+    font-size: 12.2px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+
+  .card-note {
+    font-size: 11px;
+    color: var(--ink-secondary);
+    line-height: 1.34;
+  }
+
+  .blocker-reason {
+    font-size: 11px;
+    color: var(--danger);
+    background: var(--danger-bg);
+    border: 1px solid var(--danger-border);
+    padding: 4.5px 7.5px;
+    border-radius: 4px;
+    line-height: 1.32;
+    font-weight: 500;
+  }
+
+  .scope-reason {
+    font-size: 11px;
+    color: var(--amber);
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-border);
+    padding: 4.5px 7.5px;
+    border-radius: 4px;
+    line-height: 1.32;
+    font-weight: 500;
+  }
+
+  /* Table View (Wisp AI Ops Workflows) */
+  .table-view {
+    display: none;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    font-size: 11.5px;
+    color: var(--ink-muted);
+  }
+
+  .link-pill {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    padding: 3px 9px;
+    border-radius: 999px;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+
+  .link-pill.active {
+    background: var(--ink);
+    color: #fff;
+    border-color: var(--ink);
+  }
+
+  .pm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+
+  .pm-table th {
+    background: var(--bg-subtle);
+    text-align: left;
+    padding: 9px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--ink-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pm-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+    vertical-align: top;
+  }
+
+  .pm-table tbody tr {
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+
+  .pm-table tbody tr:hover {
+    background: var(--bg);
+  }
+
+  .pm-table tr.row-blocker {
+    background: #fff8f7;
+  }
+
+  /* Modal */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(23, 24, 22, 0.45);
+    backdrop-filter: blur(2px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 100;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+  }
+
+  .modal-sheet {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    max-width: 650px;
+    width: 100%;
+    max-height: 86vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+
+  .modal-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .modal-close {
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--ink-secondary);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .modal-body {
+    font-size: 12.5px;
+    color: var(--ink-secondary);
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .kv {
+    display: grid;
+    grid-template-columns: 125px 1fr;
+    gap: 7px 12px;
+    font-size: 12px;
+  }
+
+  .kv b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .draft-box {
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--ink);
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--ink);
+    color: var(--bg-elevated);
+    padding: 9px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(70px);
+    opacity: 0;
+    transition: all 0.2s ease;
+    z-index: 200;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand-left">
+    <span class="brand-mark">LIDO LABS</span>
+    <div class="sprint-title">
+      <span>Operations Unit · OKR &amp; Delivery Board</span>
+      <span class="meta-pill"><strong>GOOSE-4 + 2027 EGG</strong> · Submission <strong>Nov 23</strong></span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="view-toggle">
+      <button class="view-btn active" id="btn-view-board" onclick="switchView('board')">4 P&amp;L Lines</button>
+      <button class="view-btn" id="btn-view-table" onclick="switchView('table')">Wisp AI Workflows (6)</button>
+    </div>
+    <button class="btn btn-primary" onclick="openPulse()">Weekly Ops Pulse ↗</button>
+  </div>
+</header>
+
+<section class="pace-bar">
+  <div class="pace-left">
+    <span class="pace-status" id="pace-badge"><span class="pace-dot"></span><span id="pace-badge-text">2 NEEDS ATTENTION</span></span>
+    <span class="kpi-chip" id="kpi-progress"></span>
+    <span class="kpi-chip"><strong>27 Days to Nov 23 Lock</strong> · Dec 7 Snapshot Vote</span>
+    <span class="kpi-chip" id="kpi-bottleneck"></span>
+  </div>
+</section>
+
+<main class="board-container">
+  <div class="board-grid" id="board-grid"></div>
+
+  <div class="table-view" id="table-view">
+    <div class="filter-bar" id="filter-bar"></div>
+    <table class="pm-table">
+      <thead>
+        <tr>
+          <th>Wisp Automation</th>
+          <th>P&amp;L Line</th>
+          <th>Connected MCPs</th>
+          <th>Cadence</th>
+          <th>What It Replaces in Operations Unit</th>
+          <th>Owner</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+  </div>
+</main>
+
+<div class="modal-backdrop" id="modal-backdrop" onclick="if(event.target===this)closeModal()">
+  <div class="modal-sheet" id="modal-sheet"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const stages = [
+  { n: '01 · Staking (Core)', d: '$26.9M Core Baseline', tag: 'On Pace ✓' },
+  { n: '02 · Lido Earn (Growth)', d: 'Growth Allocation', tag: 'active' },
+  { n: '03 · New Bets · Wisp (Growth)', d: 'Vertical Expansion', tag: 'On Pace ✓' },
+  { n: '04 · Shared Services · BORG Ops', d: 'Nov 23 Joint Lock', tag: 'active' }
+];
+
+const cards = [
+  {
+    id: 'KR-01', s: 0, st: 'done',
+    t: 'Lido v3 Staking Infrastructure & Audit Hand-offs',
+    o: 'Protocol R&D + Validator Set',
+    n: 'All cross-team dependencies between audit remediation and node operator rollout cleared.'
+  },
+  {
+    id: 'KR-02', s: 0, st: 'done',
+    t: 'stVaults Institutional Wrapper & Legal Readiness',
+    o: 'Institutional BD + Legal Ops',
+    n: 'Standardized legal and risk review checklist in place for institutional stVaults partners.'
+  },
+  {
+    id: 'KR-03', s: 0, st: 'pace', b: 'ON PACE',
+    t: '2027 Core Staking OKR & Budget Lock',
+    o: 'Staking Function Leads',
+    n: '2027 Core maintenance scope aligned with GOOSE-4 resilience targets ahead of Nov 23.'
+  },
+  {
+    id: 'KR-04', s: 1, st: 'blocker', b: 'BLOCKER · Nov 15',
+    t: 'Quarterly Growth Milestone Rubric for 2027 EGG',
+    o: 'Lido Earn Lead + Ops Unit',
+    n: 'Needs pre-agreed quarterly TVL & net-revenue gates before Nov 23 so tokenholders get forward-looking clarity instead of a backward audit.'
+  },
+  {
+    id: 'KR-05', s: 1, st: 'done',
+    t: 'Constant-ETH-FX Performance Reporting Baseline',
+    o: 'Finance & Treasury Ops',
+    n: 'Separates ETH price swings from vault operating yield in H2/2027 tokenholder reports.'
+  },
+  {
+    id: 'KR-06', s: 1, st: 'pace', b: 'ON PACE',
+    t: 'DeFi Risk & Partner Onboarding SLA',
+    o: 'Earn Product + Risk Ops',
+    n: '2-week cross-functional sign-off loop across Security, Legal, and Comms.'
+  },
+  {
+    id: 'KR-07', s: 2, st: 'done',
+    t: 'Wisp Private Enclave + Notion / Linear / Granola MCPs',
+    o: 'Wisp Team (@usewisp_io)',
+    n: 'Public beta live with local encrypted storage and MCP connectors ready for internal ops dogfooding.'
+  },
+  {
+    id: 'KR-08', s: 2, st: 'pace', b: 'PILOT ACTIVE',
+    t: 'Operations Unit AI Workflow Dogfooding in Wisp',
+    o: 'Strategic PM + Wisp Lead',
+    n: 'Running weekly function-head OKR rollups and contract checks inside Wisp so sensitive ops data stays off public cloud LLMs.'
+  },
+  {
+    id: 'KR-09', s: 2, st: 'pace', b: 'ON PACE',
+    t: '2027 New Bets Gate-Review Framework',
+    o: 'New Bets Leads + Ops Unit',
+    n: 'Clear stage-gates tying discretionary Growth drawdowns to user/revenue milestones.'
+  },
+  {
+    id: 'KR-10', s: 3, st: 'scope', b: 'DUE NOV 23 · 27d Left',
+    t: 'Joint GOOSE-4 Goals + 2027 EGG Budget Submission',
+    o: 'DAO Ops Workstream + Function Heads',
+    n: 'First cycle submitting 2027 strategic goals and EGG budget in the same window; 2 function-head KR tables still need final lock.'
+  },
+  {
+    id: 'KR-11', s: 3, st: 'done',
+    t: 'BORG Operational Multisig Rotation Runbook',
+    o: 'BORG Ops + Multisig Signers',
+    n: 'Oct 19 signer rotation completed across Operational, Bug Bounty, and TRP multisigs with on-chain verification.'
+  },
+  {
+    id: 'KR-12', s: 3, st: 'pace', b: 'ON PACE',
+    t: 'Unified Strategic Narrative Rollout Across Units',
+    o: 'Operations Unit + Comms',
+    n: 'Aligning internal Q1 2027 unit OKRs with the external GOOSE-4 narrative for the November tokenholder call.'
+  }
+];
+
+const workflows = [
+  ['Weekly OKR Drift Rollup', 'All 4 P&L Lines', 'Linear · Notion · Granola', 'Every Thu', 'Pulls cycle progress & meeting notes inside Wisp to flag off-pace KRs before Friday ops review', 'Strategic PM', 'On Pace', 'KR-08'],
+  ['GOOSE-4 vs. EGG Budget Lock Check', 'Shared Services · BORG', 'Notion · Local Sheet', 'Weekly to Nov 23', 'Checks that every 2027 function-head KR maps to a Core or Growth cost line before forum publication', 'DAO Ops + PM', 'Flagged', 'KR-10'],
+  ['Growth Bet Milestone Gate Digest', 'Lido Earn & New Bets', 'Notion · Linear', 'Quarterly / Pre-EGG', 'Drafts the forward-looking milestone scorecard (TVL, net yield, kill/scale gates) for tokenholder updates', 'Ops + Finance', 'Blocked', 'KR-04'],
+  ['Cross-Unit Dependency Radar', 'Staking (Core)', 'Linear · Slack / Forum', 'Bi-weekly', 'Surfaces unowned handoffs between Protocol R&D, Legal, and Validator Ops without adding meetings', 'Strategic PM', 'On Pace', 'KR-03'],
+  ['BORG Multisig & Signer SLA Check', 'Shared Services · BORG', 'Notion · Safe Config', 'Monthly', 'Verifies signer rotation steps, Etherscan signatures, and Cayman foundation compliance dates', 'BORG Ops', 'Done', 'KR-11'],
+  ['Vendor & Contract Renewal Triage', 'Shared Services · BORG', 'Notion · Local Docs', 'Monthly', 'Reviews contributor/vendor renewal terms inside Wisp private enclave with zero external data retention', 'Legal + Ops', 'On Pace', 'KR-08']
+];
+
+let filter = 'All';
+const $ = i => document.getElementById(i);
+
+function toast(m) {
+  const t = $('toast');
+  t.textContent = m;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function badge(c) {
+  if (c.st === 'done') return '<span class="badge badge-ok">Done</span>';
+  if (c.st === 'blocker') return `<span class="badge badge-danger">${c.b}</span>`;
+  if (c.st === 'scope') return `<span class="badge badge-warn">${c.b}</span>`;
+  if (c.st === 'pace') return `<span class="badge badge-ok">${c.b}</span>`;
+  return `<span class="badge badge-neutral">${c.b}</span>`;
+}
+
+function render() {
+  const g = $('board-grid');
+  g.innerHTML = '';
+  const allFlagged = cards.filter(c => c.st === 'blocker' || c.st === 'scope');
+
+  stages.forEach((s, i) => {
+    const cs = cards.filter(c => c.s === i);
+    const colFlagged = cs.filter(c => c.st === 'blocker' || c.st === 'scope');
+    let tag = s.tag, cls = 'done';
+    if (s.tag === 'active') {
+      tag = colFlagged.length ? `1 Flagged` : 'On Pace ✓';
+      cls = colFlagged.length ? 'warn' : 'done';
+    }
+    const col = document.createElement('div');
+    col.className = 'board-col' + (colFlagged.length ? ' active-col' : '');
+    col.innerHTML = `
+      <div class="col-header">
+        <div class="col-header-top">
+          <span class="col-title">${s.n}</span>
+          <span class="col-pace-tag ${cls}">${tag}</span>
+        </div>
+        <div class="col-subtitle">
+          <span>${s.d}</span>
+          <span>${cs.filter(c => c.st === 'done').length}/${cs.length} locked</span>
+        </div>
+      </div>
+      <div class="col-cards">
+        ${cs.map(c => `
+          <div class="task-card ${c.st === 'blocker' ? 'blocker-card' : c.st === 'scope' ? 'scope-card' : c.st === 'pace' ? 'pace-card' : c.st === 'done' ? 'done-card' : ''}" onclick="openCard('${c.id}')">
+            <div class="card-top">
+              <span class="card-id-owner"><strong>${c.id}</strong> · ${c.o}</span>
+              ${badge(c)}
+            </div>
+            <div class="card-title">${c.t}</div>
+            ${c.n && c.st !== 'done' ? (c.st === 'blocker' ? `<div class="blocker-reason">${c.n}</div>` : c.st === 'scope' ? `<div class="scope-reason">${c.n}</div>` : `<div class="card-note">${c.n}</div>`) : ''}
+          </div>
+        `).join('')}
+      </div>
+    `;
+    g.appendChild(col);
+  });
+
+  const done = cards.filter(c => c.st === 'done').length;
+  $('kpi-progress').innerHTML = `<strong>${done}/${cards.length} Locked</strong> · ${allFlagged.length} Flagged`;
+  const b = $('pace-badge');
+  b.classList.toggle('on-track', !allFlagged.length);
+  $('pace-badge-text').textContent = allFlagged.length ? `${allFlagged.length} NEEDS ATTENTION` : 'ALL GATES ON TRACK';
+
+  const bl = [];
+  if (cards[3].st === 'blocker') bl.push('Earn 2027 Milestone Rubric');
+  if (cards[9].st === 'scope') bl.push('GOOSE-4 / EGG Final KR Lock');
+  $('kpi-bottleneck').innerHTML = bl.length ? `<strong>Focus this week:</strong> ${bl.join(' + ')}` : `<strong>Blockers:</strong> Cleared`;
+
+  renderTable();
+}
+
+function renderTable() {
+  $('filter-bar').innerHTML = 'Filter:' + ['All', 'Flagged', 'Blocked', 'On Pace', 'Done'].map(f => `<button class="link-pill ${f === filter ? 'active' : ''}" onclick="filter='${f}';renderTable()">${f}</button>`).join('') + '<span style="margin-left:auto">Dogfooding Wisp (usewisp.io) across Lido Labs Operations · Zero cloud data retention</span>';
+  const cls = { Blocked: 'badge-danger', Flagged: 'badge-warn', 'On Pace': 'badge-ok', Done: 'badge-neutral' };
+  $('table-body').innerHTML = workflows.filter(r => filter === 'All' || r[6] === filter).map(r => `
+    <tr class="${r[6] === 'Blocked' ? 'row-blocker' : ''}" onclick="openCard('${r[7]}')">
+      <td><strong>${r[0]}</strong></td>
+      <td>${r[1]}</td>
+      <td><span style="font-family:'JetBrains Mono',monospace;font-size:11px;">${r[2]}</span></td>
+      <td>${r[3]}</td>
+      <td>${r[4]}</td>
+      <td>${r[5]}</td>
+      <td><span class="badge ${cls[r[6]]}">${r[6]}</span></td>
+    </tr>
+  `).join('');
+}
+
+function switchView(v) {
+  $('board-grid').style.display = v === 'board' ? 'grid' : 'none';
+  $('table-view').style.display = v === 'table' ? 'block' : 'none';
+  $('btn-view-board').classList.toggle('active', v === 'board');
+  $('btn-view-table').classList.toggle('active', v === 'table');
+}
+
+function modal(title, sub, body, actions = '') {
+  $('modal-sheet').innerHTML = `
+    <div class="modal-header">
+      <div>
+        <div class="card-id-owner">${sub}</div>
+        <h2 class="modal-title">${title}</h2>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">${body}</div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal()">Close</button>
+      ${actions}
+    </div>
+  `;
+  $('modal-backdrop').classList.add('open');
+}
+
+function closeModal() {
+  $('modal-backdrop').classList.remove('open');
+}
+
+function openCard(id) {
+  const c = cards.find(x => x.id === id);
+  modal(
+    c.t,
+    `${c.id} · ${stages[c.s].n}`,
+    `<div class="kv">
+      <b>Owner</b><span>${c.o}</span>
+      <b>Status</b><span>${badge(c)}</span>
+      <b>P&amp;L Bucket</b><span>${stages[c.s].n} (${stages[c.s].d})</span>
+      <b>Operational Context</b><span>${c.n}</span>
+      <b>Strategic PM Play</b><span>${c.st === 'blocker' ? 'Run 30-min working session with Earn lead & Finance to lock 3 quarterly milestone gates for the 2027 EGG doc.' : c.st === 'scope' ? 'Pre-fill function-head KR templates from Linear/Notion via Wisp and lock final numbers 7 days before Nov 23.' : 'Maintain weekly async check-in via Wisp rollup; keep function heads out of status meetings.'}</span>
+    </div>`,
+    c.st === 'done' ? '' : `<button class="btn btn-primary" onclick="resolve('${c.id}')">Mark Gate Locked ✓</button>`
+  );
+}
+
+function resolve(id) {
+  const c = cards.find(x => x.id === id);
+  c.st = 'done';
+  workflows.forEach(w => { if (w[7] === id) w[6] = 'Done'; });
+  closeModal();
+  render();
+  toast(id + ' locked for Nov 23 submission');
+}
+
+function openPulse() {
+  const open = cards.filter(c => c.st === 'blocker' || c.st === 'scope');
+  modal(
+    'Weekly Operations Unit Pulse',
+    'Friday Async Update · To: Lido Labs Function Heads & DAO Ops Workstream',
+    `<div class="draft-box">Subject: Lido Labs Ops Pulse — 27 Days to GOOSE-4 & 2027 EGG Lock (Nov 23)
+
+Hi team,
+
+Status: ${open.length ? open.length + ' gates need lock this week' : 'All 12 gates locked'} ahead of the Nov 23 GOOSE-4 + 2027 EGG submission.
+
+Locked across the 4 P&L lines: ${cards.filter(c => c.st === 'done').length}/${cards.length} KRs (Core Staking v3/stVaults handoffs, Constant-FX reporting baseline, Wisp MCP beta, Oct 19 BORG multisig rotation).
+
+${open.length ? 'Needs decision this week:\n' + open.map(c => '• ' + c.id + ' (' + c.t + ') — ' + c.n).join('\n') : 'No open blockers across units.'}
+
+Timeline: Nov 16 internal KR lock → Nov 23 forum publication → Dec 7 Snapshot vote.</div>`,
+    `<button class="btn btn-primary" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.querySelector('.draft-box').innerText);toast('Ops Pulse copied');closeModal()">Copy Pulse</button>`
+  );
+}
+
+render();
+</script>
+</body>
+</html>
