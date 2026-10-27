@@ -55,7 +55,7 @@
   .topbar {
     background: var(--bg-elevated);
     border-bottom: 1px solid var(--border);
-    padding: 10px 22px;
+    padding: 9px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -77,17 +77,17 @@
     text-transform: uppercase;
     color: #ffffff;
     background: var(--accent);
-    padding: 4px 9px;
+    padding: 4px 8px;
     border-radius: 4px;
   }
 
   .sprint-title {
-    font-size: 14.5px;
+    font-size: 14px;
     font-weight: 700;
     color: var(--ink);
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 8px;
   }
 
   .meta-pill {
@@ -97,7 +97,7 @@
     color: var(--ink-secondary);
     background: var(--bg);
     border: 1px solid var(--border);
-    padding: 3px 9px;
+    padding: 2.5px 8px;
     border-radius: 4px;
   }
 
@@ -124,10 +124,10 @@
     border: none;
     background: transparent;
     font-family: inherit;
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 600;
     color: var(--ink-secondary);
-    padding: 4.5px 10px;
+    padding: 4px 9px;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.12s ease;
@@ -143,7 +143,7 @@
     font-family: inherit;
     font-size: 11.5px;
     font-weight: 600;
-    padding: 5.5px 11px;
+    padding: 5px 10px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-strong);
     background: var(--bg-elevated);
@@ -175,7 +175,7 @@
   .pace-bar {
     background: var(--bg-subtle);
     border-bottom: 1px solid var(--border);
-    padding: 7.5px 22px;
+    padding: 7px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -186,7 +186,7 @@
   .pace-left {
     display: flex;
     align-items: center;
-    gap: 11px;
+    gap: 10px;
   }
 
   .pace-status {
@@ -217,9 +217,9 @@
   }
 
   .kpi-chip {
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--ink-secondary);
-    padding-left: 11px;
+    padding-left: 10px;
     border-left: 1px solid var(--border-strong);
   }
 
@@ -230,15 +230,15 @@
 
   /* Board Container */
   .board-container {
-    padding: 12px 22px 16px;
+    padding: 10px 20px 14px;
     flex: 1;
     overflow-x: auto;
   }
 
   .board-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(295px, 1fr));
-    gap: 13px;
+    grid-template-columns: repeat(4, minmax(290px, 1fr));
+    gap: 12px;
     align-items: start;
   }
 
@@ -246,22 +246,22 @@
     background: rgba(237, 232, 221, 0.55);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 10px 11px;
+    padding: 9px 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
   .board-col.active-col {
-    background: rgba(253, 245, 234, 0.55);
+    background: rgba(253, 245, 234, 0.5);
     border-color: var(--amber-border);
   }
 
   .col-header {
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    padding: 1px 2px 7px;
+    gap: 2px;
+    padding: 1px 2px 6px;
     border-bottom: 1px solid var(--border);
   }
 
@@ -277,7 +277,7 @@
   }
 
   .col-title {
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--ink);
   }
@@ -286,7 +286,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 9.5px;
     font-weight: 600;
-    padding: 2px 6.5px;
+    padding: 1.5px 6px;
     border-radius: 4px;
     background: var(--bg-elevated);
     border: 1px solid var(--border);
@@ -318,41 +318,21 @@
   .col-cards {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 6px;
   }
 
-  .add-card-btn {
-    border: 1px dashed var(--border-strong);
-    background: rgba(255, 255, 255, 0.45);
-    color: var(--ink-secondary);
-    font-family: inherit;
-    font-size: 11px;
-    font-weight: 600;
-    padding: 6px 10px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.12s ease;
-  }
-
-  .add-card-btn:hover {
-    background: var(--bg-elevated);
-    color: var(--ink);
-    border-style: solid;
-  }
-
-  /* Clean Card Structure with EGG Tranche + Due Date + Wisp Source */
+  /* Clean 2-to-3 Row Card Structure (Identical density to ScribeUp) */
   .task-card {
     background: var(--bg-elevated);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 8.5px 10.5px;
+    padding: 7.5px 10px;
     box-shadow: var(--shadow-sm);
     cursor: pointer;
     transition: transform 0.12s ease, border-color 0.12s ease;
     display: flex;
     flex-direction: column;
-    gap: 4.5px;
+    gap: 4px;
   }
 
   .task-card:hover {
@@ -373,7 +353,7 @@
   }
 
   .task-card.done-card {
-    opacity: 0.86;
+    opacity: 0.82;
   }
 
   .card-top {
@@ -385,7 +365,7 @@
 
   .card-id-owner {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9.8px;
+    font-size: 10px;
     color: var(--ink-muted);
     font-weight: 500;
     white-space: nowrap;
@@ -400,9 +380,9 @@
 
   .badge {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 9.2px;
+    font-size: 9.5px;
     font-weight: 600;
-    padding: 1.5px 5.5px;
+    padding: 2px 6px;
     border-radius: 4px;
     white-space: nowrap;
     flex-shrink: 0;
@@ -439,40 +419,8 @@
     line-height: 1.28;
   }
 
-  .card-meta-strip {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9.6px;
-    color: var(--ink-secondary);
-    padding-top: 2px;
-  }
-
-  .tranche-tag {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    padding: 1.5px 5.5px;
-    border-radius: 3px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .due-tag {
-    color: var(--ink-muted);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .due-tag.urgent {
-    color: var(--danger);
-    font-weight: 600;
-  }
-
   .card-note {
-    font-size: 10.8px;
+    font-size: 11px;
     color: var(--ink-secondary);
     line-height: 1.32;
   }
@@ -513,10 +461,10 @@
     display: flex;
     gap: 6px;
     align-items: center;
-    padding: 9px 14px;
+    padding: 9px 12px;
     border-bottom: 1px solid var(--border);
     background: var(--bg);
-    font-size: 11.5px;
+    font-size: 11px;
     color: var(--ink-muted);
   }
 
@@ -542,13 +490,13 @@
   .pm-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
+    font-size: 11.5px;
   }
 
   .pm-table th {
     background: var(--bg-subtle);
     text-align: left;
-    padding: 9px 14px;
+    padding: 8px 12px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
     text-transform: uppercase;
@@ -557,7 +505,7 @@
   }
 
   .pm-table td {
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-bottom: 1px solid var(--border);
     color: var(--ink);
     vertical-align: top;
@@ -597,9 +545,9 @@
     background: var(--bg-elevated);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-lg);
-    max-width: 680px;
+    max-width: 650px;
     width: 100%;
-    max-height: 88vh;
+    max-height: 86vh;
     overflow-y: auto;
     box-shadow: var(--shadow-lg);
     padding: 20px 22px;
@@ -652,8 +600,8 @@
 
   .kv {
     display: grid;
-    grid-template-columns: 145px 1fr;
-    gap: 7px 12px;
+    grid-template-columns: 135px 1fr;
+    gap: 6px 12px;
     font-size: 12px;
     align-items: center;
   }
@@ -665,25 +613,45 @@
     color: var(--ink-muted);
   }
 
-  .form-input, .form-select, .form-textarea {
-    width: 100%;
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .form-field.full {
+    grid-column: 1 / -1;
+  }
+
+  .form-field label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 600;
+  }
+
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
     font-family: inherit;
     font-size: 12px;
-    color: var(--ink);
-    background: var(--bg);
-    border: 1px solid var(--border-strong);
+    padding: 7px 9px;
     border-radius: var(--radius-sm);
-    padding: 7px 10px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg);
+    color: var(--ink);
     outline: none;
   }
 
-  .form-input:focus, .form-select:focus, .form-textarea:focus {
-    border-color: var(--ink);
-    background: var(--bg-elevated);
-  }
-
-  .form-textarea {
-    min-height: 60px;
+  .form-field textarea {
+    min-height: 56px;
     resize: vertical;
   }
 
@@ -691,7 +659,7 @@
     background: var(--bg);
     border: 1px solid var(--border-strong);
     border-radius: var(--radius-md);
-    padding: 12px;
+    padding: 11px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11.2px;
     color: var(--ink);
@@ -727,25 +695,25 @@
   <div class="brand-left">
     <span class="brand-mark">LIDO LABS</span>
     <div class="sprint-title">
-      <span>GOOSE-4 &amp; EGG Milestone Accountability Board</span>
+      <span>GOOSE-4 &amp; EGG Accountability Board</span>
       <span class="meta-pill"><strong>$60M EGG · 4 P&amp;L Lines</strong> · Forum Lock <strong>Nov 23</strong></span>
     </div>
   </div>
   <div class="topbar-right">
     <div class="view-toggle">
-      <button class="view-btn active" id="btn-view-board" onclick="switchView('board')">P&amp;L Milestone Gates</button>
-      <button class="view-btn" id="btn-view-table" onclick="switchView('table')">Wisp Enclave Automations (6)</button>
+      <button class="view-btn active" id="btn-view-board" onclick="switchView('board')">Board</button>
+      <button class="view-btn" id="btn-view-table" onclick="switchView('table')">Wisp Automations (6)</button>
     </div>
-    <button class="btn" onclick="openNewCardModal(0)">+ New Gate</button>
-    <button class="btn btn-primary" onclick="openPulse()">Generate Tokenholder &amp; Ops Digest ↗</button>
+    <button class="btn" onclick="openNewCardModal()">+ Gate</button>
+    <button class="btn btn-primary" onclick="openPulse()">Forum &amp; Ops Digest ↗</button>
   </div>
 </header>
 
 <section class="pace-bar">
   <div class="pace-left">
-    <span class="pace-status" id="pace-badge"><span class="pace-dot"></span><span id="pace-badge-text">2 GATES AT RISK</span></span>
+    <span class="pace-status" id="pace-badge"><span class="pace-dot"></span><span id="pace-badge-text">AT RISK</span></span>
     <span class="kpi-chip" id="kpi-progress"></span>
-    <span class="kpi-chip" id="kpi-budget"></span>
+    <span class="kpi-chip"><strong>27 Days to Nov 23 Lock</strong> · Dec 7 Vote</span>
     <span class="kpi-chip" id="kpi-bottleneck"></span>
   </div>
 </section>
@@ -780,131 +748,122 @@
 <script>
 const stages = [
   { n: '01 · Staking (Core)', d: '$26.9M Core · Constant-FX', tag: 'On Pace ✓' },
-  { n: '02 · Lido Earn (Growth)', d: '$13.9M Growth Pool (Shared)', tag: 'active' },
+  { n: '02 · Lido Earn (Growth)', d: '$13.9M Stage-Gated Pool', tag: 'active' },
   { n: '03 · New Bets · Wisp (Growth)', d: 'Stage-Gated Drawdowns', tag: 'On Pace ✓' },
-  { n: '04 · Shared Services · BORG Ops', d: 'Cayman BORG + Governance', tag: 'active' }
+  { n: '04 · Shared Services · BORG Ops', d: 'Nov 23 Forum Lock', tag: 'active' }
 ];
 
 const cards = [
   {
     id: 'KR-01', s: 0, st: 'done',
     t: 'Lido v3 Staking Infrastructure & Audit Hand-offs',
-    o: 'Protocol R&D + Validator Set',
-    tranche: 'Core EGG · $11.4M R&D',
+    o: 'Protocol R&D',
+    tranche: 'Core EGG ($26.9M)',
     due: '2026-10-18',
     wisp: 'Linear MCP · Verified',
-    proof: 'Audit remediation + node operator rollout handoffs verified.',
-    n: 'All cross-team dependencies between audit remediation and node operator rollout cleared.'
+    d: 'All cross-team dependencies between audit remediation and node operator rollout cleared.'
   },
   {
     id: 'KR-02', s: 0, st: 'done',
     t: 'stVaults Institutional Wrapper & Legal Readiness',
-    o: 'Institutional BD + Legal Ops',
-    tranche: 'Core EGG · $4.2M BD/Legal',
+    o: 'Institutional BD + Legal',
+    tranche: 'Core EGG ($26.9M)',
     due: '2026-10-24',
     wisp: 'Notion MCP · Verified',
-    proof: 'Institutional risk & legal wrapper checklist signed off.',
-    n: 'Standardized legal and risk review checklist in place for institutional stVaults partners.'
+    d: 'Standardized legal and risk review checklist in place for institutional stVaults partners.'
   },
   {
-    id: 'KR-03', s: 0, st: 'pace', b: 'ON PACE',
+    id: 'KR-03', s: 0, st: 'pace',
     t: '2027 Core Staking Resilience KRs & Budget Lock',
-    o: 'Staking Function Leads',
-    tranche: '2027 Core EGG · $26.9M Base',
+    o: 'Staking Leads',
+    tranche: 'Core EGG ($26.9M)',
     due: '2026-11-16',
     wisp: 'Wisp Weekly Rollup',
-    proof: 'Constant-ETH-FX cost baseline + validator decentralization targets.',
-    n: '2027 Core maintenance scope aligned with GOOSE-4 resilience targets ahead of Nov 23.'
+    d: '2027 Core maintenance scope aligned with GOOSE-4 resilience targets and constant-FX guardrail.'
   },
   {
-    id: 'KR-04', s: 1, st: 'blocker', b: 'BLOCKER · Nov 15',
+    id: 'KR-04', s: 1, st: 'blocker',
     t: 'Quarterly Growth Milestone Rubric for 2027 EGG',
-    o: 'Lido Earn Lead + Ops Unit',
-    tranche: 'Growth EGG · $6.8M Tranche',
+    o: 'Earn Lead + Ops Unit',
+    tranche: 'Growth EGG ($13.9M)',
     due: '2026-11-15',
     wisp: 'Wisp Enclave Draft Needed',
-    proof: 'Tokenholder requirement: quarterly TVL, net yield & kill/scale thresholds.',
-    n: 'Community pushed back on backward-looking reports; needs pre-agreed quarterly TVL & net-revenue gates before Nov 23.'
+    n: 'Tokenholders pushed back on backward-looking updates; needs quarterly TVL & net-revenue gates before Nov 23.',
+    d: 'Tokenholders pushed back on backward-looking updates; needs quarterly TVL & net-revenue gates before Nov 23.'
   },
   {
     id: 'KR-05', s: 1, st: 'done',
     t: 'Constant-ETH-FX Performance Reporting Baseline',
     o: 'Finance & Treasury Ops',
-    tranche: 'Growth EGG · Reporting Gate',
+    tranche: 'Growth EGG ($13.9M)',
     due: '2026-10-15',
     wisp: 'Local Sheet · Verified',
-    proof: 'Separates ETH price appreciation from real vault operating yield.',
-    n: 'Separates ETH price swings from vault operating yield in H2/2027 tokenholder reports.'
+    d: 'Separates ETH price swings from vault operating yield in H2/2027 tokenholder reports.'
   },
   {
-    id: 'KR-06', s: 1, st: 'pace', b: 'ON PACE',
+    id: 'KR-06', s: 1, st: 'pace',
     t: 'DeFi Risk & Partner Onboarding SLA',
     o: 'Earn Product + Risk Ops',
-    tranche: 'Growth EGG · Ops SLA',
+    tranche: 'Growth EGG ($13.9M)',
     due: '2026-11-12',
     wisp: 'Linear + Notion MCP',
-    proof: '10-business-day cross-functional review SLA across Security & Legal.',
-    n: '2-week cross-functional sign-off loop across Security, Legal, and Comms.'
+    d: '2-week cross-functional sign-off loop across Security, Legal, and Comms.'
   },
   {
     id: 'KR-07', s: 2, st: 'done',
     t: 'Wisp Private Enclave + Notion / Linear / Granola MCPs',
     o: 'Wisp Team (@usewisp_io)',
-    tranche: 'New Bets EGG · Product Gate',
+    tranche: 'New Bets · Wisp',
     due: '2026-10-20',
     wisp: 'Enclave Live (~200 Users)',
-    proof: 'Public beta live at usewisp.io with zero external LLM retention.',
-    n: 'Public beta live with local encrypted storage and MCP connectors ready for internal ops dogfooding.'
+    d: 'Public beta live with local encrypted storage and MCP connectors ready for internal ops dogfooding.'
   },
   {
-    id: 'KR-08', s: 2, st: 'pace', b: 'PILOT ACTIVE',
+    id: 'KR-08', s: 2, st: 'pace',
     t: 'Operations Unit AI Workflow Dogfooding in Wisp',
     o: 'Strategic PM + Wisp Lead',
-    tranche: 'New Bets + Ops Unit',
+    tranche: 'New Bets · Wisp',
     due: '2026-11-14',
     wisp: 'Granola + Linear + Notion',
-    proof: 'Weekly function-head OKR drift & vendor reviews run inside Wisp.',
-    n: 'Running weekly function-head OKR rollups and contract checks inside Wisp so sensitive ops data stays off public cloud LLMs.'
+    n: 'Weekly OKR rollups & vendor checks running inside Wisp private enclave (zero cloud LLM retention).',
+    d: 'Weekly OKR rollups & vendor checks running inside Wisp private enclave (zero cloud LLM retention).'
   },
   {
-    id: 'KR-09', s: 2, st: 'pace', b: 'ON PACE',
+    id: 'KR-09', s: 2, st: 'pace',
     t: '2027 New Bets Stage-Gate Drawdown Rules',
     o: 'New Bets Leads + Ops Unit',
-    tranche: 'Growth EGG · $4.5M Tranche',
+    tranche: 'Growth EGG ($13.9M)',
     due: '2026-11-18',
     wisp: 'Notion MCP Scorecard',
-    proof: 'Tranche release tied to 90-day user retention & unit-economics gates.',
-    n: 'Clear stage-gates tying discretionary Growth drawdowns to user/revenue milestones.'
+    d: 'Stage-gates tying discretionary Growth drawdowns to 90-day retention & revenue milestones.'
   },
   {
-    id: 'KR-10', s: 3, st: 'scope', b: 'DUE NOV 23 · 27d',
+    id: 'KR-10', s: 3, st: 'scope',
     t: 'Joint GOOSE-4 Goals + 2027 EGG Budget Submission',
-    o: 'DAO Ops Workstream + Function Heads',
-    tranche: 'Full 2027 EGG · $60M Cap',
+    o: 'DAO Ops + Function Heads',
+    tranche: 'Full EGG ($60M Cap)',
     due: '2026-11-23',
     wisp: 'Wisp Cross-Unit Rollup',
-    proof: 'Unified forum post + Dec 7 Snapshot vote package.',
-    n: 'First cycle submitting 2027 strategic goals and EGG budget in the same window; 2 function-head KR tables still need final lock.'
+    n: 'First cycle submitting 2027 goals and EGG budget together; 2 function-head KR tables still need final lock.',
+    d: 'First cycle submitting 2027 goals and EGG budget together; 2 function-head KR tables still need final lock.'
   },
   {
     id: 'KR-11', s: 3, st: 'done',
     t: 'BORG Operational Multisig Rotation Runbook',
-    o: 'BORG Ops + Multisig Signers',
-    tranche: 'Shared Services · Governance',
+    o: 'BORG Ops + Signers',
+    tranche: 'BORG Governance',
     due: '2026-10-19',
     wisp: 'On-Chain Safe · Verified',
-    proof: 'Oct 19 rotation across Operational, Bug Bounty & TRP multisigs.',
-    n: 'Oct 19 signer rotation completed across Operational, Bug Bounty, and TRP multisigs with on-chain verification.'
+    d: 'Oct 19 signer rotation completed across Operational, Bug Bounty, and TRP multisigs.'
   },
   {
-    id: 'KR-12', s: 3, st: 'pace', b: 'ON PACE',
+    id: 'KR-12', s: 3, st: 'pace',
     t: 'November Tokenholder Call & Accountability Pack',
     o: 'Operations Unit + Comms',
-    tranche: 'Shared Services · Reporting',
+    tranche: 'BORG Governance',
     due: '2026-11-25',
     wisp: 'Wisp Digest Export',
-    proof: 'Side-by-side 2026 H2 delivery vs. 2027 milestone commitments.',
-    n: 'Aligning internal Q1 2027 unit OKRs with the external GOOSE-4 narrative for the November tokenholder call.'
+    d: 'Side-by-side H2 delivery vs. 2027 milestone commitments for the November tokenholder call.'
   }
 ];
 
@@ -924,7 +883,7 @@ function toast(m) {
   const t = $('toast');
   t.textContent = m;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
+  setTimeout(() => t.classList.remove('show'), 2000);
 }
 
 function fmtDate(iso) {
@@ -935,11 +894,12 @@ function fmtDate(iso) {
 }
 
 function badge(c) {
-  if (c.st === 'done') return '<span class="badge badge-ok">Locked ✓</span>';
-  if (c.st === 'blocker') return `<span class="badge badge-danger">${c.b}</span>`;
-  if (c.st === 'scope') return `<span class="badge badge-warn">${c.b}</span>`;
-  if (c.st === 'pace') return `<span class="badge badge-ok">${c.b}</span>`;
-  return `<span class="badge badge-neutral">${c.b}</span>`;
+  const dt = fmtDate(c.due);
+  if (c.st === 'done') return `<span class="badge badge-ok">Locked · ${dt}</span>`;
+  if (c.st === 'blocker') return `<span class="badge badge-danger">BLOCKER · ${dt}</span>`;
+  if (c.st === 'scope') return `<span class="badge badge-warn">DUE ${dt.toUpperCase()}</span>`;
+  if (c.st === 'pace') return `<span class="badge badge-ok">ON PACE · ${dt}</span>`;
+  return `<span class="badge badge-neutral">${dt}</span>`;
 }
 
 function render() {
@@ -952,7 +912,7 @@ function render() {
     const colFlagged = cs.filter(c => c.st === 'blocker' || c.st === 'scope');
     let tag = s.tag, cls = 'done';
     if (s.tag === 'active' || colFlagged.length) {
-      tag = colFlagged.length ? `${colFlagged.length} At Risk` : 'On Pace ✓';
+      tag = colFlagged.length ? `Active · ${colFlagged.length} Flagged` : 'On Pace ✓';
       cls = colFlagged.length ? 'warn' : 'done';
     }
     const col = document.createElement('div');
@@ -965,45 +925,41 @@ function render() {
         </div>
         <div class="col-subtitle">
           <span>${s.d}</span>
-          <span>${cs.filter(c => c.st === 'done').length}/${cs.length} gates locked</span>
+          <span>${cs.filter(c => c.st === 'done').length}/${cs.length} locked</span>
         </div>
       </div>
       <div class="col-cards">
         ${cs.map(c => `
           <div class="task-card ${c.st === 'blocker' ? 'blocker-card' : c.st === 'scope' ? 'scope-card' : c.st === 'pace' ? 'pace-card' : c.st === 'done' ? 'done-card' : ''}" onclick="openCard('${c.id}')">
             <div class="card-top">
-              <span class="card-id-owner"><strong>${c.id}</strong> · ${c.o}</span>
+              <span class="card-id-owner"><strong>${c.id}</strong> · ${c.tranche}</span>
               ${badge(c)}
             </div>
             <div class="card-title">${c.t}</div>
-            <div class="card-meta-strip">
-              <span class="tranche-tag">${c.tranche}</span>
-              <span class="due-tag ${c.st === 'blocker' || c.st === 'scope' ? 'urgent' : ''}">Due ${fmtDate(c.due)}</span>
-            </div>
             ${c.n && c.st !== 'done' ? (c.st === 'blocker' ? `<div class="blocker-reason">${c.n}</div>` : c.st === 'scope' ? `<div class="scope-reason">${c.n}</div>` : `<div class="card-note">${c.n}</div>`) : ''}
           </div>
         `).join('')}
-        <button class="add-card-btn" onclick="openNewCardModal(${i})">+ Add Milestone Gate</button>
       </div>
     `;
     g.appendChild(col);
   });
 
   const done = cards.filter(c => c.st === 'done').length;
-  $('kpi-progress').innerHTML = `<strong>${done}/${cards.length} Gates Locked</strong> · ${allFlagged.length} Flagged`;
-  $('kpi-budget').innerHTML = `<strong>EGG Drawdown Guardrail:</strong> $26.9M Core + $13.9M Stage-Gated Growth`;
+  $('kpi-progress').innerHTML = `<strong>${done}/${cards.length} Locked</strong> · ${allFlagged.length} Flagged`;
   const b = $('pace-badge');
   b.classList.toggle('on-track', !allFlagged.length);
-  $('pace-badge-text').textContent = allFlagged.length ? `${allFlagged.length} GATES AT RISK` : 'ALL GATES LOCKED';
+  $('pace-badge-text').textContent = allFlagged.length ? 'AT RISK' : 'ON TRACK';
 
-  const bl = allFlagged.map(c => c.id + ' (Due ' + fmtDate(c.due) + ')');
-  $('kpi-bottleneck').innerHTML = bl.length ? `<strong>Blocking Nov 23 Forum Post:</strong> ${bl.slice(0, 2).join(' + ')}` : `<strong>Nov 23 Forum Post:</strong> Ready to Publish`;
+  const bl = [];
+  if (cards[3].st === 'blocker') bl.push('Earn Growth Milestone Rubric');
+  if (cards[9].st === 'scope') bl.push('GOOSE-4 / EGG Final KR Lock');
+  $('kpi-bottleneck').innerHTML = bl.length ? `<strong>Waiting on:</strong> ${bl.join(' & ')}` : `<strong>Blockers:</strong> None`;
 
   renderTable();
 }
 
 function renderTable() {
-  $('filter-bar').innerHTML = 'Filter:' + ['All', 'Flagged', 'Blocked', 'On Pace', 'Done'].map(f => `<button class="link-pill ${f === filter ? 'active' : ''}" onclick="filter='${f}';renderTable()">${f}</button>`).join('') + '<span style="margin-left:auto">Dogfooding Wisp (usewisp.io) across Lido Labs Operations · Zero cloud LLM data retention</span>';
+  $('filter-bar').innerHTML = 'Filter:' + ['All', 'Flagged', 'Blocked', 'On Pace', 'Done'].map(f => `<button class="link-pill ${f === filter ? 'active' : ''}" onclick="filter='${f}';renderTable()">${f}</button>`).join('') + '<span style="margin-left:auto">Dogfooding Wisp (usewisp.io) across Lido Labs Operations · Zero cloud LLM retention</span>';
   const cls = { Blocked: 'badge-danger', Flagged: 'badge-warn', 'On Pace': 'badge-ok', Done: 'badge-neutral' };
   $('table-body').innerHTML = workflows.filter(r => filter === 'All' || r[6] === filter).map(r => `
     <tr class="${r[6] === 'Blocked' ? 'row-blocker' : ''}" onclick="openCard('${r[7]}')">
@@ -1056,11 +1012,9 @@ function openCard(id) {
       <b>Owner</b><span>${c.o}</span>
       <b>Status</b><span>${badge(c)}</span>
       <b>EGG Budget Line</b><span>${c.tranche}</span>
-      <b>Target Lock Date</b><span><input type="date" class="form-input" style="max-width:170px;padding:4px 8px;" value="${c.due}" onchange="updateDue('${c.id}', this.value)" /></span>
-      <b>Wisp Enclave Source</b><span>${c.wisp}</span>
-      <b>Tokenholder Proof</b><span>${c.proof}</span>
-      <b>Operational Context</b><span>${c.n}</span>
-      <b>Strategic PM Play</b><span>${c.st === 'blocker' ? 'Run 30-min working session with Earn lead & Finance to lock 3 quarterly milestone gates for the 2027 EGG doc.' : c.st === 'scope' ? 'Pre-fill function-head KR templates from Linear/Notion via Wisp and lock final numbers 7 days before Nov 23.' : 'Maintain weekly async check-in via Wisp rollup; keep function heads out of status meetings.'}</span>
+      <b>Due Date</b><span><input type="date" style="font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--border-strong);border-radius:6px;background:var(--bg);" value="${c.due}" onchange="updateDue('${c.id}', this.value)" /></span>
+      <b>Wisp MCP Source</b><span>${c.wisp}</span>
+      <b>Context</b><span>${c.d || c.n}</span>
     </div>`,
     c.st === 'done' ? '' : `<button class="btn btn-primary" onclick="resolve('${c.id}')">Mark Gate Locked ✓</button>`
   );
@@ -1071,70 +1025,77 @@ function updateDue(id, newDate) {
   if (c && newDate) {
     c.due = newDate;
     render();
-    toast(id + ' due date updated to ' + fmtDate(newDate));
+    toast(id + ' due date set to ' + fmtDate(newDate));
   }
 }
 
-function openNewCardModal(defaultStage = 0) {
+function openNewCardModal() {
   const nextNum = String(cards.length + 1).padStart(2, '0');
   modal(
-    'Add GOOSE-4 / EGG Milestone Gate',
-    `KR-${nextNum} · Lido Labs Operations Unit`,
-    `<div class="kv">
-      <b>P&amp;L Column</b>
-      <select id="new-stage" class="form-select">
-        ${stages.map((s, idx) => `<option value="${idx}" ${idx === defaultStage ? 'selected' : ''}>${s.n}</option>`).join('')}
-      </select>
-      <b>Milestone / KR Title</b>
-      <input id="new-title" class="form-input" placeholder="e.g., Q1 2027 Lido Earn Net-Yield Kill/Scale Threshold" />
-      <b>Owner</b>
-      <input id="new-owner" class="form-input" placeholder="e.g., Lido Earn Lead + Finance Ops" />
-      <b>EGG Budget Tranche</b>
-      <input id="new-tranche" class="form-input" placeholder="e.g., Growth EGG · $2.5M Tranche" />
-      <b>Due Date</b>
-      <input id="new-due" type="date" class="form-input" value="2026-11-18" />
-      <b>Wisp MCP Source</b>
-      <select id="new-wisp" class="form-select">
-        <option value="Wisp Enclave · Linear + Notion MCP">Wisp Enclave · Linear + Notion MCP</option>
-        <option value="Wisp Enclave · Granola Meeting Rollup">Wisp Enclave · Granola Meeting Rollup</option>
-        <option value="Wisp Enclave · Local Budget Sheet">Wisp Enclave · Local Budget Sheet</option>
-      </select>
-      <b>Status</b>
-      <select id="new-status" class="form-select">
-        <option value="pace">ON PACE</option>
-        <option value="scope">NEEDS LOCK · Nov 23</option>
-        <option value="blocker">BLOCKER</option>
-        <option value="done">Locked ✓</option>
-      </select>
-      <b>Tokenholder Proof / Note</b>
-      <textarea id="new-note" class="form-textarea" placeholder="What measurable gate unlocks this budget tranche or satisfies the Nov 23 forum submission?"></textarea>
+    'Log Milestone Gate',
+    `KR-${nextNum} · GOOSE-4 & 2027 EGG Cycle`,
+    `<div class="form-grid">
+      <div class="form-field full">
+        <label>Milestone / KR Title</label>
+        <input id="new-title" placeholder="e.g., Q1 2027 Lido Earn Net-Yield Kill/Scale Threshold" />
+      </div>
+      <div class="form-field">
+        <label>P&amp;L Line</label>
+        <select id="new-stage">
+          ${stages.map((s, idx) => `<option value="${idx}">${s.n}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-field">
+        <label>EGG Budget Pool</label>
+        <select id="new-tranche">
+          <option value="Core EGG ($26.9M)">Core EGG ($26.9M)</option>
+          <option value="Growth EGG ($13.9M)" selected>Growth EGG ($13.9M)</option>
+          <option value="New Bets · Wisp">New Bets · Wisp</option>
+          <option value="Full EGG ($60M Cap)">Full EGG ($60M Cap)</option>
+          <option value="BORG Governance">BORG Governance</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Due Date</label>
+        <input id="new-due" type="date" value="2026-11-18" />
+      </div>
+      <div class="form-field">
+        <label>Status</label>
+        <select id="new-status">
+          <option value="pace">ON PACE</option>
+          <option value="scope">DUE NOV 23 (Flagged)</option>
+          <option value="blocker">BLOCKER</option>
+        </select>
+      </div>
+      <div class="form-field full">
+        <label>Tokenholder Proof / Note</label>
+        <textarea id="new-note" placeholder="What measurable gate unlocks this budget pool or satisfies the Nov 23 forum submission?"></textarea>
+      </div>
     </div>`,
-    `<button class="btn btn-primary" onclick="saveNewCard()">Add Milestone Gate</button>`
+    `<button class="btn btn-primary" onclick="saveNewCard()">Add Gate</button>`
   );
   setTimeout(() => { const el = $('new-title'); if (el) el.focus(); }, 40);
 }
 
 function saveNewCard() {
-  const title = ($('new-title').value || '').trim();
-  if (!title) {
-    toast('Enter a Milestone / KR title first');
-    return;
-  }
+  const title = ($('new-title').value || '').trim() || 'New Milestone Gate';
   const stageIdx = parseInt($('new-stage').value, 10) || 0;
-  const owner = ($('new-owner').value || '').trim() || 'Operations Unit';
-  const tranche = ($('new-tranche').value || '').trim() || '2027 EGG · Milestone Gate';
+  const tranche = $('new-tranche').value || 'Growth EGG ($13.9M)';
   const due = $('new-due').value || '2026-11-18';
-  const wisp = $('new-wisp').value;
   const st = $('new-status').value;
-  const note = ($('new-note').value || '').trim() || 'Added to GOOSE-4 / 2027 EGG accountability cycle.';
+  const note = ($('new-note').value || '').trim();
   const id = 'KR-' + String(cards.length + 1).padStart(2, '0');
-  const badgeMap = { pace: 'ON PACE', scope: 'DUE ' + fmtDate(due).toUpperCase(), blocker: 'BLOCKER · ' + fmtDate(due), done: 'Locked ✓' };
 
-  cards.push({ id, s: stageIdx, st, b: badgeMap[st], t: title, o: owner, tranche, due, wisp, proof: note, n: note });
+  cards.push({
+    id, s: stageIdx, st, t: title, o: 'Operations Unit', tranche, due,
+    wisp: 'Wisp Enclave · Linear + Notion MCP',
+    n: note || (st !== 'pace' ? 'Added to GOOSE-4 / 2027 EGG tracking cycle.' : ''),
+    d: note || 'Added to GOOSE-4 / 2027 EGG tracking cycle.'
+  });
   closeModal();
   switchView('board');
   render();
-  toast(id + ' (' + tranche + ', due ' + fmtDate(due) + ') added');
+  toast(id + ' logged for ' + fmtDate(due));
 }
 
 function resolve(id) {
@@ -1143,24 +1104,23 @@ function resolve(id) {
   workflows.forEach(w => { if (w[7] === id) w[6] = 'Done'; });
   closeModal();
   render();
-  toast(id + ' locked for Nov 23 forum submission');
+  toast(id + ' locked');
 }
 
 function openPulse() {
   const open = cards.filter(c => c.st === 'blocker' || c.st === 'scope');
   modal(
-    'Tokenholder & Operations Unit Accountability Digest',
-    'Generated via Wisp Private Enclave · Ready for Nov 23 Forum Thread & Friday Ops Sync',
-    `<div class="draft-box">## Lido Labs BORG — GOOSE-4 & 2027 EGG Milestone Readiness (As of Oct 27, 2026)
-• Cycle Lock: ${cards.filter(c => c.st === 'done').length}/${cards.length} milestone gates locked across the 4 P&L lines ($26.9M Core Staking baseline + $13.9M stage-gated Growth pool).
-• Governance Countdown: 27 days to Nov 23 forum publication → Dec 7 Snapshot vote.
+    'Tokenholder & Ops Accountability Digest',
+    'Generated via Wisp Enclave · Ready for Nov 23 Forum Thread & Friday Ops Sync',
+    `<div class="draft-box">Subject: Lido Labs — GOOSE-4 & 2027 EGG Readiness (27d to Nov 23 Lock)
 
-### 1. Locked & Verified Gates (Constant-ETH-FX)
-${cards.filter(c => c.st === 'done').map(c => '• [' + c.id + ' · ' + c.tranche + '] ' + c.t + ' — ' + c.proof).join('\n')}
+Status: ${open.length ? 'AT RISK (' + open.length + ' gates flagged)' : 'ON TRACK'} for Nov 23 forum publication → Dec 7 Snapshot vote.
 
-### 2. Open Gates Requiring Lock Before Nov 23
-${open.length ? open.map(c => '• [' + c.id + ' · Due ' + fmtDate(c.due) + ' · ' + c.tranche + '] ' + c.t + ' (' + c.o + ') — ' + c.n).join('\n') : '• All GOOSE-4 / 2027 EGG milestone gates locked and verified.'}</div>`,
-    `<button class="btn btn-primary" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.querySelector('.draft-box').innerText);toast('Accountability Digest copied');closeModal()">Copy Forum / Ops Digest</button>`
+Locked (${cards.filter(c => c.st === 'done').length}/${cards.length} gates across $26.9M Core + $13.9M Stage-Gated Growth):
+${cards.filter(c => c.st === 'done').map(c => '• ' + c.id + ' (' + c.tranche + ') — ' + c.t).join('\n')}
+
+${open.length ? 'Needs lock before Nov 23:\n' + open.map(c => '• ' + c.id + ' [Due ' + fmtDate(c.due) + ' · ' + c.tranche + '] ' + c.t + ' — ' + (c.d || c.n)).join('\n') : 'No open blockers.'}</div>`,
+    `<button class="btn btn-primary" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.querySelector('.draft-box').innerText);toast('Digest copied');closeModal()">Copy Digest</button>`
   );
 }
 
