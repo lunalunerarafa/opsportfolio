@@ -321,6 +321,26 @@
     gap: 7px;
   }
 
+  .add-card-btn {
+    border: 1px dashed var(--border-strong);
+    background: rgba(255, 255, 255, 0.45);
+    color: var(--ink-secondary);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.12s ease;
+  }
+
+  .add-card-btn:hover {
+    background: var(--bg-elevated);
+    color: var(--ink);
+    border-style: solid;
+  }
+
   /* Clean 3-Row Card Structure */
   .task-card {
     background: var(--bg-elevated);
@@ -524,7 +544,7 @@
     background: #fff8f7;
   }
 
-  /* Modal */
+  /* Modal & Form */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -603,6 +623,7 @@
     grid-template-columns: 125px 1fr;
     gap: 7px 12px;
     font-size: 12px;
+    align-items: center;
   }
 
   .kv b {
@@ -610,6 +631,28 @@
     font-size: 10px;
     text-transform: uppercase;
     color: var(--ink-muted);
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    font-family: inherit;
+    font-size: 12px;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    outline: none;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--ink);
+    background: var(--bg-elevated);
+  }
+
+  .form-textarea {
+    min-height: 64px;
+    resize: vertical;
   }
 
   .draft-box {
@@ -661,6 +704,7 @@
       <button class="view-btn active" id="btn-view-board" onclick="switchView('board')">4 P&amp;L Lines</button>
       <button class="view-btn" id="btn-view-table" onclick="switchView('table')">Wisp AI Workflows (6)</button>
     </div>
+    <button class="btn" onclick="openNewCardModal(0)">+ New KR</button>
     <button class="btn btn-primary" onclick="openPulse()">Weekly Ops Pulse ↗</button>
   </div>
 </header>
@@ -820,8 +864,8 @@ function render() {
     const cs = cards.filter(c => c.s === i);
     const colFlagged = cs.filter(c => c.st === 'blocker' || c.st === 'scope');
     let tag = s.tag, cls = 'done';
-    if (s.tag === 'active') {
-      tag = colFlagged.length ? `1 Flagged` : 'On Pace ✓';
+    if (s.tag === 'active' || colFlagged.length) {
+      tag = colFlagged.length ? `${colFlagged.length} Flagged` : 'On Pace ✓';
       cls = colFlagged.length ? 'warn' : 'done';
     }
     const col = document.createElement('div');
@@ -848,6 +892,7 @@ function render() {
             ${c.n && c.st !== 'done' ? (c.st === 'blocker' ? `<div class="blocker-reason">${c.n}</div>` : c.st === 'scope' ? `<div class="scope-reason">${c.n}</div>` : `<div class="card-note">${c.n}</div>`) : ''}
           </div>
         `).join('')}
+        <button class="add-card-btn" onclick="openNewCardModal(${i})">+ Add KR / Gate</button>
       </div>
     `;
     g.appendChild(col);
@@ -859,10 +904,8 @@ function render() {
   b.classList.toggle('on-track', !allFlagged.length);
   $('pace-badge-text').textContent = allFlagged.length ? `${allFlagged.length} NEEDS ATTENTION` : 'ALL GATES ON TRACK';
 
-  const bl = [];
-  if (cards[3].st === 'blocker') bl.push('Earn 2027 Milestone Rubric');
-  if (cards[9].st === 'scope') bl.push('GOOSE-4 / EGG Final KR Lock');
-  $('kpi-bottleneck').innerHTML = bl.length ? `<strong>Focus this week:</strong> ${bl.join(' + ')}` : `<strong>Blockers:</strong> Cleared`;
+  const bl = allFlagged.map(c => c.id + ' (' + c.t.split(' ').slice(0, 3).join(' ') + '…)');
+  $('kpi-bottleneck').innerHTML = bl.length ? `<strong>Focus this week:</strong> ${bl.slice(0, 2).join(' + ')}` : `<strong>Blockers:</strong> Cleared`;
 
   renderTable();
 }
@@ -928,6 +971,55 @@ function openCard(id) {
   );
 }
 
+function openNewCardModal(defaultStage = 0) {
+  const nextNum = String(cards.length + 1).padStart(2, '0');
+  modal(
+    'Add New KR / Delivery Gate',
+    `KR-${nextNum} · Lido Labs Operations Unit`,
+    `<div class="kv">
+      <b>P&amp;L Column</b>
+      <select id="new-stage" class="form-select">
+        ${stages.map((s, idx) => `<option value="${idx}" ${idx === defaultStage ? 'selected' : ''}>${s.n}</option>`).join('')}
+      </select>
+      <b>KR / Gate Title</b>
+      <input id="new-title" class="form-input" placeholder="e.g., Q1 2027 Institutional stVaults SLA Sign-off" />
+      <b>Owner</b>
+      <input id="new-owner" class="form-input" placeholder="e.g., Institutional BD + Ops Unit" />
+      <b>Status</b>
+      <select id="new-status" class="form-select">
+        <option value="pace">ON PACE</option>
+        <option value="scope">NEEDS LOCK · Nov 23</option>
+        <option value="blocker">BLOCKER</option>
+        <option value="done">Done</option>
+      </select>
+      <b>Context / Note</b>
+      <textarea id="new-note" class="form-textarea" placeholder="1-line context, dependency, or milestone gate..."></textarea>
+    </div>`,
+    `<button class="btn btn-primary" onclick="saveNewCard()">Add to Board</button>`
+  );
+  setTimeout(() => { const el = $('new-title'); if (el) el.focus(); }, 40);
+}
+
+function saveNewCard() {
+  const title = ($('new-title').value || '').trim();
+  if (!title) {
+    toast('Enter a KR / Gate title first');
+    return;
+  }
+  const stageIdx = parseInt($('new-stage').value, 10) || 0;
+  const owner = ($('new-owner').value || '').trim() || 'Operations Unit';
+  const st = $('new-status').value;
+  const note = ($('new-note').value || '').trim() || 'Added to GOOSE-4 / 2027 EGG tracking cycle.';
+  const id = 'KR-' + String(cards.length + 1).padStart(2, '0');
+  const badgeMap = { pace: 'ON PACE', scope: 'DUE NOV 23', blocker: 'BLOCKER', done: 'Done' };
+
+  cards.push({ id, s: stageIdx, st, b: badgeMap[st], t: title, o: owner, n: note });
+  closeModal();
+  switchView('board');
+  render();
+  toast(id + ' added to ' + stages[stageIdx].n);
+}
+
 function resolve(id) {
   const c = cards.find(x => x.id === id);
   c.st = 'done';
@@ -946,7 +1038,7 @@ function openPulse() {
 
 Hi team,
 
-Status: ${open.length ? open.length + ' gates need lock this week' : 'All 12 gates locked'} ahead of the Nov 23 GOOSE-4 + 2027 EGG submission.
+Status: ${open.length ? open.length + ' gates need lock this week' : 'All ' + cards.length + ' gates locked'} ahead of the Nov 23 GOOSE-4 + 2027 EGG submission.
 
 Locked across the 4 P&L lines: ${cards.filter(c => c.st === 'done').length}/${cards.length} KRs (Core Staking v3/stVaults handoffs, Constant-FX reporting baseline, Wisp MCP beta, Oct 19 BORG multisig rotation).
 
