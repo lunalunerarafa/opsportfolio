@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Lido Labs — GOOSE-4 &amp; 2027 EGG Accountability Board</title>
+<title>Lido Labs — GOOSE-4 &amp; 2027 EGG Accountability Board (Powered by Wisp Enclave)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -16,6 +16,9 @@
     --ink-secondary: #4a4c46;
     --ink-muted: #767870;
     --accent: #0088cc;
+    --wisp: #1f5f4a;
+    --wisp-bg: #eaf5f0;
+    --wisp-border: #b6dccb;
     --amber: #9e5a16;
     --amber-bg: #fdf5ea;
     --amber-border: #ebcfab;
@@ -161,6 +164,18 @@
     background: var(--bg-subtle);
   }
 
+  .btn-wisp {
+    background: var(--wisp-bg);
+    color: var(--wisp);
+    border-color: var(--wisp-border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .btn-wisp:hover {
+    background: #dcf0e7;
+  }
+
   .btn-primary {
     background: var(--ink);
     color: var(--bg-elevated);
@@ -171,7 +186,7 @@
     background: #2c2e2a;
   }
 
-  /* Row 2: Single-Glance Pace Bar */
+  /* Row 2: Single-Glance Pace & Wisp Enclave Status Bar */
   .pace-bar {
     background: var(--bg-subtle);
     border-bottom: 1px solid var(--border);
@@ -226,6 +241,25 @@
   .kpi-chip strong {
     color: var(--ink);
     font-weight: 600;
+  }
+
+  .wisp-enclave-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--wisp);
+    background: var(--wisp-bg);
+    border: 1px solid var(--wisp-border);
+    padding: 2.5px 9px;
+    border-radius: 999px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .wisp-enclave-pill:hover {
+    background: #dcf0e7;
   }
 
   /* Board Container */
@@ -376,6 +410,11 @@
 
   .card-id-owner strong {
     color: var(--ink-secondary);
+  }
+
+  .wisp-tag {
+    color: var(--wisp);
+    font-weight: 600;
   }
 
   .badge {
@@ -600,10 +639,10 @@
 
   .kv {
     display: grid;
-    grid-template-columns: 135px 1fr;
-    gap: 6px 12px;
+    grid-template-columns: 145px 1fr;
+    gap: 7px 12px;
     font-size: 12px;
-    align-items: center;
+    align-items: start;
   }
 
   .kv b {
@@ -611,6 +650,18 @@
     font-size: 10px;
     text-transform: uppercase;
     color: var(--ink-muted);
+    padding-top: 2px;
+  }
+
+  .wisp-signal-box {
+    background: var(--wisp-bg);
+    border: 1px solid var(--wisp-border);
+    border-radius: var(--radius-sm);
+    padding: 7px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--wisp);
+    line-height: 1.4;
   }
 
   .form-grid {
@@ -704,6 +755,7 @@
       <button class="view-btn active" id="btn-view-board" onclick="switchView('board')">Board</button>
       <button class="view-btn" id="btn-view-table" onclick="switchView('table')">Wisp Automations (6)</button>
     </div>
+    <button class="btn btn-wisp" onclick="openWispSyncModal()">Wisp Sync ↻</button>
     <button class="btn" onclick="openNewCardModal()">+ Gate</button>
     <button class="btn btn-primary" onclick="openPulse()">Forum &amp; Ops Digest ↗</button>
   </div>
@@ -716,6 +768,9 @@
     <span class="kpi-chip"><strong>27 Days to Nov 23 Lock</strong> · Dec 7 Vote</span>
     <span class="kpi-chip" id="kpi-bottleneck"></span>
   </div>
+  <button class="wisp-enclave-pill" onclick="openWispSyncModal()" title="View live Wisp Enclave MCP signals">
+    <span>● Wisp Enclave: Linear · Notion · Granola MCPs (0 Cloud LLM Retention)</span>
+  </button>
 </section>
 
 <main class="board-container">
@@ -759,8 +814,9 @@ const cards = [
     t: 'Lido v3 Staking Infrastructure & Audit Hand-offs',
     o: 'Protocol R&D',
     tranche: 'Core EGG ($26.9M)',
+    mcp: 'Linear MCP',
     due: '2026-10-18',
-    wisp: 'Linear MCP · Verified',
+    wisp: 'Linear MCP (`v3-audit` epic): 14/14 audit remediation issues closed; node operator handoff verified.',
     d: 'All cross-team dependencies between audit remediation and node operator rollout cleared.'
   },
   {
@@ -768,8 +824,9 @@ const cards = [
     t: 'stVaults Institutional Wrapper & Legal Readiness',
     o: 'Institutional BD + Legal',
     tranche: 'Core EGG ($26.9M)',
+    mcp: 'Notion MCP',
     due: '2026-10-24',
-    wisp: 'Notion MCP · Verified',
+    wisp: 'Notion MCP (`stVaults Legal Sign-Off`): Risk & institutional wrapper checklist marked Approved.',
     d: 'Standardized legal and risk review checklist in place for institutional stVaults partners.'
   },
   {
@@ -777,8 +834,9 @@ const cards = [
     t: '2027 Core Staking Resilience KRs & Budget Lock',
     o: 'Staking Leads',
     tranche: 'Core EGG ($26.9M)',
+    mcp: 'Linear + Granola',
     due: '2026-11-16',
-    wisp: 'Wisp Weekly Rollup',
+    wisp: 'Granola MCP (`Core Staking Sync`): 2027 maintenance scope matched to $26.9M constant-FX guardrail.',
     d: '2027 Core maintenance scope aligned with GOOSE-4 resilience targets and constant-FX guardrail.'
   },
   {
@@ -786,9 +844,10 @@ const cards = [
     t: 'Quarterly Growth Milestone Rubric for 2027 EGG',
     o: 'Earn Lead + Ops Unit',
     tranche: 'Growth EGG ($13.9M)',
+    mcp: 'Granola + Notion',
     due: '2026-11-15',
-    wisp: 'Wisp Enclave Draft Needed',
-    n: 'Tokenholders pushed back on backward-looking updates; needs quarterly TVL & net-revenue gates before Nov 23.',
+    wisp: 'Granola MCP (`Earn Weekly`) + Notion (`2027 EGG Draft`): Q1/Q2 TVL & net-revenue threshold table still blank.',
+    n: 'Wisp flagged via Granola + Notion: Q1/Q2 TVL & net-revenue drawdown gates still blank before Nov 23 lock.',
     d: 'Tokenholders pushed back on backward-looking updates; needs quarterly TVL & net-revenue gates before Nov 23.'
   },
   {
@@ -796,8 +855,9 @@ const cards = [
     t: 'Constant-ETH-FX Performance Reporting Baseline',
     o: 'Finance & Treasury Ops',
     tranche: 'Growth EGG ($13.9M)',
+    mcp: 'Notion MCP',
     due: '2026-10-15',
-    wisp: 'Local Sheet · Verified',
+    wisp: 'Notion MCP (`Finance H2 Baseline`): Constant-ETH-FX table locked for H2/2027 reporting.',
     d: 'Separates ETH price swings from vault operating yield in H2/2027 tokenholder reports.'
   },
   {
@@ -805,8 +865,9 @@ const cards = [
     t: 'DeFi Risk & Partner Onboarding SLA',
     o: 'Earn Product + Risk Ops',
     tranche: 'Growth EGG ($13.9M)',
+    mcp: 'Linear MCP',
     due: '2026-11-12',
-    wisp: 'Linear + Notion MCP',
+    wisp: 'Linear MCP (`EARN-SLA` project): Security, Legal, and Comms sign-off templates on track for Nov 12.',
     d: '2-week cross-functional sign-off loop across Security, Legal, and Comms.'
   },
   {
@@ -814,8 +875,9 @@ const cards = [
     t: 'Wisp Private Enclave + Notion / Linear / Granola MCPs',
     o: 'Wisp Team (@usewisp_io)',
     tranche: 'New Bets · Wisp',
+    mcp: 'Wisp Enclave',
     due: '2026-10-20',
-    wisp: 'Enclave Live (~200 Users)',
+    wisp: 'Wisp Enclave Live (~200 users): Notion, Linear, Granola & GCal MCP connectors active with local storage.',
     d: 'Public beta live with local encrypted storage and MCP connectors ready for internal ops dogfooding.'
   },
   {
@@ -823,9 +885,10 @@ const cards = [
     t: 'Operations Unit AI Workflow Dogfooding in Wisp',
     o: 'Strategic PM + Wisp Lead',
     tranche: 'New Bets · Wisp',
+    mcp: 'All Wisp MCPs',
     due: '2026-11-14',
-    wisp: 'Granola + Linear + Notion',
-    n: 'Weekly OKR rollups & vendor checks running inside Wisp private enclave (zero cloud LLM retention).',
+    wisp: 'Wisp Enclave Dogfooding: Weekly OKR drift rollups & vendor reviews running locally (0 cloud LLM retention).',
+    n: 'Pulls weekly OKR drift from Linear, Notion & Granola inside Wisp enclave so ops data stays off public cloud LLMs.',
     d: 'Weekly OKR rollups & vendor checks running inside Wisp private enclave (zero cloud LLM retention).'
   },
   {
@@ -833,8 +896,9 @@ const cards = [
     t: '2027 New Bets Stage-Gate Drawdown Rules',
     o: 'New Bets Leads + Ops Unit',
     tranche: 'Growth EGG ($13.9M)',
+    mcp: 'Notion MCP',
     due: '2026-11-18',
-    wisp: 'Notion MCP Scorecard',
+    wisp: 'Notion MCP (`New Bets Stage-Gates`): 90-day retention & revenue drawdown rubric in final review.',
     d: 'Stage-gates tying discretionary Growth drawdowns to 90-day retention & revenue milestones.'
   },
   {
@@ -842,9 +906,10 @@ const cards = [
     t: 'Joint GOOSE-4 Goals + 2027 EGG Budget Submission',
     o: 'DAO Ops + Function Heads',
     tranche: 'Full EGG ($60M Cap)',
+    mcp: 'Notion + Linear',
     due: '2026-11-23',
-    wisp: 'Wisp Cross-Unit Rollup',
-    n: 'First cycle submitting 2027 goals and EGG budget together; 2 function-head KR tables still need final lock.',
+    wisp: 'Notion MCP (`GOOSE-4 Master Doc`): 2 of 4 function-head KR tables still missing final budget line mapping.',
+    n: 'Wisp diff on Notion `GOOSE-4 Master Doc`: 2 function-head KR tables still unmapped to 2027 EGG cost lines.',
     d: 'First cycle submitting 2027 goals and EGG budget together; 2 function-head KR tables still need final lock.'
   },
   {
@@ -852,8 +917,9 @@ const cards = [
     t: 'BORG Operational Multisig Rotation Runbook',
     o: 'BORG Ops + Signers',
     tranche: 'BORG Governance',
+    mcp: 'Notion MCP',
     due: '2026-10-19',
-    wisp: 'On-Chain Safe · Verified',
+    wisp: 'Notion MCP (`BORG Multisig Runbook`): Oct 19 signer rotation verified across Operational, Bug Bounty & TRP Safes.',
     d: 'Oct 19 signer rotation completed across Operational, Bug Bounty, and TRP multisigs.'
   },
   {
@@ -861,8 +927,9 @@ const cards = [
     t: 'November Tokenholder Call & Accountability Pack',
     o: 'Operations Unit + Comms',
     tranche: 'BORG Governance',
+    mcp: 'Granola + Notion',
     due: '2026-11-25',
-    wisp: 'Wisp Digest Export',
+    wisp: 'Wisp Digest Generator: Side-by-side H2 delivery vs. 2027 milestone deck auto-compiled from locked KRs.',
     d: 'Side-by-side H2 delivery vs. 2027 milestone commitments for the November tokenholder call.'
   }
 ];
@@ -883,7 +950,7 @@ function toast(m) {
   const t = $('toast');
   t.textContent = m;
   t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2000);
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 
 function fmtDate(iso) {
@@ -932,7 +999,7 @@ function render() {
         ${cs.map(c => `
           <div class="task-card ${c.st === 'blocker' ? 'blocker-card' : c.st === 'scope' ? 'scope-card' : c.st === 'pace' ? 'pace-card' : c.st === 'done' ? 'done-card' : ''}" onclick="openCard('${c.id}')">
             <div class="card-top">
-              <span class="card-id-owner"><strong>${c.id}</strong> · ${c.tranche}</span>
+              <span class="card-id-owner"><strong>${c.id}</strong> · ${c.tranche} · <span class="wisp-tag">Wisp: ${c.mcp}</span></span>
               ${badge(c)}
             </div>
             <div class="card-title">${c.t}</div>
@@ -951,8 +1018,8 @@ function render() {
   $('pace-badge-text').textContent = allFlagged.length ? 'AT RISK' : 'ON TRACK';
 
   const bl = [];
-  if (cards[3].st === 'blocker') bl.push('Earn Growth Milestone Rubric');
-  if (cards[9].st === 'scope') bl.push('GOOSE-4 / EGG Final KR Lock');
+  if (cards[3].st === 'blocker') bl.push('Earn Growth Rubric (KR-04)');
+  if (cards[9].st === 'scope') bl.push('GOOSE-4 / EGG Lock (KR-10)');
   $('kpi-bottleneck').innerHTML = bl.length ? `<strong>Waiting on:</strong> ${bl.join(' & ')}` : `<strong>Blockers:</strong> None`;
 
   renderTable();
@@ -1011,12 +1078,28 @@ function openCard(id) {
     `<div class="kv">
       <b>Owner</b><span>${c.o}</span>
       <b>Status</b><span>${badge(c)}</span>
-      <b>EGG Budget Line</b><span>${c.tranche}</span>
+      <b>EGG Budget Pool</b><span>${c.tranche}</span>
       <b>Due Date</b><span><input type="date" style="font-family:inherit;font-size:12px;padding:4px 8px;border:1px solid var(--border-strong);border-radius:6px;background:var(--bg);" value="${c.due}" onchange="updateDue('${c.id}', this.value)" /></span>
-      <b>Wisp MCP Source</b><span>${c.wisp}</span>
-      <b>Context</b><span>${c.d || c.n}</span>
+      <b>Wisp Enclave Signal</b><div class="wisp-signal-box">${c.wisp}</div>
+      <b>Operational Context</b><span>${c.d || c.n}</span>
     </div>`,
     c.st === 'done' ? '' : `<button class="btn btn-primary" onclick="resolve('${c.id}')">Mark Gate Locked ✓</button>`
+  );
+}
+
+function openWispSyncModal() {
+  modal(
+    'Wisp Private Enclave — Weekly OKR & Gate Sync',
+    'usewisp.io · Connected MCPs: Linear · Notion · Granola · Google Calendar (Zero Cloud Retention)',
+    `<div style="font-size:12px;color:var(--ink-secondary);">
+      Instead of function heads manually updating cards or pasting sensitive $60M EGG budget docs into public cloud LLMs, Wisp pulls weekly drift directly from Lido's connected tools inside the private enclave:
+    </div>
+    <div class="draft-box">[Wisp Enclave Sync · Oct 27, 2026]
+• Linear MCP → KR-01 (v3 Staking Audits): 14/14 remediation issues closed ✓
+• Notion MCP → KR-02 (stVaults Wrapper): Institutional legal checklist signed off ✓
+• Granola + Notion MCP → KR-04 (Lido Earn $13.9M Growth Pool): FLAGGED — Earn Weekly Sync transcript notes Q1/Q2 TVL & net-revenue thresholds still unagreed; Notion table blank (Due Nov 15).
+• Notion MCP → KR-10 (GOOSE-4 + 2027 EGG Submission): FLAGGED — 2 of 4 P&L function-head KR tables still missing final budget line mapping (Due Nov 23).</div>`,
+    `<button class="btn btn-primary" onclick="toast('Wisp Enclave sync complete · 12 gates verified across Linear, Notion & Granola');closeModal()">Re-Run Enclave Sync ↻</button>`
   );
 }
 
@@ -1056,10 +1139,19 @@ function openNewCardModal() {
         </select>
       </div>
       <div class="form-field">
+        <label>Wisp MCP Source</label>
+        <select id="new-mcp">
+          <option value="Notion MCP">Notion MCP</option>
+          <option value="Linear MCP">Linear MCP</option>
+          <option value="Granola + Notion" selected>Granola + Notion</option>
+          <option value="Linear + Granola">Linear + Granola</option>
+        </select>
+      </div>
+      <div class="form-field">
         <label>Due Date</label>
         <input id="new-due" type="date" value="2026-11-18" />
       </div>
-      <div class="form-field">
+      <div class="form-field full">
         <label>Status</label>
         <select id="new-status">
           <option value="pace">ON PACE</option>
@@ -1068,8 +1160,8 @@ function openNewCardModal() {
         </select>
       </div>
       <div class="form-field full">
-        <label>Tokenholder Proof / Note</label>
-        <textarea id="new-note" placeholder="What measurable gate unlocks this budget pool or satisfies the Nov 23 forum submission?"></textarea>
+        <label>Wisp Enclave Signal / Note</label>
+        <textarea id="new-note" placeholder="What signal in Linear, Notion, or Granola verifies this gate?"></textarea>
       </div>
     </div>`,
     `<button class="btn btn-primary" onclick="saveNewCard()">Add Gate</button>`
@@ -1081,21 +1173,22 @@ function saveNewCard() {
   const title = ($('new-title').value || '').trim() || 'New Milestone Gate';
   const stageIdx = parseInt($('new-stage').value, 10) || 0;
   const tranche = $('new-tranche').value || 'Growth EGG ($13.9M)';
+  const mcp = $('new-mcp').value || 'Notion MCP';
   const due = $('new-due').value || '2026-11-18';
   const st = $('new-status').value;
   const note = ($('new-note').value || '').trim();
   const id = 'KR-' + String(cards.length + 1).padStart(2, '0');
 
   cards.push({
-    id, s: stageIdx, st, t: title, o: 'Operations Unit', tranche, due,
-    wisp: 'Wisp Enclave · Linear + Notion MCP',
-    n: note || (st !== 'pace' ? 'Added to GOOSE-4 / 2027 EGG tracking cycle.' : ''),
+    id, s: stageIdx, st, t: title, o: 'Operations Unit', tranche, mcp, due,
+    wisp: `${mcp}: ${note || 'Tracked inside Wisp private enclave for Nov 23 GOOSE-4 lock.'}`,
+    n: note || (st !== 'pace' ? `Wisp (${mcp}): Added to GOOSE-4 / 2027 EGG tracking cycle.` : ''),
     d: note || 'Added to GOOSE-4 / 2027 EGG tracking cycle.'
   });
   closeModal();
   switchView('board');
   render();
-  toast(id + ' logged for ' + fmtDate(due));
+  toast(id + ' logged via ' + mcp);
 }
 
 function resolve(id) {
@@ -1111,15 +1204,15 @@ function openPulse() {
   const open = cards.filter(c => c.st === 'blocker' || c.st === 'scope');
   modal(
     'Tokenholder & Ops Accountability Digest',
-    'Generated via Wisp Enclave · Ready for Nov 23 Forum Thread & Friday Ops Sync',
+    'Compiled inside Wisp Enclave from Linear, Notion & Granola · Zero Cloud LLM Retention',
     `<div class="draft-box">Subject: Lido Labs — GOOSE-4 & 2027 EGG Readiness (27d to Nov 23 Lock)
 
-Status: ${open.length ? 'AT RISK (' + open.length + ' gates flagged)' : 'ON TRACK'} for Nov 23 forum publication → Dec 7 Snapshot vote.
+Status: ${open.length ? 'AT RISK (' + open.length + ' gates flagged by Wisp)' : 'ON TRACK'} for Nov 23 forum publication → Dec 7 Snapshot vote.
 
-Locked (${cards.filter(c => c.st === 'done').length}/${cards.length} gates across $26.9M Core + $13.9M Stage-Gated Growth):
-${cards.filter(c => c.st === 'done').map(c => '• ' + c.id + ' (' + c.tranche + ') — ' + c.t).join('\n')}
+Locked (${cards.filter(c => c.st === 'done').length}/${cards.length} gates verified across $26.9M Core + $13.9M Stage-Gated Growth):
+${cards.filter(c => c.st === 'done').map(c => '• ' + c.id + ' [' + c.mcp + ' · ' + c.tranche + '] — ' + c.t).join('\n')}
 
-${open.length ? 'Needs lock before Nov 23:\n' + open.map(c => '• ' + c.id + ' [Due ' + fmtDate(c.due) + ' · ' + c.tranche + '] ' + c.t + ' — ' + (c.d || c.n)).join('\n') : 'No open blockers.'}</div>`,
+${open.length ? 'Flagged by Wisp Enclave before Nov 23:\n' + open.map(c => '• ' + c.id + ' [Due ' + fmtDate(c.due) + ' · ' + c.mcp + '] ' + c.t + ' — ' + c.wisp).join('\n') : 'No open blockers.'}</div>`,
     `<button class="btn btn-primary" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.querySelector('.draft-box').innerText);toast('Digest copied');closeModal()">Copy Digest</button>`
   );
 }
