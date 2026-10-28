@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Build at Sugar</title>
+  <link rel="icon" type="image/png" href="https://sugaraccount.com/_components/v2/7413e242d9ead389ac7bd559f33080ba3aab3793/sugar-wordmark-transparent-1200.377c59ca.png" />
+  <style>
+    :root {
+      --neon-green: #66ff99;
+      --neon-pink: #FFB3D9;
+      --bg: #ffffff;
+      --fg: #000000;
+      --border: #d4d4d8;
+      --border-strong: #a1a1aa;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Subtle dot-matrix background matching sugaraccount.com App.tsx */
+    .bg-dots {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image: radial-gradient(circle, rgba(200, 200, 200, 0.4) 1.5px, transparent 1.5px);
+      background-size: 8px 8px;
+      opacity: 0.35;
+    }
+
+    /* Interactive cursor neon-green glow matching sugaraccount.com MouseGlow.tsx */
+    .mouse-glow-wrap {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .mouse-glow-soft {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .mouse-glow-dots {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(circle, var(--neon-green) 1.5px, transparent 1.5px);
+      background-size: 8px 8px;
+      opacity: 0.6;
+    }
+
+    /* Fixed Black Top Navbar matching sugaraccount.com Header.tsx */
+    .site-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background-color: #000000;
+      border-bottom: 1px solid #27272a;
+      padding: 0 24px;
+      backdrop-filter: blur(12px);
+    }
+
+    .site-nav-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    .nav-home-link {
+      color: var(--neon-green);
+      font-size: 13.5px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .nav-home-link:hover {
+      opacity: 0.8;
+    }
+
+    /* Main Single-Column Container */
+    .page-main {
+      position: relative;
+      z-index: 10;
+      max-width: 620px;
+      margin: 0 auto;
+      padding: 92px 24px 36px;
+    }
+
+    /* Intro Block */
+    .intro-block {
+      margin-bottom: 20px;
+    }
+
+    .page-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -1.2px;
+      line-height: 1.1;
+      color: #000000;
+      margin-bottom: 12px;
+    }
+
+    @media (min-width: 768px) {
+      .page-title {
+        font-size: 38px;
+        letter-spacing: -1.4px;
+      }
+    }
+
+    .intro-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: rgba(0, 0, 0, 0.78);
+      margin-bottom: 14px;
+    }
+
+    .intro-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .intro-bullets li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      color: #18181b;
+    }
+
+    /* Crisp neon-green dot badge matching Sugar's #66ff99 accent */
+    .bullet-marker {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: var(--neon-green);
+      border: 1px solid #000000;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: var(--border);
+      margin: 18px 0;
+    }
+
+    /* Minimalist Form */
+    .careers-form {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #000000;
+      letter-spacing: -0.2px;
+    }
+
+    .field-input,
+    .field-textarea {
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid var(--border-strong);
+      border-radius: 0px;
+      padding: 8px 12px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      line-height: 1.45;
+      color: #000000;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .field-input::placeholder,
+    .field-textarea::placeholder {
+      color: #a1a1aa;
+    }
+
+    .field-input:hover,
+    .field-textarea:hover {
+      border-color: #52525b;
+    }
+
+    .field-input:focus,
+    .field-textarea:focus {
+      border-color: #000000;
+      box-shadow: 3px 3px 0px var(--neon-green);
+    }
+
+    .field-textarea {
+      min-height: 88px;
+      resize: vertical;
+    }
+
+    .submit-row {
+      padding-top: 4px;
+    }
+
+    /* Primary CTA Button matching sugaraccount.com Hero & PRE-FOOTER_CTA */
+    .submit-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 26px;
+      background-color: var(--neon-pink);
+      border: 1px solid var(--neon-pink);
+      border-radius: 8px;
+      color: #000000;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .submit-btn:hover {
+      background-color: #ffa1d0;
+      border-color: #000000;
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* Confirmation State matching sugaraccount.com ThankYou.tsx */
+    .confirmation-state {
+      display: none;
+      background-color: #ffffff;
+      border: 1px solid var(--border);
+      padding: 32px 24px;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .confirmation-state.active {
+      display: block;
+    }
+
+    .check-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 9999px;
+      background-color: rgba(102, 255, 153, 0.14);
+      border: 1px solid rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 3px 3px 0px var(--neon-green);
+    }
+
+    .confirmation-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      margin-bottom: 8px;
+      color: #000000;
+    }
+
+    .confirmation-text {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.68);
+      line-height: 1.55;
+      max-width: 400px;
+      margin: 0 auto 18px;
+    }
+
+    .reset-link {
+      background: none;
+      border: none;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: rgba(0, 0, 0, 0.55);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      cursor: pointer;
+    }
+
+    .reset-link:hover {
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-dots" aria-hidden="true"></div>
+
+  <div class="mouse-glow-wrap" id="mouseGlow" aria-hidden="true">
+    <div class="mouse-glow-soft" id="mouseGlowSoft"></div>
+    <div class="mouse-glow-dots" id="mouseGlowDots"></div>
+  </div>
+
+  <nav class="site-nav">
+    <div class="site-nav-inner">
+      <a href="https://sugaraccount.com/" class="brand-link" aria-label="Sugar Home">
+        <img
+          src="https://sugaraccount.com/_components/v2/7413e242d9ead389ac7bd559f33080ba3aab3793/sugar-wordmark-transparent-1200.377c59ca.png"
+          alt="Sugar"
+          class="brand-logo"
+        />
+      </a>
+      <a href="https://sugaraccount.com/" class="nav-home-link">sugaraccount.com ↗</a>
+    </div>
+  </nav>
+
+  <main class="page-main">
+    <section class="intro-block">
+      <h1 class="page-title">Build at Sugar</h1>
+
+      <div class="intro-copy">
+        <p>We provide up to $25M in revolving credit (USD, USDC, USDT) so fintechs never lock up capital in pre-funding or sponsor reserves again.</p>
+        <p>We hire killers who want to build a generational fintech company and generational wealth, not coast.</p>
+      </div>
+
+      <ul class="intro-bullets">
+        <li>
+          <span class="bullet-marker" aria-hidden="true"></span>
+          <span>Backed by Alliance &amp; White Star Capital</span>
+        </li>
+        <li>
+          <span class="bullet-marker" aria-hidden="true"></span>
+          <span>Meaningful ownership for the team</span>
+        </li>
+        <li>
+          <span class="bullet-marker" aria-hidden="true"></span>
+          <span>Actively hiring: Engineering, Sales / GTM &amp; Operations (+$10K referral fee for a successful hire)</span>
+        </li>
+      </ul>
+    </section>
+
+    <div class="divider"></div>
+
+    <form class="careers-form" id="careersForm">
+      <div class="field-group">
+        <label class="field-label" for="name">Name</label>
+        <input
+          class="field-input"
+          type="text"
+          id="name"
+          name="name"
+          required
+          autocomplete="name"
+        />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="email">Email</label>
+        <input
+          class="field-input"
+          type="email"
+          id="email"
+          name="email"
+          required
+          autocomplete="email"
+        />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="proof">Proof of work (GitHub, portfolio, etc)</label>
+        <input
+          class="field-input"
+          type="text"
+          id="proof"
+          name="proof"
+          required
+        />
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="why">Why Sugar? What would you build or own here? (Bullet points only)</label>
+        <textarea
+          class="field-textarea"
+          id="why"
+          name="why"
+          rows="4"
+          placeholder="• &#10;• &#10;• "
+          required
+        ></textarea>
+      </div>
+
+      <div class="submit-row">
+        <button type="submit" class="submit-btn">Submit →</button>
+      </div>
+    </form>
+
+    <div class="confirmation-state" id="confirmationState" role="status" aria-live="polite">
+      <div class="check-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2 class="confirmation-title">Received.</h2>
+      <p class="confirmation-text">Your note is in our queue. If there’s a fit, we’ll reach out directly.</p>
+      <button type="button" class="reset-link" id="resetBtn">Submit another response</button>
+    </div>
+  </main>
+
+  <script>
+    // Auto-bullet behavior for "Why Sugar? What would you build or own here? (Bullet points only)"
+    const whyInput = document.getElementById('why');
+
+    whyInput.addEventListener('focus', () => {
+      if (whyInput.value.trim() === '') {
+        whyInput.value = '• ';
+        requestAnimationFrame(() => {
+          whyInput.selectionStart = whyInput.selectionEnd = whyInput.value.length;
+        });
+      }
+    });
+
+    whyInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const start = whyInput.selectionStart;
+        const end = whyInput.selectionEnd;
+        const val = whyInput.value;
+        const insert = '\n• ';
+        whyInput.value = val.substring(0, start) + insert + val.substring(end);
+        whyInput.selectionStart = whyInput.selectionEnd = start + insert.length;
+      } else if (e.key === 'Backspace') {
+        const start = whyInput.selectionStart;
+        const end = whyInput.selectionEnd;
+        if (start === end) {
+          const before = whyInput.value.substring(0, start);
+          if (before.endsWith('\n• ')) {
+            e.preventDefault();
+            whyInput.value = whyInput.value.substring(0, start - 3) + whyInput.value.substring(end);
+            whyInput.selectionStart = whyInput.selectionEnd = start - 3;
+          } else if (before === '• ') {
+            e.preventDefault();
+          }
+        }
+      }
+    });
+
+    whyInput.addEventListener('paste', (e) => {
+      const pasted = (e.clipboardData || window.clipboardData).getData('text');
+      if (!pasted) return;
+      e.preventDefault();
+      const lines = pasted.split(/\r?\n/).map((line, idx) => {
+        const trimmed = line.replace(/^[\s•\-\*]+/, '').trim();
+        if (!trimmed) return '';
+        return (idx === 0 && whyInput.value.substring(0, whyInput.selectionStart).endsWith('• '))
+          ? trimmed
+          : '• ' + trimmed;
+      }).filter(Boolean);
+      const textToInsert = lines.join('\n');
+      const start = whyInput.selectionStart;
+      const end = whyInput.selectionEnd;
+      whyInput.value = whyInput.value.substring(0, start) + textToInsert + whyInput.value.substring(end);
+      whyInput.selectionStart = whyInput.selectionEnd = start + textToInsert.length;
+    });
+
+    whyInput.addEventListener('blur', () => {
+      if (whyInput.value.trim() === '•') {
+        whyInput.value = '';
+      }
+    });
+
+    // Form submission & confirmation state
+    const form = document.getElementById('careersForm');
+    const confirmation = document.getElementById('confirmationState');
+    const resetBtn = document.getElementById('resetBtn');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.style.display = 'none';
+      confirmation.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    resetBtn.addEventListener('click', () => {
+      form.reset();
+      confirmation.classList.remove('active');
+      form.style.display = 'flex';
+    });
+
+    // Interactive cursor glow matching sugaraccount.com MouseGlow.tsx
+    const glowWrap = document.getElementById('mouseGlow');
+    const glowSoft = document.getElementById('mouseGlowSoft');
+    const glowDots = document.getElementById('mouseGlowDots');
+
+    window.addEventListener('mousemove', (e) => {
+      const x = e.clientX;
+      const y = e.clientY;
+      glowWrap.style.opacity = '1';
+      glowSoft.style.background = `radial-gradient(circle 60px at ${x}px ${y}px, var(--neon-green) 0%, transparent 50%)`;
+      glowSoft.style.opacity = '0.28';
+      glowSoft.style.maskImage = `radial-gradient(circle 60px at ${x}px ${y}px, black 0%, transparent 70%)`;
+      glowSoft.style.webkitMaskImage = `radial-gradient(circle 60px at ${x}px ${y}px, black 0%, transparent 70%)`;
+
+      glowDots.style.backgroundPosition = `${x % 8}px ${y % 8}px`;
+      glowDots.style.maskImage = `radial-gradient(circle 40px at ${x}px ${y}px, black 0%, transparent 65%)`;
+      glowDots.style.webkitMaskImage = `radial-gradient(circle 40px at ${x}px ${y}px, black 0%, transparent 65%)`;
+    });
+  </script>
+</body>
+</html>
