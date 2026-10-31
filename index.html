@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>naffy quehen castaneda · ops</title>
-<meta name="description" content="ops that scale. ~10 yrs across crypto, igaming, online coaching and creative production. proof of work: better comms + fewer meetings, hiring faster, promoting from within.">
+<meta name="description" content="ops that scale. ~10 yrs across crypto, igaming, online coaching and creative production. proof of work: better comms + fewer meetings, hiring faster, promoting from within, never missing a deadline.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="naffy quehen castaneda · ops">
 <meta property="og:description" content="ops that scale. proof of work: better comms + fewer meetings, hiring faster, promoting from within + lower costs.">
@@ -113,11 +113,12 @@ ol.steps li::before{content:counter(r);position:absolute;left:0;top:12px;width:2
  <div class="top"><span class="nm">naffy quehen castaneda</span><span class="nm">miami / cartagena</span></div>
  <h1>ops that scale</h1>
  <p class="ln">~10 yrs across crypto, igaming, online coaching, creative production</p>
+ <p class="ln" style="margin-top:14px;color:var(--tx)">what's slowing your team down? <span class="nw">send it my way.</span></p>
  <div class="ct"><a href="mailto:naffy.castaneda@gmail.com">email</a><a href="https://www.linkedin.com/in/naffy-andrea-castaneda" target="_blank" rel="noopener">linkedin</a><a href="https://t.me/naffyandrea" target="_blank" rel="noopener">telegram</a></div>
 </aside>
 
 <main class="R">
- <p class="bl">i run the day to day: the follow-ups, the deadlines, and making sure nobody’s working in the dark. that’s meant okr cycles, partner onboarding, rolling out new tools + automations and making them stick, recruitment, strategic projects + more, on teams where the job is whatever needs doing.</p>
+ <p class="bl">i run the day to day: the follow-ups, the deadlines, and making sure nobody’s working in the dark. that’s meant okr cycles, partner onboarding, rolling out new tools + automations and making them stick, recruitment, strategic projects, on teams where the job is whatever needs doing.</p>
 
  <h2>proof of work</h2>
  <div class="pg" id="pg"></div>
@@ -201,6 +202,19 @@ ol.steps li::before{content:counter(r);position:absolute;left:0;top:12px;width:2
 <p class="dl" style="margin:28px 0 0">worth asking before you post a role: who's already doing part of the job?</p>
 </div>
 </dialog>
+<dialog id="dlg4" aria-label="never missing a deadline">
+<div class="dc">
+<div class="xb"><button type="button">close ✕</button></div>
+<h3 class="dh">never missing a deadline</h3>
+<p class="dl">100+ ads across markets, each with its own rules, budget and air date. none went out late.</p>
+<h2>protecting a deadline</h2>
+<div class="mv"><b>count back from the date.</b><span>every earlier deadline gets set from it.</span></div>
+<div class="mv"><b>start the slowest sign-off first.</b><span>legal, a partner or one stakeholder usually sets the real timeline.</span></div>
+<div class="mv"><b>set a last day for changes, and hold it.</b><span>late changes are what make dates slip.</span></div>
+<div class="mv"><b>give every piece one owner.</b><span>hand it out, then track everything in one place.</span></div>
+<p class="dl" style="margin:28px 0 0">worth asking before your next launch: what's the last day anything can change?</p>
+</div>
+</dialog>
 <script>
 const pg=document.getElementById('pg');
 const t1=`<button type="button" class="pc feat half" data-d="dlg" aria-haspopup="dialog">
@@ -213,12 +227,17 @@ const t2=`<button type="button" class="pc feat half" data-d="dlg2" aria-haspopup
 <p class="fs">how i'd get from <b>200 applicants</b> to a <b>shortlist of ~6</b> in a day</p>
 <div class="pk"><div>Proof of work</div><div>Non-negotiable question (yes / no)</div></div>
 <span class="go">see the flow →</span></button>`;
-const t3=`<button type="button" class="pc feat" data-d="dlg3" aria-haspopup="dialog">
+const t3=`<button type="button" class="pc feat half" data-d="dlg3" aria-haspopup="dialog">
 <h3>promoting from within + lower costs</h3>
 <p class="fs"><b>$150k+ a year</b> saved by <span class="nw">4 internal moves</span></p>
 <div class="pk"><div>Compliance officer</div><div>was a customer support rep</div></div>
 <span class="go">see the moves →</span></button>`;
-pg.innerHTML=t1+t2+t3;
+const t4=`<button type="button" class="pc feat half" data-d="dlg4" aria-haspopup="dialog">
+<h3>never missing a deadline</h3>
+<p class="fs"><b>100+ ads on air,</b> none late</p>
+<div class="pk"><div>Slowest sign-off</div><div>starts first, so it never sets the date</div></div>
+<span class="go">see the habits →</span></button>`;
+pg.innerHTML=t1+t2+t3+t4;
 const lock=v=>{try{document.body.style.overflow=v}catch(e){}};
 document.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const d=document.getElementById(b.dataset.d);d.showModal();lock('hidden');d.querySelector('.dc').scrollTop=0});
 document.querySelectorAll('dialog').forEach(d=>{
