@@ -84,9 +84,9 @@ footer a{color:var(--muted)}
 
 <script>
 var ROWS = [
- {id:1, name:"Competitor watch", team:"Marketing",
-  ai:"Checks named competitors' public pages each week and drafts a short note on what changed.", ap:"Marketing lead edits and approves before it goes to Sales.", tools:"Public web pages, Notion, Slack",
-  base:"Hours per analysis; share of Sales who open the note", i:2,f:5,r:1,a:3},
+ {id:1, name:"Publisher payment replies", team:"Finance",
+  ai:"Drafts the reply to each publisher payment question from the invoice and payment status in QuickBooks.", ap:"Finance approves each reply before it goes out.", tools:"QuickBooks, email",
+  base:"Payment questions per month; hours to first reply", i:3,f:4,r:2,a:4},
  {id:2, name:"Sales to onboarding handoff brief", team:"Sales, Onboarding",
   ai:"When a deal closes, drafts the brief for the Paris onboarding team: scope, promised KPIs, contacts, open questions.", ap:"AE confirms; onboarding lead accepts.", tools:"CRM, Notion, Slack",
   base:"Days from closed deal to kickoff; questions sent back to Sales", i:4,f:3,r:2,a:4},
@@ -95,7 +95,7 @@ var ROWS = [
   base:"Minutes of setup checks per campaign; changes made after launch", i:4,f:3,r:3,a:4},
  {id:4, name:"Feature request digest", team:"Product",
   ai:"Tags feature requests in call and deal notes and groups them by theme, with deal value attached.", ap:"Product lead decides what enters the roadmap review.", tools:"CRM, Slack",
-  base:"Requests logged per month; days from request to product review", i:3,f:4,r:1,a:3},
+  base:"Requests logged per month; days from request to product review", i:3,f:4,r:1,a:2},
  {id:5, name:"Quarterly commission check", team:"Finance",
   ai:"Each quarter, matches closed revenue to each rep's commission plan and drafts the payout sheet, flagging anything unclear.", ap:"Director of Finance approves before payroll.", tools:"QuickBooks, CRM, Google Sheets",
   base:"Hours to calculate each quarter; payout corrections after payroll", i:4,f:3,r:3,a:4}
