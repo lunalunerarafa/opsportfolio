@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - index.html
-      - README.md
-      - .nojekyll
-      - .github/workflows/reboot-pages.yml
-      - "regen8/**"
 permissions:
   contents: read
   pages: write
@@ -56,8 +50,7 @@ jobs:
       - name: Stage site files
         run: |
           mkdir -p _site
-          cp index.html README.md .nojekyll _site/
-          cp -r regen8 _site/
+          rsync -a --exclude .git --exclude .github --exclude _site ./ _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
