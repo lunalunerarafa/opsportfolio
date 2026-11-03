@@ -29,7 +29,7 @@ section{margin-top:28px}
 .nm{font-weight:500}
 .tm{font-size:13px;color:var(--ink2)}
 .sc{font-family:'JetBrains Mono',monospace;font-size:14px;text-align:right}
-.chev{color:var(--muted);font-size:12px;text-align:center;transition:transform .15s}
+.chev{color:var(--ink2);font-size:16px;text-align:center;transition:transform .15s}
 .item.open .chev{transform:rotate(90deg)}
 .det{display:none;padding:4px 16px 20px 72px}
 .item.open .det{display:block}
@@ -61,6 +61,7 @@ footer a{color:var(--muted)}
 <header>
   <h1>AI workflows: first 90 days</h1>
   <p class="goal">Goal: five in production, each with a baseline. <span class="small">Built from COOL's open job posts, Nov 2026.</span></p>
+  <p class="small hint" style="margin-top:10px">Open any row to see how it works.</p>
 </header>
 
 <section>
@@ -104,8 +105,8 @@ function score(r){return 2*r.i+r.f+r.a-r.r;}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
 var FIELDS=[["What the AI does","ai"],["Who approves","ap"],["Runs on","tools"],["Baseline, measured in week 1","base"]];
 document.getElementById("rows").innerHTML=ROWS.slice().sort(function(x,y){return score(y)-score(x) || y.i-x.i || x.id-y.id;}).map(function(r,k){
-  return '<div class="item">'+
-   '<div class="row" role="button" tabindex="0" aria-expanded="false">'+
+  return '<div class="item'+(k===0?' open':'')+'">'+
+   '<div class="row" role="button" tabindex="0" aria-expanded="'+(k===0)+'">'+
     '<span class="rk">'+(k+1)+'</span>'+
     '<span class="nm">'+esc(r.name)+'<span class="mt">'+esc(r.team)+'</span></span>'+
     '<span class="tm">'+esc(r.team)+'</span>'+
